@@ -147,7 +147,7 @@ export function Ch1Faster() {
 
           {/* 연도 슬라이더 */}
           <div className="mt-6 flex flex-col gap-3">
-            <label htmlFor="ch1-year" className="text-sm text-paper/50">
+            <label htmlFor="ch1-year" className="text-sm text-paper/55">
               연도를 움직여 두 선의 격차를 확인해 보세요
             </label>
             <div className="flex items-center gap-5">
@@ -188,7 +188,7 @@ export function Ch1Faster() {
                 )}
               </>
             ) : (
-              <span className="text-paper/50">{activeYear}년에는 비교할 값이 없습니다.</span>
+              <span className="text-paper/55">{activeYear}년에는 비교할 값이 없습니다.</span>
             )}
           </motion.p>
         </ChartFrame>

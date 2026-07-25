@@ -190,11 +190,11 @@ export function Ch3Who() {
                 }
                 ariaLabel={`${year}년 전국 고독사 사망자의 성별·연령대 구조 피라미드`}
               />
-              <p className="mt-3 text-center text-sm text-paper/45">
+              <p className="mt-3 text-center text-sm text-paper/55">
                 합계 <span className="num text-paper/70">{fmtInt(deathTotal)}</span>명 · 40대 이상
               </p>
               {deathPair && deathPairPublished !== null && (
-                <p className="mt-2 text-center text-xs leading-relaxed text-paper/40">
+                <p className="mt-2 text-center text-xs leading-relaxed text-paper/55">
                   같은 묶음을 보도자료 기준(연령미상까지 포함한 전체 고독사 대비)으로 세면{' '}
                   <span className="num text-paper/60">{deathPairPublished.toFixed(1)}%</span>입니다. 아래 판정
                   카드의 숫자가 이 기준입니다.
@@ -229,7 +229,7 @@ export function Ch3Who() {
                 }
                 ariaLabel={`${year}년 부산 1인세대의 성별·연령대 구조 피라미드`}
               />
-              <p className="mt-3 text-center text-sm text-paper/45">
+              <p className="mt-3 text-center text-sm text-paper/55">
                 합계 <span className="num text-paper/70">{fmtInt(aloneTotal)}</span>세대 · 40대 이상
               </p>
             </ChartFrame>
@@ -258,7 +258,7 @@ export function Ch3Who() {
                   ? '혼자 사는 사람과 혼자 죽는 사람은 같지 않습니다. 고립을 사람 수로만 세면 이 어긋남이 보이지 않습니다.'
                   : '두 그림에서 가장 두꺼운 칸이 같은 집단을 가리킵니다.'}
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-paper/50">
+              <p className="mt-4 text-sm leading-relaxed text-paper/55">
                 다만 왼쪽은 전국, 오른쪽은 부산입니다. 부산의 고독사 교차표가 없어 같은 지역끼리 비교하지
                 못했습니다. 이 문장은 정황일 뿐 증명이 아닙니다.
               </p>

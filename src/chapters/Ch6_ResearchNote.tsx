@@ -12,7 +12,7 @@ const TEAM = {
 
 /** 종이색 배경에서 쓰는 판정 배지 색 */
 const VERDICT_STYLE: Record<Verdict, string> = {
-  채택: 'border-rust/45 bg-rust/10 text-rust',
+  채택: 'border-rustdeep/50 bg-rustdeep/10 text-rustdeep',
   부분채택: 'border-tide/60 bg-tide/10 text-tide',
   기각: 'border-ink/25 bg-ink/[0.05] text-ink/65',
   검증불가: 'border-ink/25 bg-ink/[0.05] text-ink/65',
@@ -77,7 +77,7 @@ export function Ch6ResearchNote() {
     <div className="w-full bg-paper text-ink">
       <section id="ch6" className="chapter flex flex-col gap-16" aria-labelledby="ch6-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-rust">CHAPTER 6</span>
+          <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 6</span>
           <h2 id="ch6-heading" className="font-serif text-headline text-ink">
             연구 노트
           </h2>
@@ -90,7 +90,7 @@ export function Ch6ResearchNote() {
         {/* 가설 판정 요약 */}
         <div className="flex flex-col gap-5">
           <h3 className="font-serif text-2xl text-ink">가설 세 개, 판정 세 개</h3>
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/60">
+          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             아래 표는 손으로 쓴 것이 아닙니다.{' '}
             <code className="num rounded bg-ink/[0.06] px-1.5 py-0.5 text-[0.85em]">src/lib/hypothesis.ts</code> 의
             순수 함수가 CSV 를 읽어 계산한 결과를 그대로 그린 것입니다. 데이터를 갱신하면 판정도 따라 바뀝니다.
@@ -101,7 +101,7 @@ export function Ch6ResearchNote() {
             <table className="w-full min-w-[640px] border-collapse text-left">
               <caption className="sr-only">가설별 판정과 근거 요약</caption>
               <thead>
-                <tr className="border-b border-ink/25 text-sm text-ink/50">
+                <tr className="border-b border-ink/25 text-sm text-ink/65">
                   <th scope="col" className="py-3 pr-4 font-normal">
                     가설
                   </th>
@@ -124,7 +124,7 @@ export function Ch6ResearchNote() {
                     transition={{ duration: 0.45, delay: reduced ? 0 : i * 0.1 }}
                   >
                     <th scope="row" className="py-5 pr-4 font-normal">
-                      <span className="num text-xs text-ink/40">{r.id}</span>
+                      <span className="num text-xs text-ink/65">{r.id}</span>
                       <span className="mt-1 block font-serif text-lg text-ink">{r.title}</span>
                     </th>
                     <td className="py-5 pr-4">
@@ -141,7 +141,7 @@ export function Ch6ResearchNote() {
             </table>
           </div>
 
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/60">
+          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             세 개 중 하나가 <span className="text-ink">검증불가</span>로 남았습니다. 저희는 이것을 실패가 아니라
             결과로 봅니다. 공개된 데이터로 알 수 없는 것이 무엇인지 아는 것도 연구가 알아낸 것입니다.
           </p>
@@ -170,7 +170,7 @@ export function Ch6ResearchNote() {
           </ol>
 
           <div className="max-w-[74ch] rounded-lg border border-ink/15 bg-ink/[0.04] p-5">
-            <p className="mb-3 text-sm text-ink/60">누구든 아래 명령으로 데이터를 다시 만들 수 있습니다.</p>
+            <p className="mb-3 text-sm text-ink/65">누구든 아래 명령으로 데이터를 다시 만들 수 있습니다.</p>
             <pre className="num overflow-x-auto text-xs leading-relaxed text-ink/75">
               <code>{`npm install\nnpm run data:fetch   # 원자료 내려받기 (KOSIS API 키 필요)\nnpm run data:build   # public/data/*.csv 생성\nnpm test             # 가설 판정 함수 테스트`}</code>
             </pre>
@@ -180,7 +180,7 @@ export function Ch6ResearchNote() {
         {/* 한계 */}
         <div className="flex flex-col gap-5">
           <h3 className="font-serif text-2xl text-ink">이 연구가 못 한 것</h3>
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/60">
+          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             질문받기 전에 먼저 적습니다. 감추면 신뢰를 잃고 먼저 말하면 신뢰를 얻는다고 생각했습니다.
           </p>
           <div className="grid gap-5 md:grid-cols-2">
@@ -194,7 +194,7 @@ export function Ch6ResearchNote() {
                 transition={{ duration: 0.45, delay: reduced ? 0 : (i % 2) * 0.08 }}
               >
                 <h4 className="font-serif text-base text-ink">{l.title}</h4>
-                <p className="text-sm leading-relaxed text-ink/60">{l.body}</p>
+                <p className="text-sm leading-relaxed text-ink/65">{l.body}</p>
               </motion.div>
             ))}
           </div>
@@ -205,19 +205,19 @@ export function Ch6ResearchNote() {
           <h3 className="font-serif text-2xl text-ink">쓴 자료 전부</h3>
 
           <div className="flex flex-col gap-3">
-            <h4 className="text-sm text-ink/45">데이터</h4>
+            <h4 className="text-sm text-ink/65">데이터</h4>
             {sourceRows.length === 0 ? (
-              <p className="text-sm text-ink/50">출처 목록을 불러오지 못했습니다.</p>
+              <p className="text-sm text-ink/65">출처 목록을 불러오지 못했습니다.</p>
             ) : (
               <ol className="flex flex-col gap-3">
                 {sourceRows.map((s, i) => (
                   <li key={s.id} className="flex gap-4 border-b border-ink/12 pb-3 text-sm">
-                    <span className="num shrink-0 text-ink/35">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="num shrink-0 text-ink/65">{String(i + 1).padStart(2, '0')}</span>
                     <span className="flex flex-col gap-1">
                       <span className="text-ink/80">
                         {s.org}, 「{s.title}」({s.year})
                       </span>
-                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/45">
+                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/65">
                         <a
                           href={s.url}
                           target="_blank"
@@ -237,7 +237,7 @@ export function Ch6ResearchNote() {
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
-            <h4 className="text-sm text-ink/45">제도 정보 (Chapter 5)</h4>
+            <h4 className="text-sm text-ink/65">제도 정보 (Chapter 5)</h4>
             <ol className="flex flex-col gap-3">
               {[
                 ...PROGRAMS.map((p) => ({ id: p.id, label: `${p.org} — ${p.name}`, url: p.url, on: p.verifiedOn })),
@@ -249,10 +249,10 @@ export function Ch6ResearchNote() {
                 })),
               ].map((s, i) => (
                 <li key={s.id} className="flex gap-4 border-b border-ink/12 pb-3 text-sm">
-                  <span className="num shrink-0 text-ink/35">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="num shrink-0 text-ink/65">{String(i + 1).padStart(2, '0')}</span>
                   <span className="flex flex-col gap-1">
                     <span className="text-ink/80">{s.label}</span>
-                    <span className="flex flex-wrap items-center gap-x-3 text-xs text-ink/45">
+                    <span className="flex flex-wrap items-center gap-x-3 text-xs text-ink/65">
                       <a
                         href={s.url}
                         target="_blank"
@@ -274,12 +274,12 @@ export function Ch6ResearchNote() {
         <footer className="flex flex-col gap-5 border-t border-ink/20 pt-10">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-ink/50">
+              <p className="text-sm text-ink/65">
                 {TEAM.org} · {TEAM.grade}
               </p>
               <p className="font-serif text-2xl text-ink">{TEAM.members.join(' · ')}</p>
             </div>
-            <p className="num text-sm text-ink/40">혼자 남겨진 도시, 부산 · 2026</p>
+            <p className="num text-sm text-ink/65">혼자 남겨진 도시, 부산 · 2026</p>
           </div>
 
           <p className="max-w-[70ch] font-serif text-lg leading-relaxed text-ink/75">

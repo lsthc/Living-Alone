@@ -150,7 +150,7 @@ export function MapLegend({ min, max, unit = '%' }: { min: number; max: number; 
   const steps = 12;
   return (
     <div className="flex items-center gap-3">
-      <span className="num text-xs text-paper/50">
+      <span className="num text-xs text-paper/55">
         {min.toFixed(1)}
         {unit}
       </span>
@@ -163,7 +163,7 @@ export function MapLegend({ min, max, unit = '%' }: { min: number; max: number; 
           />
         ))}
       </div>
-      <span className="num text-xs text-paper/50">
+      <span className="num text-xs text-paper/55">
         {max.toFixed(1)}
         {unit}
       </span>

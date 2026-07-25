@@ -23,7 +23,7 @@ export function SourceNote({
   const all = rowsOf(sources);
   const used = sourceIds.map((id) => all.find((s) => s.id === id)).filter((s): s is NonNullable<typeof s> => !!s);
 
-  const base = tone === 'light' ? 'text-ink/45' : 'text-paper/40';
+  const base = tone === 'light' ? 'text-ink/65' : 'text-paper/55';
   const link = tone === 'light' ? 'decoration-ink/30 hover:text-ink/70' : 'decoration-slate hover:text-paper/70';
 
   return (

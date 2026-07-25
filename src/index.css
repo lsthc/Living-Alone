@@ -55,4 +55,22 @@
   .chapter {
     @apply relative mx-auto w-full max-w-[1400px] px-6 py-24 md:px-12 lg:py-32;
   }
+
+  /* 발표 모드에서 숨길 장식 요소 (스크롤 유도 화살표 등) */
+  body.present .present-hide {
+    display: none !important;
+  }
+
+  /* 발표 모드에서는 챕터가 한 화면에 들어오도록 위아래 여백을 줄인다 */
+  body.present .chapter {
+    @apply py-16 lg:py-20;
+  }
+
+  /* 키보드로 건너뛰기 — Tab 을 처음 누르면 나타난다 */
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus-visible {
+    @apply not-sr-only fixed left-4 top-4 z-[60] rounded-md border border-lamp/60 bg-ink px-4 py-2 text-sm text-lamp;
+  }
 }

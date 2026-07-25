@@ -149,7 +149,7 @@ export function IndexTrend({
         {yTicks.map((v) => (
           <g key={v}>
             <line x1={M.left} x2={M.left + PW} y1={scale.y(v)} y2={scale.y(v)} stroke="#33465C" strokeWidth={1} />
-            <text x={M.left - 10} y={scale.y(v) + 4} textAnchor="end" className="fill-paper/40 font-mono text-[13px]">
+            <text x={M.left - 10} y={scale.y(v) + 4} textAnchor="end" className="fill-paper/55 font-mono text-[13px]">
               {v}
             </text>
           </g>
@@ -165,7 +165,7 @@ export function IndexTrend({
           strokeWidth={1}
           strokeDasharray="2 4"
         />
-        <text x={M.left - 10} y={scale.y(100) - 8} textAnchor="end" className="fill-paper/50 font-mono text-[12px]">
+        <text x={M.left - 10} y={scale.y(100) - 8} textAnchor="end" className="fill-paper/55 font-mono text-[12px]">
           {yAxisLabel}
         </text>
 
@@ -177,7 +177,7 @@ export function IndexTrend({
               x={scale.x(year)}
               y={M.top + PH + 26}
               textAnchor="middle"
-              className="fill-paper/40 font-mono text-[13px]"
+              className="fill-paper/55 font-mono text-[13px]"
             >
               {year}
             </text>

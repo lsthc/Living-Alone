@@ -83,7 +83,7 @@ export function Scatter({
       {ticks(model.yd).map((v) => (
         <g key={`y${v}`}>
           <line x1={M.left} x2={M.left + PW} y1={model.y(v)} y2={model.y(v)} stroke="#33465C" strokeWidth={1} />
-          <text x={M.left - 10} y={model.y(v) + 4} textAnchor="end" className="fill-paper/40 font-mono text-[12px]">
+          <text x={M.left - 10} y={model.y(v) + 4} textAnchor="end" className="fill-paper/55 font-mono text-[12px]">
             {v.toFixed(0)}
           </text>
         </g>
@@ -94,13 +94,13 @@ export function Scatter({
           x={model.x(v)}
           y={M.top + PH + 24}
           textAnchor="middle"
-          className="fill-paper/40 font-mono text-[12px]"
+          className="fill-paper/55 font-mono text-[12px]"
         >
           {v.toFixed(0)}
         </text>
       ))}
 
-      <text x={M.left + PW / 2} y={H - 12} textAnchor="middle" className="fill-paper/50 font-sans text-[13px]">
+      <text x={M.left + PW / 2} y={H - 12} textAnchor="middle" className="fill-paper/55 font-sans text-[13px]">
         {xLabel}
       </text>
       <text
@@ -108,7 +108,7 @@ export function Scatter({
         y={16}
         transform="rotate(-90)"
         textAnchor="middle"
-        className="fill-paper/50 font-sans text-[13px]"
+        className="fill-paper/55 font-sans text-[13px]"
       >
         {yLabel}
       </text>

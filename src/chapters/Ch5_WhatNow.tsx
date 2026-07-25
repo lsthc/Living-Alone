@@ -20,7 +20,7 @@ function ProgramCard({ program }: { program: Program }) {
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       <header className="flex flex-col gap-1.5">
-        <span className="text-xs tracking-wide text-ink/45">{program.org}</span>
+        <span className="text-xs tracking-wide text-ink/65">{program.org}</span>
         <h3 className="font-serif text-2xl text-ink">{program.name}</h3>
       </header>
 
@@ -31,7 +31,7 @@ function ProgramCard({ program }: { program: Program }) {
           { k: '어떻게', v: program.how },
         ].map((row) => (
           <div key={row.k} className="grid gap-1 sm:grid-cols-[5.5rem_minmax(0,1fr)] sm:gap-4">
-            <dt className="text-sm text-ink/45">{row.k}</dt>
+            <dt className="text-sm text-ink/65">{row.k}</dt>
             <dd className="text-sm leading-relaxed text-ink/75">{row.v}</dd>
           </div>
         ))}
@@ -43,8 +43,8 @@ function ProgramCard({ program }: { program: Program }) {
         </p>
       )}
 
-      <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink/12 pt-4 text-xs text-ink/45">
-        {program.cost && <span className="text-ink/60">{program.cost}</span>}
+      <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink/12 pt-4 text-xs text-ink/65">
+        {program.cost && <span className="text-ink/65">{program.cost}</span>}
         <a
           href={program.url}
           target="_blank"
@@ -80,7 +80,7 @@ export function Ch5WhatNow() {
     <div className="w-full bg-paper text-ink">
       <section id="ch5" className="chapter flex flex-col gap-14" aria-labelledby="ch5-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-rust">CHAPTER 5</span>
+          <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 5</span>
           <h2 id="ch5-heading" className="font-serif text-headline text-ink">
             그래서 지금 무엇을 할 수 있나
           </h2>
@@ -114,12 +114,12 @@ export function Ch5WhatNow() {
                 <div className="flex flex-col gap-2">
                   <p className="text-base text-ink">{h.name}</p>
                   <p className="text-sm leading-relaxed text-ink/65">{h.what}</p>
-                  <p className="text-xs leading-relaxed text-ink/50">{h.when}</p>
+                  <p className="text-xs leading-relaxed text-ink/65">{h.when}</p>
                   <a
                     href={h.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-ink/45 underline decoration-ink/30 underline-offset-2 hover:text-ink/75"
+                    className="text-xs text-ink/65 underline decoration-ink/30 underline-offset-2 hover:text-ink/75"
                   >
                     공식 안내 · <span className="num">{fmtDate(h.verifiedOn)}</span> 확인
                   </a>
@@ -132,7 +132,7 @@ export function Ch5WhatNow() {
         {/* 이웃으로서 할 수 있는 일 */}
         <div className="flex flex-col gap-5">
           <h3 className="font-serif text-2xl text-ink">이웃이 할 수 있는 일</h3>
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/60">
+          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             아래는 저희가 지어낸 미담이 아니라 제도 문서에 적혀 있는 내용입니다. 특히 첫 번째가 이 연구에서
             가장 뜻밖이었습니다. 가족이 아니어도 신청할 수 있습니다.
           </p>
@@ -154,7 +154,7 @@ export function Ch5WhatNow() {
                     />
                     <span className="flex flex-col gap-1.5">
                       <span className="text-sm leading-relaxed text-ink/85">{a.text}</span>
-                      <span className="text-xs text-ink/45">근거 · {a.basis}</span>
+                      <span className="text-xs text-ink/65">근거 · {a.basis}</span>
                     </span>
                   </label>
                 </li>
@@ -166,7 +166,7 @@ export function Ch5WhatNow() {
         {/* 확인 못 한 것을 확인 못 했다고 적는 자리 */}
         <div className="flex max-w-[74ch] flex-col gap-3 rounded-lg border border-dashed border-ink/25 p-6">
           <h3 className="font-serif text-lg text-ink/80">여기 넣지 않은 것</h3>
-          <ul className="flex list-disc flex-col gap-2 pl-5 text-sm leading-relaxed text-ink/55">
+          <ul className="flex list-disc flex-col gap-2 pl-5 text-sm leading-relaxed text-ink/65">
             <li>
               부산 구·군별 안부살핌 사업 — 구마다 이름과 내용이 다르고 해마다 바뀌는데, 공식 안내를 확인하지
               못해 넣지 않았습니다. 사는 구의 주민센터에 물어보는 편이 정확합니다.
@@ -180,7 +180,7 @@ export function Ch5WhatNow() {
             부산에는 「부산광역시 고독사 예방 및 사회적 고립가구 지원을 위한 조례」(2019년 제정)가 있어,
             고독사 현황 파악과 단계별 정책 수립이 시의 의무로 정해져 있습니다.
           </p>
-          <p className="border-t border-ink/12 pt-3 text-xs leading-relaxed text-ink/50">
+          <p className="border-t border-ink/12 pt-3 text-xs leading-relaxed text-ink/65">
             이 페이지의 모든 정보는 <span className="num">2026년 7월 25일</span> 각 기관 공식 사이트에서
             확인했습니다. 제도는 바뀝니다. 실제로 신청하기 전에 129나 주민센터에서 한 번 더 확인해 주세요.
           </p>

@@ -29,7 +29,7 @@ export function EmptyState({
         ))}
       </div>
       <p className="font-serif text-lg text-paper/80">{title}</p>
-      {detail && <p className="max-w-md text-sm text-paper/50">{detail}</p>}
+      {detail && <p className="max-w-md text-sm text-paper/55">{detail}</p>}
     </div>
   );
 }

@@ -77,7 +77,7 @@ export function Ch0Window() {
             혼자 켜집니다.
           </h1>
 
-          <p className="num text-sm tracking-wide text-paper/45">
+          <p className="num text-sm tracking-wide text-paper/55">
             {latest.year} · 부산 · 65세 이상 1인가구 {households.toLocaleString('ko-KR')}
           </p>
         </motion.div>

@@ -115,7 +115,7 @@ export function Ch2Where() {
                   </label>
                 </div>
                 {onlyOldDowntown && (
-                  <p className="text-xs leading-relaxed text-paper/45">
+                  <p className="text-xs leading-relaxed text-paper/55">
                     원도심은 연구팀이 영도구·동구·중구·사상구·사하구로 정의했습니다. 행정적으로 정해진 구분이 아니라
                     이 연구의 기준입니다.
                   </p>
@@ -163,7 +163,7 @@ export function Ch2Where() {
                             <dt className="text-sm text-paper/55">{row.k}</dt>
                             <dd className="flex items-baseline gap-2">
                               <span className="num text-lg text-paper">{row.v}</span>
-                              {row.sub && <span className="text-xs text-paper/40">{row.sub}</span>}
+                              {row.sub && <span className="text-xs text-paper/55">{row.sub}</span>}
                             </dd>
                           </div>
                         ))}
@@ -172,7 +172,7 @@ export function Ch2Where() {
                   ) : (
                     <motion.p
                       key="hint"
-                      className="flex h-full items-center justify-center rounded-lg border border-dashed border-slate/50 p-6 text-center text-sm text-paper/45"
+                      className="flex h-full items-center justify-center rounded-lg border border-dashed border-slate/50 p-6 text-center text-sm text-paper/55"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >

@@ -34,7 +34,7 @@ export function VerdictCard({ result, className }: { result: HypothesisResult<ne
 
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="num text-xs tracking-[0.2em] text-paper/40">{result.id}</span>
+          <span className="num text-xs tracking-[0.2em] text-paper/55">{result.id}</span>
           <span className={cn('rounded-full border px-3 py-1 text-sm font-medium', style.badge)}>{style.label}</span>
         </div>
 

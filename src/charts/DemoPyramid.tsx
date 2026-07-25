@@ -98,15 +98,15 @@ export function DemoPyramid({
         <g key={t} aria-hidden>
           <line x1={centerL - len(t)} x2={centerL - len(t)} y1={M.top} y2={M.top + PH} stroke="#33465C" strokeWidth={1} strokeOpacity={0.35} />
           <line x1={centerR + len(t)} x2={centerR + len(t)} y1={M.top} y2={M.top + PH} stroke="#33465C" strokeWidth={1} strokeOpacity={0.35} />
-          <text x={centerL - len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/35 font-mono text-[11px]">
+          <text x={centerL - len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-mono text-[11px]">
             {t.toFixed(0)}
           </text>
-          <text x={centerR + len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/35 font-mono text-[11px]">
+          <text x={centerR + len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-mono text-[11px]">
             {t.toFixed(0)}
           </text>
         </g>
       ))}
-      <text x={W / 2} y={M.top + PH + 36} textAnchor="middle" className="fill-paper/40 font-sans text-[11px]">
+      <text x={W / 2} y={M.top + PH + 36} textAnchor="middle" className="fill-paper/55 font-sans text-[11px]">
         가로축 단위 %
       </text>
 
@@ -183,7 +183,7 @@ export function DemoPyramid({
                     x={left ? centerL - 8 : centerR + 8}
                     y={y + barH / 2 + 4}
                     textAnchor={left ? 'end' : 'start'}
-                    className="fill-paper/30 font-mono text-[11px]"
+                    className="fill-paper/55 font-mono text-[11px]"
                   >
                     데이터 없음
                   </text>

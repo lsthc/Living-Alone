@@ -30,7 +30,7 @@ function Field({
   const id = useId();
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm text-ink/60">
+      <label htmlFor={id} className="text-sm text-ink/65">
         {label}
       </label>
       <select
@@ -56,9 +56,9 @@ function Stat({ value, unit, caption }: { value: string; unit?: string; caption:
     <div className="flex flex-col gap-1">
       <p className="flex items-baseline gap-1.5">
         <span className="num text-3xl text-ink md:text-4xl">{value}</span>
-        {unit && <span className="text-lg text-ink/60">{unit}</span>}
+        {unit && <span className="text-lg text-ink/65">{unit}</span>}
       </p>
-      <p className="text-sm leading-relaxed text-ink/55">{caption}</p>
+      <p className="text-sm leading-relaxed text-ink/65">{caption}</p>
     </div>
   );
 }
@@ -147,7 +147,7 @@ export function Ch4MyFamily() {
 
       <section id="ch4" className="chapter flex flex-col gap-14 pt-8" aria-labelledby="ch4-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-rust">CHAPTER 4</span>
+          <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 4</span>
           <h2 id="ch4-heading" className="font-serif text-headline text-ink">
             우리 가족의 거리
           </h2>
@@ -199,7 +199,7 @@ export function Ch4MyFamily() {
               </fieldset>
 
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-xs leading-relaxed text-ink/45">
+                <p className="text-xs leading-relaxed text-ink/65">
                   고른 내용은 이 브라우저 안에서만 계산됩니다. 어디로도 전송되지 않고 저장되지도 않습니다.
                   <br />
                   연령대는 원자료의 공표 구간을 그대로 썼습니다. 40대 미만 1인세대는 이 표에 없습니다.
@@ -212,7 +212,7 @@ export function Ch4MyFamily() {
                       setBand('');
                       setSex('');
                     }}
-                    className="rounded-full border border-ink/25 px-4 py-2 text-sm text-ink/60 transition-colors hover:border-ink/50 hover:text-ink focus-visible:ring-rust focus-visible:ring-offset-paper"
+                    className="rounded-full border border-ink/25 px-4 py-2 text-sm text-ink/65 transition-colors hover:border-ink/50 hover:text-ink focus-visible:ring-rust focus-visible:ring-offset-paper"
                   >
                     다시 고르기
                   </button>
@@ -236,7 +236,7 @@ export function Ch4MyFamily() {
                       <h3 className="font-serif text-2xl text-ink">
                         {picked!.sgg_name}에서는
                         {picked!.is_old_downtown && (
-                          <span className="ml-3 rounded-full border border-rust/40 bg-rust/10 px-2.5 py-0.5 align-middle text-xs text-rust">
+                          <span className="ml-3 rounded-full border border-rustdeep/45 bg-rustdeep/10 px-2.5 py-0.5 align-middle text-xs text-rustdeep">
                             원도심
                           </span>
                         )}
@@ -255,7 +255,7 @@ export function Ch4MyFamily() {
                           }`}
                         />
                       ) : (
-                        <p className="text-sm text-ink/50">{picked!.sgg_name}의 독거노인 비율 값이 비어 있습니다.</p>
+                        <p className="text-sm text-ink/65">{picked!.sgg_name}의 독거노인 비율 값이 비어 있습니다.</p>
                       )}
 
                       {picked!.elderly_alone !== null && (
@@ -285,14 +285,14 @@ export function Ch4MyFamily() {
                             label={`사각형 ${squares}개로 표현한 ${districtYear}년 ${picked!.sgg_name}의 독거노인 ${fmtInt(picked!.elderly_alone)}가구. 사각형 하나가 ${UNIT}가구를 뜻하고, 붉은 칸 하나는 방금 떠올린 그 한 분의 자리를 가리킨다.`}
                             className="w-full max-w-[560px]"
                           />
-                          <p className="max-w-[46ch] text-sm leading-relaxed text-ink/55">
+                          <p className="max-w-[46ch] text-sm leading-relaxed text-ink/65">
                             사각형 하나가 <span className="num">{UNIT}</span>가구입니다. 붉은 칸 하나가 방금
                             떠올린 그분입니다. Chapter 0 에서 본 <span className="num">18만</span>개의 불빛은
                             이렇게 한 칸씩 모인 것이었습니다.
                           </p>
                         </>
                       ) : (
-                        <p className="text-sm text-ink/50">{picked!.sgg_name}의 독거노인 가구 수 값이 비어 있습니다.</p>
+                        <p className="text-sm text-ink/65">{picked!.sgg_name}의 독거노인 가구 수 값이 비어 있습니다.</p>
                       )}
                     </div>
                   </div>
@@ -308,7 +308,7 @@ export function Ch4MyFamily() {
                           cell!.total
                         )}세대 가운데 ${cell!.pct.toFixed(1)}%로, ${cell!.of}개 칸 중 ${cell!.rank}번째로 큰 칸입니다.`}
                       />
-                      <div className="flex flex-col gap-3 text-sm leading-relaxed text-ink/60">
+                      <div className="flex flex-col gap-3 text-sm leading-relaxed text-ink/65">
                         <p>
                           이 수는 <span className="text-ink/85">혼자 사는 세대</span>의 수이지 고독사 통계가
                           아닙니다. Chapter 3 에서 본 것처럼, 부산의 성별·연령대별 고독사 표는 공표되지 않아
@@ -336,7 +336,7 @@ export function Ch4MyFamily() {
                     <p className="font-serif text-xl leading-relaxed text-ink/85 md:text-2xl">
                       그리고 데이터가 끝내 재지 못한 것이 하나 있습니다. 거리입니다.
                     </p>
-                    <p className="mt-4 leading-relaxed text-ink/60">
+                    <p className="mt-4 leading-relaxed text-ink/65">
                       마지막으로 안부를 물은 게 언제인지는 어떤 통계에도 없습니다. 그건 이 화면이 아니라
                       여러분만 압니다. 다음 장에서는, 그 거리를 좁히려고 이미 만들어져 있는 것들을 봅니다.
                     </p>
@@ -345,7 +345,7 @@ export function Ch4MyFamily() {
               ) : (
                 <motion.p
                   key="hint"
-                  className="rounded-lg border border-dashed border-ink/25 p-10 text-center leading-relaxed text-ink/45"
+                  className="rounded-lg border border-dashed border-ink/25 p-10 text-center leading-relaxed text-ink/65"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
