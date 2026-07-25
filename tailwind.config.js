@@ -1,0 +1,38 @@
+import animate from 'tailwindcss-animate';
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: ['class'],
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        // ── 연구 발표용 색상 토큰 ────────────────────────────────
+        // 산복도로의 창문에서 가져온 6색. 이 밖의 색은 쓰지 않는다.
+        ink: '#0B1420', //   심야 남색 — 배경
+        slate: '#33465C', // 고립·비활성
+        lamp: '#FFC46B', //  창문 불빛 — 부산·강조
+        tide: '#4E9AA8', //  전국 평균·비교선
+        paper: '#EDE8DF', // Chapter 4 이후 배경, 본문 텍스트
+        rust: '#C4553F', //  원도심 강조 — 극히 절제해서만
+      },
+      fontFamily: {
+        // CDN 대신 로컬 번들 폰트를 쓴다 (발표장 오프라인 대비)
+        sans: ['Pretendard', 'system-ui', 'sans-serif'],
+        serif: ['"Gowun Batang"', 'serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+      },
+      // 프로젝터(1920×1080) 뒷줄까지 읽히도록 큰 제목 단계를 따로 둔다
+      fontSize: {
+        display: ['clamp(2.75rem, 6vw, 5.5rem)', { lineHeight: '1.08', letterSpacing: '-0.02em' }],
+        headline: ['clamp(1.75rem, 3.2vw, 3rem)', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+      },
+      keyframes: {
+        // Chapter 0 격자가 하나씩 켜지는 모션
+        lampOn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+      },
+      animation: { lampOn: 'lampOn 700ms ease-out forwards' },
+    },
+  },
+  plugins: [animate],
+};

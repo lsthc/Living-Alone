@@ -1,0 +1,74 @@
+[
+  {
+    "id": "kosis_elderly_alone",
+    "title": "독거노인가구비율 (시도/시/군/구) — 65세 이상 1인가구",
+    "org": "국가데이터처(통계청) 인구총조사",
+    "year": 2024,
+    "url": "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1YL12701",
+    "license": "공공누리 제1유형",
+    "note": "이 앱의 '독거노인 수'는 모두 이 표를 쓴다. 인구총조사 일반가구 기준이며 2011~2014년은 조사가 없어 값이 비어 있다."
+  },
+  {
+    "id": "kosis_old_housing",
+    "title": "주택의 종류·연면적 및 건축연도별 주택 - 시군구 (주택총조사)",
+    "org": "국가데이터처(통계청)",
+    "year": 2024,
+    "url": "https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1JU1520",
+    "license": "공공누리 제1유형",
+    "note": "공표 구간이 '1979년 이전 / 1980~1989 / 1990~1999'뿐이라 '30년 이상'은 정확히 계산할 수 없다. 이 앱의 노후주택 비율은 1989년 이전 준공 주택 비율(2024년 기준 35년 이상)이다."
+  },
+  {
+    "id": "mois_single_age",
+    "title": "주민등록 인구통계 — 단독세대(1인세대) 성·연령별 세대수",
+    "org": "행정안전부",
+    "year": 2024,
+    "url": "https://jumin.mois.go.kr/etcStatSingleAge.do",
+    "license": "공공누리 제1유형",
+    "note": "Chapter 3에서 고독사 피라미드와 나란히 놓는 '독거 성·연령 구조'에 사용. 2016년부터 공표된다. 고독사 통계가 아니라 1인세대 통계이므로 서로 다른 지표다."
+  },
+  {
+    "id": "mois_age",
+    "title": "주민등록 인구통계 — 연령별 인구현황",
+    "org": "행정안전부",
+    "year": 2024,
+    "url": "https://jumin.mois.go.kr/ageStatMonth.do",
+    "license": "공공누리 제1유형",
+    "note": "65세 이상 인구·총인구·고령화율, 고독사 10만 명당 발생률의 분모로 사용. 매년 12월 말 기준. 독거노인 비율(65세 이상 중 독거)은 분자가 인구총조사, 분모가 주민등록이라 기준이 섞여 있다."
+  },
+  {
+    "id": "mois_households",
+    "title": "주민등록 인구통계 — 지역별 세대원수별 세대수",
+    "org": "행정안전부",
+    "year": 2024,
+    "url": "https://jumin.mois.go.kr/etcStatHouseholds.do",
+    "license": "공공누리 제1유형",
+    "note": "1인세대 비율 산출에 사용. 주민등록 세대 기준이므로 통계청 인구주택총조사의 '1인가구 비율'과 수치가 다르다."
+  },
+  {
+    "id": "mohw_lonely_2024survey",
+    "title": "2024년 고독사 사망자 실태조사 결과 발표 (2017~2023년)",
+    "org": "보건복지부",
+    "year": 2024,
+    "url": "https://www.mohw.go.kr/board.es?mid=a10503010100&bid=0027&act=view&list_no=1483372",
+    "license": "공공누리 제1유형",
+    "note": "시·도별 고독사 발생 현황, 2022·2023년 성별·연령대별 교차표. 보도자료 원문(hwpx/PDF)에서 전사."
+  },
+  {
+    "id": "mohw_lonely_2025release",
+    "title": "2024년 고독사 전년 대비 증가 — 2024년 고독사 발생 현황",
+    "org": "보건복지부",
+    "year": 2025,
+    "url": "https://www.mohw.go.kr/board.es?mid=a10503010100&bid=0027&act=view&list_no=1488039",
+    "license": "공공누리 제1유형",
+    "note": "2020~2024년 시·도별 고독사 발생 현황, 2024년 성별·연령대별 교차표. 보도자료 원문(hwpx)에서 전사."
+  },
+  {
+    "id": "kostat_sgg_boundary",
+    "title": "센서스용 행정구역경계 (2013)",
+    "org": "통계청",
+    "year": 2013,
+    "url": "https://github.com/southkorea/southkorea-maps",
+    "license": "자유 이용",
+    "note": "부산 16개 구·군 경계 GeoJSON. 2013년 기준 경계이며 이후 조정된 부분이 있을 수 있다."
+  }
+]
