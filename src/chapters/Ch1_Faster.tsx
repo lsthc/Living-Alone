@@ -6,7 +6,7 @@ import { VerdictCard } from '@/components/VerdictCard';
 import { Slider } from '@/components/ui/slider';
 import { IndexTrend, toIndex, type TrendSeries } from '@/charts/IndexTrend';
 import { rowsOf, useData } from '@/lib/DataProvider';
-import { judgeH1 } from '@/lib/hypothesis';
+import { H1_CRITERION, judgeH1 } from '@/lib/hypothesis';
 import { cn } from '@/lib/utils';
 
 /** 화면에서 고를 수 있는 두 지표. H1 은 이 두 축을 모두 본다. */
@@ -193,6 +193,15 @@ export function Ch1Faster() {
           </motion.p>
         </ChartFrame>
       )}
+
+      {/* 그림과 판정의 기준이 다르다는 것을 먼저 밝힌다 */}
+      <p className="max-w-[70ch] text-sm leading-relaxed text-paper/55">
+        위 그래프는 첫 연도를 100으로 놓은 <em className="not-italic text-paper/75">지수 추세</em>입니다. 반면 아래 판정은
+        2일차 연구계획서에 <em className="not-italic text-paper/75">분석하기 전에 미리 등록해 둔 기준</em>
+        — {H1_CRITERION.baseYear}년부터의 연평균 증가율을 비교해 부산이 전국보다 {H1_CRITERION.gapThresholdPp}%p 이상 높으면
+        충족 — 으로 계산한 것입니다. 그래서 그림에서 보이는 인상과 판정이 어긋날 수 있습니다. 결과를 보고 기준을 고치지 않으려고
+        기준을 코드에 상수로 박아 뒀습니다.
+      </p>
 
       <VerdictCard result={verdict as never} />
     </section>

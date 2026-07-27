@@ -1,4 +1,22 @@
 .env
 node_modules
-_raw/
 dist
+
+# ── 원자료 스냅샷은 저장소에 동봉한다 ──────────────────────────────────────
+# 수집 시점의 데이터를 고정해 둬야 누구든 같은 결과를 다시 만들 수 있다(재현가능성).
+# 그래서 _raw/ 를 통째로 무시하지 않고, 아래 '작업 부스러기'만 골라서 뺀다.
+#
+#  올린다   : _raw/mois/ (행안부 CSV 90개) · _raw/kosis/ (KOSIS JSON 2개)
+#             _raw/skorea_municipalities.json (경계) · 보건복지부 보도자료 원문
+#  안 올린다: 보도자료 압축을 푼 이미지 폴더, 탐색용으로 받아 본 임시 파일
+_raw/hwpx/
+_raw/hwpx24/
+_raw/*probe*
+_raw/*.html
+_raw/*.css
+_raw/*.png
+_raw/*.txt
+_raw/age*.csv
+_raw/hh.csv
+_raw/single*.csv
+_raw/ju1520_obj.json
