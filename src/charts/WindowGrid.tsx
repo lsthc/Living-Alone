@@ -66,7 +66,9 @@ export function WindowGrid({
       className={cn('inline-block', className)}
       role="img"
       aria-label={label}
-      style={{ width: columns * size + (columns - 1) * gap }}
+      // 고유 크기를 상한으로만 두고 좁은 화면에서는 줄어들게 한다.
+      // width 로 못박으면 인라인 스타일이 w-full 을 이겨 375px 화면에서 가로 스크롤이 생긴다.
+      style={{ maxWidth: columns * size + (columns - 1) * gap, width: '100%' }}
     >
       <svg
         width="100%"
