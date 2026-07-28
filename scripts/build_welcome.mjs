@@ -115,7 +115,8 @@ const html = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>혼자 남겨진 도시, 부산 — 발표 안내</title>
 <meta name="description" content="${LAST}년 부산의 독거노인은 ${comma(aloneBusan)}명입니다. 부산정보영재교육원 중학교 2학년 칠면조 팀의 독거노인·고독사 데이터 연구 발표 안내."/>
-<meta name="theme-color" content="#ffffff"/>
+<meta name="theme-color" content="#191f28"/>
+<meta name="color-scheme" content="dark"/>
 <meta property="og:title" content="혼자 남겨진 도시, 부산"/>
 <meta property="og:description" content="${LAST}년 부산의 독거노인 ${comma(aloneBusan)}명. 중학교 2학년 네 명이 공공데이터로 확인한 것과, 끝내 확인하지 못한 것."/>
 <meta property="og:type" content="website"/>
@@ -134,16 +135,17 @@ const html = `<!doctype html>
     /* TDS Mobile 색 토큰 */
     --primary: #3182f6;
     --primary-pressed: #2272eb;
-    --canvas: #ffffff;
-    --foreground: #191f28;
-    --body: #4e5968;
+    /* welcome 화면은 기기 설정과 관계없이 이 다크 팔레트만 사용한다. */
+    --canvas: #191f28;
+    --foreground: #f9fafb;
+    --body: #b0b8c1;
     --muted: #8b95a1;
-    --surface: #f2f4f6;
-    --border: #e5e8eb;
+    --surface: #242d3a;
+    --border: #333d4b;
     --on-primary: #ffffff;
-    --weak-bg: #e8f3ff;
-    --weak-fg: #1b64da;
-    --danger: #e42939;
+    --weak-bg: rgba(49, 130, 246, 0.16);
+    --weak-fg: #90c2ff;
+    --danger: #f04452;
     /* 간격 스케일 4 / 6 / 8 / 16 / 24 / 32 */
     --s-xs: 4px; --s-sm: 6px; --s-md: 8px; --s-lg: 16px; --s-xl: 24px; --s-xxl: 32px;
     /* 반경 스케일 */
@@ -155,6 +157,7 @@ const html = `<!doctype html>
   html {
     -webkit-text-size-adjust: 100%;
     background: var(--canvas);
+    color-scheme: dark;
     /* 스크롤은 그대로 되고 막대만 숨긴다 */
     scrollbar-width: none;
     /* 끝에서 튕기며 배경이 드러나는 것을 막는다. 관성 스크롤을 쓰면 튕김이 길어진다.
@@ -229,7 +232,7 @@ const html = `<!doctype html>
   .btn-fill { background: var(--primary); color: var(--on-primary); }
   .btn-fill:active { background: var(--primary-pressed); }
   .btn-weak { background: var(--weak-bg); color: var(--weak-fg); }
-  .btn-weak:active { background: #d6e9ff; }
+  .btn-weak:active { background: rgba(49, 130, 246, 0.24); }
   .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   .btn-sub { display: block; margin-top: var(--s-xs); font-size: 14px; font-weight: 400; line-height: 21px; opacity: .82; }
   .btn-stack { display: flex; flex-direction: column; align-items: center; }
