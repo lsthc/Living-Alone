@@ -84,6 +84,16 @@ const per100kNation = at(death, '전국', LAST, 'per_100k');
 const CANVA_VIEW = 'https://www.canva.com/design/DAHQiYG_xqw/ev9RIf_Fh2df1WLUVhcPJw/view';
 const VERIFIED_ON = '2026년 7월 25일';
 
+// ── Lenis 를 파일째 끼워 넣는다.
+// 따로 부르면 요청이 하나 더 늘고, 발표장 회선에서는 그 왕복이 글꼴보다 비쌀 수 있다.
+// 대시보드와 달리 이 페이지는 번들러를 쓰지 않으므로 node_modules 에서 직접 읽는다.
+const LENIS_SRC = path.resolve('node_modules/lenis/dist/lenis.min.js');
+const lenisJs = fs
+  .readFileSync(LENIS_SRC, 'utf8')
+  .replace(/\/\/# sourceMappingURL=.*$/m, '') // 같이 올리지 않는 파일이라 참조를 지운다
+  .trim();
+const lenisVersion = JSON.parse(fs.readFileSync(path.resolve('node_modules/lenis/package.json'), 'utf8')).version;
+
 /*
  * 스타일 — Toss 디자인 시스템(TDS Mobile)
  *
@@ -145,7 +155,18 @@ const html = `<!doctype html>
   html {
     -webkit-text-size-adjust: 100%;
     background: var(--canvas);
+    /* 스크롤은 그대로 되고 막대만 숨긴다 */
+    scrollbar-width: none;
+    /* 끝에서 튕기며 배경이 드러나는 것을 막는다. 관성 스크롤을 쓰면 튕김이 길어진다.
+       발표 중 당겨서 새로고침되는 사고도 함께 막힌다. */
+    overscroll-behavior-y: none;
   }
+  html::-webkit-scrollbar { display: none; }
+
+  /* Lenis 공식 권장 스타일 */
+  html.lenis, html.lenis body { height: auto; }
+  html.lenis.lenis-smooth { scroll-behavior: auto !important; }
+  html.lenis.lenis-stopped { overflow: clip; }
 
   body {
     background: var(--canvas);
@@ -160,6 +181,7 @@ const html = `<!doctype html>
     /* 모바일: 탭 시 회색 사각형과 300ms 지연을 없앤다 */
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    overscroll-behavior-y: none;
   }
 
   .num { font-variant-numeric: tabular-nums; }
@@ -396,6 +418,28 @@ const html = `<!doctype html>
   </footer>
 
 </div>
+
+<!-- Lenis ${lenisVersion} — 스무스 스크롤. 별도 요청 없이 파일째 끼워 넣었다. -->
+<script>${lenisJs}</script>
+<script>
+(function () {
+  // 모션을 줄이도록 설정한 사람에게는 켜지 않는다. 대시보드와 같은 원칙이다.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (typeof Lenis === 'undefined') return; // 스크립트가 없어도 네이티브 스크롤로 동작해야 한다
+
+  var lenis = new Lenis({
+    duration: 1.1,
+    easing: function (t) { return 1 - Math.pow(1 - t, 3); },
+    smoothWheel: true
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+})();
+</script>
 </body>
 </html>`;
 
@@ -405,7 +449,12 @@ fs.writeFileSync(OUT, html, 'utf8');
 // ── 글꼴 서브셋 — 이 페이지에 실제로 쓰인 글자만 남긴다
 const SRC_FONT = path.resolve('public/fonts/Pretendard.woff2');
 const OUT_FONT = path.resolve('public/fonts/pretendard-subset.woff2');
-const chars = [...new Set(html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ''))].join('');
+// 화면에 그려지는 글자만 모은다. script·style 안의 코드는 렌더링되지 않으므로 제외한다.
+const visibleText = html
+  .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+  .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+  .replace(/<[^>]+>/g, ' ');
+const chars = [...new Set(visibleText.replace(/\s+/g, ''))].join('');
 
 try {
   execFileSync(
@@ -432,7 +481,12 @@ try {
   console.warn(`  ${String(e.message).split('\n')[0]}`);
 }
 
-console.log(`public/welcome.html 생성 — ${(Buffer.byteLength(html, 'utf8') / 1024).toFixed(1)}KB`);
+const totalKb = Buffer.byteLength(html, 'utf8') / 1024;
+const lenisKb = Buffer.byteLength(lenisJs, 'utf8') / 1024;
+console.log(
+  `public/welcome.html 생성 — ${totalKb.toFixed(1)}KB ` +
+    `(그중 Lenis ${lenisVersion} 인라인 ${lenisKb.toFixed(1)}KB)`
+);
 console.log(`  독거노인 ${comma(aloneBusan)} · 10만명당 ${fmt(per100kBusan)}(전국 ${fmt(per100kNation)}) · ${topDistrict.sgg_name} ${fmt(topDistrict.elderly_alone_rate, 1)}%`);
 console.log(`  H1 ${axes.map((a) => `${a.label} ${fmt(a.gap)}%p ${a.pass ? '충족' : '미달'}`).join(' / ')}`);
 console.log(`  발표자료 ${CANVA_VIEW}`);

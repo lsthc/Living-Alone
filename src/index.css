@@ -23,6 +23,12 @@
     scroll-behavior: auto;
     /* 스크롤은 계속 되지만 막대는 숨긴다 (Firefox) */
     scrollbar-width: none;
+    /* 끝까지 내렸을 때 튕기며 body 배경이 드러나는 것을 막는다.
+       이 앱은 위쪽이 남색, Chapter 4 아래로는 종이색이라 body 배경(남색)과
+       마지막 화면(종이색)이 서로 다르다. 튕기면 종이색 푸터 아래로 남색 띠가
+       크게 나타난다. Lenis 의 관성 스크롤이 이 튕김을 더 길고 잦게 만든다.
+       튕김 자체를 없애 해결한다. 발표 중 당겨서 새로고침되는 사고도 함께 막힌다. */
+    overscroll-behavior-y: none;
   }
 
   html::-webkit-scrollbar {
@@ -34,6 +40,7 @@
     @apply bg-ink font-sans text-paper antialiased;
     /* 배경 전환(심야 남색 → 종이색)은 Chapter 4 에서 일어난다 */
     transition: background-color 1200ms ease-out;
+    overscroll-behavior-y: none;
     /* 한글은 음절 블록 사이 어디서나 줄바꿈이 허용돼 단어가 쪼개진다.
        keep-all 로 띄어쓰기 단위를 지키게 한다 (숫자+단위는 whitespace-nowrap 으로 별도 처리). */
     word-break: keep-all;
