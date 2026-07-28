@@ -19,11 +19,11 @@ export interface ScatterPoint {
   highlight: boolean;
 }
 
-const W = 760;
-const H = 520;
-const M = { top: 28, right: 28, bottom: 58, left: 62 };
-const PW = W - M.left - M.right;
-const PH = H - M.top - M.bottom;
+/** 폰에서는 viewBox 를 좁혀 글자가 실제로 읽히는 크기를 지킨다 (IndexTrend 와 같은 원칙) */
+const DIMS = {
+  desktop: { W: 760, H: 520, M: { top: 28, right: 28, bottom: 58, left: 62 } },
+  mobile: { W: 440, H: 440, M: { top: 24, right: 18, bottom: 52, left: 44 } },
+} as const;
 
 export function Scatter({
   points,
@@ -32,6 +32,7 @@ export function Scatter({
   selected,
   onSelect,
   ariaLabel,
+  mobile = false,
 }: {
   points: ScatterPoint[];
   xLabel: string;
@@ -39,7 +40,12 @@ export function Scatter({
   selected?: string | null;
   onSelect?: (key: string | null) => void;
   ariaLabel: string;
+  /** 폰 화면이면 좁은 viewBox 로 그리고, 이름표는 원도심·선택된 점에만 붙인다 */
+  mobile?: boolean;
 }) {
+  const { W, H, M } = DIMS[mobile ? 'mobile' : 'desktop'];
+  const PW = W - M.left - M.right;
+  const PH = H - M.top - M.bottom;
   const reduced = useReducedMotion();
   // 지도와 같은 이유로 뷰포트 판정은 SVG 하나에서만 한다
   const svgRef = useRef<SVGSVGElement>(null);
@@ -66,12 +72,13 @@ export function Scatter({
       y: (v: number) => M.top + PH - ((v - yd.lo) / (yd.hi - yd.lo)) * PH,
       xd,
       yd,
-      // 넓이가 인구에 비례하도록 반지름은 제곱근으로
-      r: (s: number | null) => (s && maxSize ? 6 + 18 * Math.sqrt(s / maxSize) : 7),
+      // 넓이가 인구에 비례하도록 반지름은 제곱근으로. 폰에서는 플롯이 좁아 반지름도 줄인다.
+      r: (s: number | null) =>
+        s && maxSize ? (mobile ? 4 + 12 * Math.sqrt(s / maxSize) : 6 + 18 * Math.sqrt(s / maxSize)) : mobile ? 5 : 7,
       fit: linearFit(xs, ys),
       r2: pearson(xs, ys),
     };
-  }, [points]);
+  }, [points, mobile, M, PW, PH]);
 
   if (!model) return null;
 
@@ -82,8 +89,8 @@ export function Scatter({
       {/* 눈금 */}
       {ticks(model.yd).map((v) => (
         <g key={`y${v}`}>
-          <line x1={M.left} x2={M.left + PW} y1={model.y(v)} y2={model.y(v)} stroke="#33465C" strokeWidth={1} />
-          <text x={M.left - 10} y={model.y(v) + 4} textAnchor="end" className="fill-paper/55 font-mono text-[12px]">
+          <line x1={M.left} x2={M.left + PW} y1={model.y(v)} y2={model.y(v)} stroke="#4e5968" strokeWidth={1} />
+          <text x={M.left - 10} y={model.y(v) + 4} textAnchor="end" className="fill-paper/55 font-sans text-[12px]">
             {v.toFixed(0)}
           </text>
         </g>
@@ -94,7 +101,7 @@ export function Scatter({
           x={model.x(v)}
           y={M.top + PH + 24}
           textAnchor="middle"
-          className="fill-paper/55 font-mono text-[12px]"
+          className="fill-paper/55 font-sans text-[12px]"
         >
           {v.toFixed(0)}
         </text>
@@ -120,7 +127,7 @@ export function Scatter({
           y1={model.y(model.fit.intercept + model.fit.slope * model.xd.lo)}
           x2={model.x(model.xd.hi)}
           y2={model.y(model.fit.intercept + model.fit.slope * model.xd.hi)}
-          stroke="#EDE8DF"
+          stroke="#ffffff"
           strokeOpacity={0.3}
           strokeWidth={1.5}
           strokeDasharray="6 6"
@@ -165,16 +172,20 @@ export function Scatter({
               stroke={p.highlight ? 'var(--lamp)' : 'var(--tide)'}
               strokeWidth={isSel ? 2 : 1}
             />
-            <text
-              x={model.x(p.x)}
-              y={model.y(p.y) - model.r(p.size) - 7}
-              textAnchor="middle"
-              className="pointer-events-none font-sans text-[12px]"
-              fill={p.highlight ? 'var(--lamp)' : '#EDE8DF'}
-              fillOpacity={isSel ? 1 : 0.55}
-            >
-              {p.label}
-            </text>
+            {/* 폰에서는 16개 이름표가 전부 겹쳐 읽을 수 없다.
+                원도심(앰버)과 지금 선택한 점에만 붙이고, 나머지는 탭하면 나타난다. */}
+            {(!mobile || p.highlight || isSel) && (
+              <text
+                x={model.x(p.x)}
+                y={model.y(p.y) - model.r(p.size) - 7}
+                textAnchor="middle"
+                className="pointer-events-none font-sans text-[12px]"
+                fill={p.highlight ? 'var(--lamp)' : '#ffffff'}
+                fillOpacity={isSel ? 1 : 0.55}
+              >
+                {p.label}
+              </text>
+            )}
           </motion.g>
           </g>
         );
@@ -182,7 +193,7 @@ export function Scatter({
 
       {/* 상관계수 */}
       {model.r2 !== null && (
-        <text x={M.left + PW - 4} y={M.top + 16} textAnchor="end" className="fill-paper/60 font-mono text-[14px]">
+        <text x={M.left + PW - 4} y={M.top + 16} textAnchor="end" className="fill-paper/60 font-sans text-[14px]">
           r = {model.r2.toFixed(2)}
         </text>
       )}

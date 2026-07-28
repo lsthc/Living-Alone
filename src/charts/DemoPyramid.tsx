@@ -29,12 +29,11 @@ export interface PyramidBracket {
   label: string;
 }
 
-const W = 520;
-const H = 400;
-const M = { top: 44, right: 14, bottom: 42, left: 14 };
-const GAP = 88; // 가운데 연령 이름표가 들어갈 폭
-const HALF = (W - M.left - M.right - GAP) / 2;
-const PH = H - M.top - M.bottom;
+/** 폰에서는 viewBox 를 좁혀 글자가 실제로 읽히는 크기를 지킨다 (IndexTrend 와 같은 원칙) */
+const DIMS = {
+  desktop: { W: 520, H: 400, M: { top: 44, right: 14, bottom: 42, left: 14 }, GAP: 88 },
+  mobile: { W: 420, H: 380, M: { top: 42, right: 10, bottom: 40, left: 10 }, GAP: 72 },
+} as const;
 
 const COLOR = { 남: 'var(--lamp)', 여: 'var(--tide)' } as const;
 
@@ -44,6 +43,7 @@ export function DemoPyramid({
   unit,
   bracket,
   ariaLabel,
+  mobile = false,
 }: {
   /** 아래에서 위로 올라가는 순서 (예: 40대 → 80대이상) */
   bands: string[];
@@ -52,7 +52,12 @@ export function DemoPyramid({
   unit: string;
   bracket?: PyramidBracket;
   ariaLabel: string;
+  /** 폰 화면이면 좁은 viewBox 로 그린다 */
+  mobile?: boolean;
 }) {
+  const { W, H, M, GAP } = DIMS[mobile ? 'mobile' : 'desktop'];
+  const HALF = (W - M.left - M.right - GAP) / 2;
+  const PH = H - M.top - M.bottom;
   const reduced = useReducedMotion();
   // 뷰포트 판정은 SVG 하나에서만 한다 (Scatter·DistrictMap 과 같은 이유)
   const svgRef = useRef<SVGSVGElement>(null);
@@ -81,7 +86,7 @@ export function DemoPyramid({
     };
 
     return { total, pctOf, valueOf, domain, bandH, rowY };
-  }, [bands, data]);
+  }, [bands, data, M, PH]);
 
   if (!model) return null;
 
@@ -96,12 +101,12 @@ export function DemoPyramid({
       {/* 눈금선 — 좌우 대칭 */}
       {ticks.map((t) => (
         <g key={t} aria-hidden>
-          <line x1={centerL - len(t)} x2={centerL - len(t)} y1={M.top} y2={M.top + PH} stroke="#33465C" strokeWidth={1} strokeOpacity={0.35} />
-          <line x1={centerR + len(t)} x2={centerR + len(t)} y1={M.top} y2={M.top + PH} stroke="#33465C" strokeWidth={1} strokeOpacity={0.35} />
-          <text x={centerL - len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-mono text-[11px]">
+          <line x1={centerL - len(t)} x2={centerL - len(t)} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} strokeOpacity={0.35} />
+          <line x1={centerR + len(t)} x2={centerR + len(t)} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} strokeOpacity={0.35} />
+          <text x={centerL - len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-sans text-[11px]">
             {t.toFixed(0)}
           </text>
-          <text x={centerR + len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-mono text-[11px]">
+          <text x={centerR + len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-sans text-[11px]">
             {t.toFixed(0)}
           </text>
         </g>
@@ -183,7 +188,7 @@ export function DemoPyramid({
                     x={left ? centerL - 8 : centerR + 8}
                     y={y + barH / 2 + 4}
                     textAnchor={left ? 'end' : 'start'}
-                    className="fill-paper/55 font-mono text-[11px]"
+                    className="fill-paper/55 font-sans text-[11px]"
                   >
                     데이터 없음
                   </text>
@@ -238,8 +243,8 @@ export function DemoPyramid({
       })}
 
       {/* 가운데 세로선 */}
-      <line x1={centerL} x2={centerL} y1={M.top} y2={M.top + PH} stroke="#33465C" strokeWidth={1} />
-      <line x1={centerR} x2={centerR} y1={M.top} y2={M.top + PH} stroke="#33465C" strokeWidth={1} />
+      <line x1={centerL} x2={centerL} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} />
+      <line x1={centerR} x2={centerR} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} />
     </svg>
   );
 }

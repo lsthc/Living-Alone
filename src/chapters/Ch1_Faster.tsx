@@ -9,6 +9,7 @@ import { Slider } from '@/components/ui/slider';
 import { IndexTrend, toIndex, type TrendSeries } from '@/charts/IndexTrend';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { H1_CRITERION, judgeH1 } from '@/lib/hypothesis';
+import { useIsMobile } from '@/lib/useIsMobile';
 import { cn } from '@/lib/utils';
 
 /** 화면에서 고를 수 있는 두 지표. H1 은 이 두 축을 모두 본다. */
@@ -40,6 +41,7 @@ type MetricKey = keyof typeof METRICS;
 export function Ch1Faster() {
   const { trend, deaths, loading } = useData();
   const reduced = useReducedMotion();
+  const mobile = useIsMobile();
   const [metric, setMetric] = useState<MetricKey>('elderly');
 
   const trendRows = rowsOf(trend);
@@ -91,7 +93,7 @@ export function Ch1Faster() {
     busanAt && nationAt && nationAt.index > 100 ? (busanAt.index - 100) / (nationAt.index - 100) : null;
 
   return (
-    <section id="ch1" className="chapter flex flex-col gap-14" aria-labelledby="ch1-heading">
+    <section id="ch1" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch1-heading">
       <header className="flex max-w-[70ch] flex-col gap-4">
         <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 1 · 가설 H1</span>
         <h2 id="ch1-heading" className="font-serif text-headline text-paper">
@@ -144,6 +146,7 @@ export function Ch1Faster() {
             series={series}
             activeYear={activeYear}
             morphSeriesKey="부산"
+            mobile={mobile}
             ariaLabel={`${baseYear}년을 100으로 지수화한 부산과 전국의 ${METRICS[metric].label} 추세 꺾은선 그래프`}
           />
 

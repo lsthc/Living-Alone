@@ -4,13 +4,16 @@
 
 @layer base {
   :root {
-    /* Tailwind 토큰과 같은 값. SVG 등에서 var() 로 직접 쓸 때를 위해 CSS 변수로도 둔다. */
-    --ink: #0b1420;
-    --slate: #33465c;
-    --lamp: #ffc46b;
-    --tide: #4e9aa8;
-    --paper: #ede8df;
-    --rust: #c4553f;
+    /* Tailwind 토큰과 같은 값. SVG 등에서 var() 로 직접 쓸 때를 위해 CSS 변수로도 둔다.
+       값은 Toss(TDS Mobile) 팔레트다. 원본 값은 _backup/original-index-2026-07-28/ 참고. */
+    --ink: #191f28;
+    --slate: #4e5968;
+    --lamp: #3182f6;
+    --tide: #8b95a1;
+    --paper: #ffffff;
+    --rust: #e42939;
+    --weak-bg: #e8f3ff;
+    --weak-fg: #1b64da;
 
     /* 발표 모드에서 1.25배로 올린다 (PresentModeProvider 가 바꾼다) */
     --font-scale: 1;
@@ -61,9 +64,10 @@
     overflow: hidden;
   }
 
-  /* 모든 숫자는 고정폭으로. 값이 바뀔 때 자릿수가 흔들리지 않게 한다. */
+  /* 모든 숫자는 tabular-nums 로. 값이 바뀔 때 자릿수가 흔들리지 않게 한다.
+     Toss 처럼 본문과 같은 산세리프를 쓰고 숫자 폭만 고정한다. */
   .num {
-    @apply font-mono tabular-nums;
+    @apply font-sans tabular-nums;
   }
 
   /* 키보드 포커스 링은 항상 보이게 한다 (접근성 요구사항) */
@@ -85,9 +89,10 @@
 }
 
 @layer components {
-  /* 챕터 공통 여백. 1920×1080 프로젝터를 먼저 맞추고 모바일로 좁힌다. */
+  /* 챕터 공통 여백. 1920×1080 프로젝터를 먼저 맞추고 모바일로 좁힌다.
+     폰에서는 세로 여백을 줄여 스크롤 길이를 줄인다. */
   .chapter {
-    @apply relative mx-auto w-full max-w-[1400px] px-6 py-24 md:px-12 lg:py-32;
+    @apply relative mx-auto w-full max-w-[1400px] px-5 py-16 md:px-12 md:py-24 lg:py-32;
   }
 
   /* 발표 모드에서 숨길 장식 요소 (스크롤 유도 화살표 등) */

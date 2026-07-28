@@ -21,11 +21,15 @@ export interface TrendSeries {
   points: { year: number; value: number }[];
 }
 
-const W = 1000;
-const H = 460;
-const M = { top: 28, right: 116, bottom: 46, left: 56 };
-const PW = W - M.left - M.right;
-const PH = H - M.top - M.bottom;
+/**
+ * 데스크톱과 모바일의 치수를 따로 둔다.
+ * viewBox 가 넓을수록 같은 px 글자가 화면에서 작게 찍히므로,
+ * 폰에서는 viewBox 자체를 좁혀 글자가 실제로 읽히는 크기가 되게 한다.
+ */
+const DIMS = {
+  desktop: { W: 1000, H: 460, M: { top: 28, right: 116, bottom: 46, left: 56 } },
+  mobile: { W: 440, H: 360, M: { top: 24, right: 66, bottom: 40, left: 40 } },
+} as const;
 
 /** 각 계열을 자기 첫 연도 = 100 으로 지수화한다. */
 export function toIndex(points: { year: number; value: number }[]) {
@@ -61,6 +65,7 @@ export function IndexTrend({
   squareCount = 96,
   yAxisLabel = '지수',
   ariaLabel,
+  mobile = false,
 }: {
   series: TrendSeries[];
   activeYear?: number;
@@ -68,7 +73,12 @@ export function IndexTrend({
   squareCount?: number;
   yAxisLabel?: string;
   ariaLabel: string;
+  /** 폰 화면이면 좁은 viewBox 로 그린다 (글자가 읽히는 크기를 지키기 위해) */
+  mobile?: boolean;
 }) {
+  const { W, H, M } = DIMS[mobile ? 'mobile' : 'desktop'];
+  const PW = W - M.left - M.right;
+  const PH = H - M.top - M.bottom;
   const ref = useRef<SVGSVGElement>(null);
   const inView = useReveal(ref, 0.3);
   const reduced = useReducedMotion();
@@ -107,7 +117,7 @@ export function IndexTrend({
       y0,
       y1,
     };
-  }, [indexed]);
+  }, [indexed, M, PW, PH]);
 
   const paths = useMemo(() => {
     if (!scale) return [];
@@ -133,7 +143,8 @@ export function IndexTrend({
 
   const yTicks = [scale.y0, (scale.y0 + scale.y1) / 2, scale.y1].map((v) => Math.round(v));
   const yearTicks = Array.from(new Set(indexed.flatMap((s) => s.data.map((d) => d.year)))).sort((a, b) => a - b);
-  const tickEvery = Math.ceil(yearTicks.length / 8);
+  // 폰에서는 눈금 사이가 좁아 겹치므로 개수를 줄인다
+  const tickEvery = Math.ceil(yearTicks.length / (mobile ? 5 : 8));
 
   return (
     <svg
@@ -148,8 +159,8 @@ export function IndexTrend({
       <motion.g animate={{ opacity: phase >= 2 ? 1 : 0 }} transition={{ duration: 0.6 }}>
         {yTicks.map((v) => (
           <g key={v}>
-            <line x1={M.left} x2={M.left + PW} y1={scale.y(v)} y2={scale.y(v)} stroke="#33465C" strokeWidth={1} />
-            <text x={M.left - 10} y={scale.y(v) + 4} textAnchor="end" className="fill-paper/55 font-mono text-[13px]">
+            <line x1={M.left} x2={M.left + PW} y1={scale.y(v)} y2={scale.y(v)} stroke="#4e5968" strokeWidth={1} />
+            <text x={M.left - 10} y={scale.y(v) + 4} textAnchor="end" className="fill-paper/55 font-sans text-[13px]">
               {v}
             </text>
           </g>
@@ -160,12 +171,12 @@ export function IndexTrend({
           x2={M.left + PW}
           y1={scale.y(100)}
           y2={scale.y(100)}
-          stroke="#EDE8DF"
+          stroke="#ffffff"
           strokeOpacity={0.35}
           strokeWidth={1}
           strokeDasharray="2 4"
         />
-        <text x={M.left - 10} y={scale.y(100) - 8} textAnchor="end" className="fill-paper/55 font-mono text-[12px]">
+        <text x={M.left - 10} y={scale.y(100) - 8} textAnchor="end" className="fill-paper/55 font-sans text-[12px]">
           {yAxisLabel}
         </text>
 
@@ -177,7 +188,7 @@ export function IndexTrend({
               x={scale.x(year)}
               y={M.top + PH + 26}
               textAnchor="middle"
-              className="fill-paper/55 font-mono text-[13px]"
+              className="fill-paper/55 font-sans text-[13px]"
             >
               {year}
             </text>
@@ -231,7 +242,7 @@ export function IndexTrend({
             x2={scale.x(activeYear)}
             y1={M.top}
             y2={M.top + PH}
-            stroke="#EDE8DF"
+            stroke="#ffffff"
             strokeOpacity={0.25}
             strokeWidth={1}
           />
@@ -245,7 +256,7 @@ export function IndexTrend({
                   x={scale.x(activeYear)}
                   y={scale.y(d.index) - 14}
                   textAnchor="middle"
-                  className="font-mono text-[14px]"
+                  className="font-sans text-[14px]"
                   fill={s.color}
                 >
                   {d.index.toFixed(0)}

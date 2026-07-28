@@ -14,6 +14,9 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // 터치 기기에서는 만들지 않는다. 모바일 브라우저의 네이티브 관성 스크롤이
+    // 더 부드럽고, Lenis 를 겹치면 매 프레임 raf 비용만 들고 스크롤이 덜컹인다.
+    if (window.matchMedia('(pointer: coarse)').matches) return;
 
     const instance = new Lenis({
       duration: 1.1,

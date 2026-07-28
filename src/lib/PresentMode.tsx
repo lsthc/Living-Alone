@@ -206,7 +206,8 @@ export function PresentControls() {
         <button
           type="button"
           onClick={toggle}
-          className="present-hide fixed bottom-5 left-5 z-50 rounded-full border border-slate/60 bg-ink/85 px-4 py-2 text-xs text-paper/60 backdrop-blur transition-colors hover:border-lamp/60 hover:text-lamp"
+          // 발표 모드는 프로젝터·키보드용 기능이라 폰에서는 버튼을 숨긴다
+          className="present-hide fixed bottom-5 left-5 z-50 hidden rounded-full border border-slate/60 bg-ink/85 px-4 py-2 text-xs text-paper/60 backdrop-blur transition-colors hover:border-lamp/60 hover:text-lamp md:block"
         >
           발표 모드 <span className="num">P</span>
         </button>

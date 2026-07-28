@@ -10,6 +10,7 @@ import { DistrictMap, MapLegend } from '@/charts/DistrictMap';
 import { Scatter, type ScatterPoint } from '@/charts/Scatter';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { judgeH2 } from '@/lib/hypothesis';
+import { useIsMobile } from '@/lib/useIsMobile';
 import { fmtInt, fmtPct } from '@/lib/utils';
 import type { DistrictRow } from '@/data/schema';
 
@@ -21,6 +22,7 @@ import type { DistrictRow } from '@/data/schema';
 export function Ch2Where() {
   const { districts, geo, loading } = useData();
   const reduced = useReducedMotion();
+  const mobile = useIsMobile();
   const [onlyOldDowntown, setOnlyOldDowntown] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -68,7 +70,7 @@ export function Ch2Where() {
   if (loading) return <section id="ch2" className="chapter min-h-screen" aria-busy="true" />;
 
   return (
-    <section id="ch2" className="chapter flex flex-col gap-14" aria-labelledby="ch2-heading">
+    <section id="ch2" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch2-heading">
       <header className="flex max-w-[70ch] flex-col gap-4">
         <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 2 · 가설 H2</span>
         <h2 id="ch2-heading" className="font-serif text-headline text-paper">
@@ -202,8 +204,14 @@ export function Ch2Where() {
                 yLabel="독거노인 비율 (%)"
                 selected={selected}
                 onSelect={setSelected}
+                mobile={mobile}
                 ariaLabel="노후주택 비율과 독거노인 비율의 관계를 보여주는 산점도"
               />
+              {mobile && (
+                <p className="mt-2 text-xs text-paper/55">
+                  좁은 화면에서는 원도심 5개구의 이름만 보입니다. 다른 점은 탭하면 이름이 나타납니다.
+                </p>
+              )}
             </ChartFrame>
           )}
         </>
