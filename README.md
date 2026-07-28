@@ -59,7 +59,7 @@ H1 이 반만 맞았다는 사실이 이 연구에서 가장 중요한 발견입
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # 가설 판정 함수 테스트 18개
+npm test           # 가설 판정 함수 테스트 23개
 npm run build      # dist/ 생성
 npm run preview    # 빌드 결과를 로컬 서버로 확인 (발표는 이 방식으로)
 ```
@@ -73,6 +73,23 @@ npm run data:build   # 원본 → public/data/*.csv, *.geojson
 
 보건복지부 고독사 수치만 API 가 없어 보도자료 원문에서 전사했습니다.
 `scripts/build_csv.mjs` 상단 상수를 직접 고쳐야 합니다.
+
+## 학부모 안내 페이지 (`/welcome.html`)
+
+발표장에서 학부모가 QR 을 찍고 들어오는 자리입니다. 발표자료(Canva)와 대시보드로 가는 버튼,
+가설 판정 세 개, 그리고 **129 · 109 탭하면 바로 걸리는 전화**가 있습니다.
+
+```bash
+npm run welcome:build   # public/welcome.html + 글꼴 서브셋 생성
+```
+
+- **숫자를 손으로 적지 않습니다.** 포스터와 같은 규칙으로 `public/data/` 의 CSV 를 읽어 계산합니다.
+- **가볍습니다.** 학부모 수십 명이 발표장 회선으로 동시에 엽니다. 프레임워크도 외부 요청도 없는
+  단일 HTML(13KB)이고, 글꼴은 이 페이지에 쓰인 353자만 남긴 서브셋(2MB → 80KB)을 씁니다.
+- 글꼴 서브셋에는 `pyftsubset` 이 필요합니다 — `pip install "fonttools[woff]" brotli`.
+  없으면 서브셋만 건너뛰고 시스템 글꼴로 표시됩니다(페이지는 정상 생성).
+- 발표자료 링크는 반드시 Canva 의 **`/view`** 주소를 씁니다. `/edit` 주소를 배포하면
+  들어온 사람이 발표자료를 고칠 수 있습니다.
 
 ## 발표 모드
 
