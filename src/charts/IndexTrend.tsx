@@ -271,7 +271,10 @@ export function IndexTrend({
                 width={gridSize}
                 height={gridSize}
                 fill="var(--lamp)"
-                initial={{ x: from.x, y: from.y, opacity: 0 }}
+                // width·height 를 animate 에 넣었으면 initial 에도 반드시 넣어야 한다.
+                // framer-motion 은 SVG 속성(attribute)으로만 준 값을 초기값으로 읽지 못해
+                // width="undefined" 를 써 버린다 (콘솔에 Expected length, "undefined").
+                initial={{ x: from.x, y: from.y, opacity: 0, width: gridSize, height: gridSize }}
                 animate={{
                   x: target.x,
                   y: target.y,
