@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChartFrame } from '@/components/ChartFrame';
 import { EmptyState } from '@/components/EmptyState';
-import { NextChapter } from '@/components/StoryNav';
+import { UpNext } from '@/components/deck/UpNext';
 import { VerdictCard } from '@/components/VerdictCard';
+import { BottomSheet } from '@/components/ui/BottomSheet';
+import { SwipeDeck } from '@/components/ui/SwipeDeck';
 import { BlurText } from '@/components/reactbits/BlurText';
 import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { DemoPyramid, type PyramidDatum } from '@/charts/DemoPyramid';
@@ -74,6 +76,19 @@ export function Ch3Who() {
   const [picked, setPicked] = useState<number | null>(null);
   const year = picked ?? years[years.length - 1] ?? null;
 
+  /** 한쪽 성별만 남기고 보기 — 두 그림의 모양 차이는 한쪽씩 지워야 눈에 들어온다 */
+  const [focusSex, setFocusSex] = useState<'남' | '여' | null>(null);
+
+  /**
+   * 먼저 맞혀 보기.
+   *
+   * 이 챕터의 핵심은 '혼자 사는 사람'과 '혼자 죽는 사람'이 어긋난다는 것이다.
+   * 그림을 먼저 보면 그 어긋남이 당연해 보이지만, 답을 적어 놓고 보면 놀란다.
+   * 그래서 접어 둔 카드로 두고, 열어 본 사람만 답한다.
+   */
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [guess, setGuess] = useState<{ sex: '남' | '여'; band: AgeBand } | null>(null);
+
   const deathData: PyramidDatum[] = useMemo(
     () =>
       demoRows
@@ -115,11 +130,92 @@ export function Ch3Who() {
   const deathTotal = deathData.reduce((a, d) => a + (d.value ?? 0), 0);
   const aloneTotal = aloneData.reduce((a, d) => a + (d.value ?? 0), 0);
 
-  if (loading) return <section id="ch3" className="chapter min-h-screen" aria-busy="true" />;
+  if (loading) return <section id="ch3" className="chapter min-h-full" aria-busy="true" />;
 
   const hasData = deathData.length > 0 && aloneData.length > 0;
   // 두 그림에서 가장 두꺼운 칸이 서로 다른 성별인가 — 이 챕터의 핵심 문장이 여기서 갈린다
   const sexDiffers = !!deathTop && !!aloneTop && deathTop.sex !== aloneTop.sex;
+
+  /**
+   * 퀴즈 본문. 넓은 화면에서는 카드 안에서 펼치고, 폰에서는 시트 안에 그대로 들어간다.
+   * 같은 내용을 두 벌 쓰지 않으려고 한 번만 만들어 두 자리에서 쓴다.
+   */
+  const quizBody = deathTop ? (
+    <div className="flex flex-col gap-4 pt-1">
+      <div className="grid grid-cols-2 gap-3">
+        {(['남', '여'] as const).map((sex) => (
+          <div key={sex} className="flex flex-col gap-1.5">
+            <span className="text-xs text-paper/55">{sex}성</span>
+            {BANDS.map((band) => {
+              const mine = guess?.sex === sex && guess.band === band;
+              const answer = deathTop.sex === sex && deathTop.band === band;
+              return (
+                <button
+                  key={band}
+                  type="button"
+                  onClick={() => setGuess({ sex, band })}
+                  aria-pressed={mine}
+                  className={cn(
+                    'min-h-[44px] rounded-md border px-3 text-sm transition-colors',
+                    guess && answer
+                      ? 'border-lamp bg-lamp/20 text-lamp'
+                      : mine
+                        ? 'border-rust/60 bg-rust/10 text-paper/85'
+                        : 'border-slate/50 text-paper/60 hover:border-slate hover:text-paper/85'
+                  )}
+                >
+                  {band}
+                  {guess && answer && <span className="ml-2 text-xs">정답</span>}
+                  {guess && mine && !answer && <span className="ml-2 text-xs text-paper/55">내 답</span>}
+                </button>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      {guess && (
+        <p className="text-sm leading-relaxed text-paper/70">
+          {guess.sex === deathTop.sex && guess.band === deathTop.band ? (
+            <>
+              맞혔습니다.{' '}
+              <span className="num text-lamp">
+                {deathTop.band} {deathTop.sex}성
+              </span>
+              이 {year}년 전국 고독사에서 가장 두꺼운 칸입니다
+              {deathTop.share !== null && (
+                <>
+                  {' '}
+                  (40대 이상 합계의 <span className="num">{deathTop.share.toFixed(1)}%</span>)
+                </>
+              )}
+              .
+            </>
+          ) : (
+            <>
+              고르신 칸은{' '}
+              <span className="num text-paper/85">
+                {guess.band} {guess.sex}성
+              </span>
+              입니다. 실제로 가장 두꺼운 칸은{' '}
+              <span className="num text-lamp">
+                {deathTop.band} {deathTop.sex}성
+              </span>
+              이었습니다
+              {deathTop.share !== null && (
+                <>
+                  {' '}
+                  (40대 이상 합계의 <span className="num">{deathTop.share.toFixed(1)}%</span>)
+                </>
+              )}
+              . 많은 분이 여기서 한 번 놀랍니다.
+            </>
+          )}{' '}
+          아래 두 그림에서 그 칸을 직접 확인해 보세요.
+        </p>
+      )}
+    </div>
+  ) : null;
 
   return (
     <section id="ch3" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch3-heading">
@@ -143,29 +239,115 @@ export function Ch3Who() {
         />
       ) : (
         <>
-          {/* 연도 전환 */}
-          {years.length > 1 && (
-            <div role="tablist" aria-label="연도 선택" className="flex flex-wrap gap-2">
-              {years.map((y) => (
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+            {/* 연도 전환 */}
+            {years.length > 1 && (
+              <div role="tablist" aria-label="연도 선택" className="flex flex-wrap gap-2">
+                {years.map((y) => (
+                  <button
+                    key={y}
+                    role="tab"
+                    aria-selected={y === year}
+                    onClick={() => setPicked(y)}
+                    className={cn(
+                      'num rounded-full border px-4 py-2 text-sm transition-colors',
+                      y === year
+                        ? 'border-lamp/60 bg-lamp/15 text-lamp'
+                        : 'border-slate/60 text-paper/55 hover:border-slate hover:text-paper/80'
+                    )}
+                  >
+                    {y}년
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 성별 강조 — 두 피라미드에 동시에 걸린다 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-paper/55">한쪽만 보기</span>
+              {([null, '남', '여'] as const).map((s) => (
                 <button
-                  key={y}
-                  role="tab"
-                  aria-selected={y === year}
-                  onClick={() => setPicked(y)}
+                  key={s ?? 'all'}
+                  type="button"
+                  onClick={() => setFocusSex(s)}
+                  aria-pressed={focusSex === s}
                   className={cn(
-                    'num rounded-full border px-4 py-2 text-sm transition-colors',
-                    y === year
+                    'rounded-full border px-3.5 py-1.5 text-sm transition-colors',
+                    focusSex === s
                       ? 'border-lamp/60 bg-lamp/15 text-lamp'
                       : 'border-slate/60 text-paper/55 hover:border-slate hover:text-paper/80'
                   )}
                 >
-                  {y}년
+                  {s === null ? '둘 다' : `${s}성만`}
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* 먼저 맞혀 보기 — 폰에서는 아래에서 시트로 올라온다 */}
+          {deathTop && (
+            <div className="flex max-w-[74ch] flex-col gap-4 rounded-lg border border-slate/50 bg-ink/50 p-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h3 className="font-serif text-lg text-paper/85">
+                  아래 그림을 보기 전에 — {year}년 전국에서 혼자 떠난 분이 가장 많은 칸은 어디일까요
+                </h3>
+                {!(quizOpen && !mobile) && (
+                  <button
+                    type="button"
+                    onClick={() => setQuizOpen(true)}
+                    className="min-h-[44px] shrink-0 rounded-full border border-lamp/50 px-4 text-sm text-lamp transition-colors hover:bg-lamp/15"
+                  >
+                    {guess ? '다시 맞혀 보기' : '맞혀 보기'}
+                  </button>
+                )}
+              </div>
+
+              {/* 넓은 화면 — 카드 안에서 펼친다 */}
+              {!mobile && (
+                <AnimatePresence initial={false}>
+                  {quizOpen && (
+                    <motion.div
+                      className="overflow-hidden"
+                      initial={{ height: reduced ? 'auto' : 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: reduced ? 'auto' : 0, opacity: 0 }}
+                      transition={{ duration: reduced ? 0 : 0.3, ease: 'easeOut' }}
+                    >
+                      {quizBody}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
+
+              {/* 폰 — 아래에서 올라오는 시트 */}
+              {mobile && (
+                <BottomSheet
+                  open={quizOpen}
+                  onClose={() => setQuizOpen(false)}
+                  tone="dark"
+                  title="가장 두꺼운 칸은 어디일까요"
+                  subtitle={`${year}년 전국 고독사 · 성별과 연령대를 하나 골라 주세요`}
+                  footer={
+                    guess ? (
+                      <button
+                        type="button"
+                        onClick={() => setQuizOpen(false)}
+                        className="flex min-h-[56px] w-full items-center justify-center rounded-lg bg-lamp text-[17px] font-semibold text-paper transition-colors active:bg-[#2272eb]"
+                      >
+                        그림에서 확인하기
+                      </button>
+                    ) : undefined
+                  }
+                >
+                  {quizBody}
+                </BottomSheet>
+              )}
+            </div>
           )}
 
-          <div className="grid gap-14 lg:grid-cols-2 lg:gap-10">
+          {/* 두 그림은 나란히 놓고 모양을 비교하는 것이 핵심이라, 넓은 화면에서는 2열로 둔다.
+              폰에서는 세로로 쌓으면 두 번째 그림을 아무도 못 보므로 밀어서 넘긴다. */}
+          <SwipeDeck labels={['전국 고독사', '부산 1인세대']} desktopClassName="grid gap-10 lg:grid-cols-2">
             {/* 왼쪽 — 전국 고독사 */}
             <ChartFrame
               title={`${year}년 전국 고독사`}
@@ -194,6 +376,7 @@ export function Ch3Who() {
                     : undefined
                 }
                 mobile={mobile}
+                focusSex={focusSex}
                 ariaLabel={`${year}년 전국 고독사 사망자의 성별·연령대 구조 피라미드`}
               />
               <p className="mt-3 text-center text-sm text-paper/55">
@@ -234,13 +417,14 @@ export function Ch3Who() {
                     : undefined
                 }
                 mobile={mobile}
+                focusSex={focusSex}
                 ariaLabel={`${year}년 부산 1인세대의 성별·연령대 구조 피라미드`}
               />
               <p className="mt-3 text-center text-sm text-paper/55">
                 합계 <span className="num text-paper/70">{fmtInt(aloneTotal)}</span>세대 · 40대 이상
               </p>
             </ChartFrame>
-          </div>
+          </SwipeDeck>
 
           {/* 두 그림을 잇는 문장 — 이 챕터의 핵심 */}
           {deathTop && aloneTop && (
@@ -287,7 +471,7 @@ export function Ch3Who() {
 
       <VerdictCard result={verdict as never} />
 
-      <NextChapter to="ch4" label="우리 가족의 자리 찾아보기" />
+      <UpNext />
     </section>
   );
 }

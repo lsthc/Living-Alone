@@ -1,11 +1,5 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Children, useEffect, useMemo, useRef, type ReactNode } from 'react';
-import { useLenis } from '@/lib/SmoothScroll';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { gsap } from 'gsap';
 
 type Segment = { key: string; text: string } | { key: string; node: ReactNode };
 
@@ -36,15 +30,16 @@ export interface ScrollRevealTextProps {
  * React Bits 의 ScrollReveal 을 이 프로젝트 톤에 맞게 다시 짰다.
  * 원본의 baseRotation(문단이 기울어져 있다가 펴지는 연출)은 뺐다 — 진지한 주제와 안 어울린다.
  *
- * 원본은 scrub(스크롤 위치에 흐림 정도를 그대로 묶는 방식)을 쓰지만 여기서는 뺐다.
- * 이 문단들은 캡션이 아니라 사람이 멈춰 서서 읽는 본문이다. 문단이 시야에 걸친 채로
- * 스크롤이 멈추면(대부분의 사람이 읽을 때 하는 행동이다) 뒷부분 글자가 계속 흐린 채로
- * 남아 정작 읽어야 할 때 가장 안 읽힌다. 그래서 화면에 들어오면 한 번, 끝까지 재생하고 끝낸다.
- * Lenis 가 켜져 있으면(reduced-motion 이 아니면) 그 스크롤 이벤트에 ScrollTrigger 를 동기화한다.
+ * 원본은 GSAP ScrollTrigger 로 문서 스크롤에 물려 재생한다. 이 앱이 챕터 덱이 된 뒤로는
+ * 문서가 아예 스크롤되지 않고(챕터 패널이 자기 안에서만 스크롤한다) ScrollTrigger 가
+ * 아무 신호도 받지 못한다. 그래서 판정을 IntersectionObserver 로 바꿨다 —
+ * 어느 컨테이너가 스크롤하든 '화면에 보이는가'만 보므로 덱에서도 그대로 동작한다.
+ *
+ * 재생은 화면에 들어올 때 한 번, 끝까지 하고 끝낸다. 스크롤 위치에 흐림 정도를 묶으면
+ * 사람이 읽으려고 멈춘 순간 뒷부분이 흐린 채로 남아 정작 읽어야 할 때 안 읽힌다.
  */
 export function ScrollRevealText({ children, className, baseOpacity = 0.3, blurStrength = 4 }: ScrollRevealTextProps) {
   const ref = useRef<HTMLParagraphElement>(null);
-  const lenis = useLenis();
   const segments = useMemo(() => splitChildren(children), [children]);
 
   useEffect(() => {
@@ -53,35 +48,44 @@ export function ScrollRevealText({ children, className, baseOpacity = 0.3, blurS
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const words = el.querySelectorAll<HTMLElement>('.reveal-word');
-    const tween = gsap.fromTo(
-      words,
-      { opacity: baseOpacity, filter: `blur(${blurStrength}px)` },
-      {
+    if (!words.length) return;
+
+    gsap.set(words, { opacity: baseOpacity, filter: `blur(${blurStrength}px)` });
+
+    let tween: gsap.core.Tween | undefined;
+    const play = () => {
+      tween = gsap.to(words, {
         opacity: 1,
         filter: 'blur(0px)',
         ease: 'power2.out',
         duration: 0.6,
         stagger: 0.03,
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-      }
+      });
+    };
+
+    // IntersectionObserver 가 없는 환경에서 문단이 흐린 채로 남으면 발표 중에 복구할 방법이 없다.
+    // 그럴 때는 그냥 바로 재생한다 (useReveal 과 같은 원칙).
+    if (typeof IntersectionObserver === 'undefined') {
+      play();
+      return () => tween?.kill();
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          play();
+        }
+      },
+      { threshold: 0.15 }
     );
+    io.observe(el);
 
     return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
+      io.disconnect();
+      tween?.kill();
     };
   }, [segments, baseOpacity, blurStrength]);
-
-  // Lenis 는 실제 스크롤 위치를 직접 옮기지만, ScrollTrigger 가 한 틱이라도 늦게 알아채면
-  // scrub 애니메이션이 살짝 밀려 보인다. 매 Lenis 틱마다 강제로 다시 맞춘다.
-  useEffect(() => {
-    if (!lenis) return;
-    const onScroll = () => ScrollTrigger.update();
-    lenis.on('scroll', onScroll);
-    return () => {
-      lenis.off('scroll', onScroll);
-    };
-  }, [lenis]);
 
   return (
     <p ref={ref} className={className}>

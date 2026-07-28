@@ -31,6 +31,7 @@ export function DistrictMap({
   onlyOldDowntown = false,
   selected,
   onSelect,
+  interactionMode = 'hover',
   ariaLabel,
   className,
 }: {
@@ -40,6 +41,14 @@ export function DistrictMap({
   onlyOldDowntown?: boolean;
   selected?: string | null;
   onSelect?: (code: string | null) => void;
+  /**
+   * hover — 마우스를 올리면 선택되고 다시 누르면 해제된다 (데스크톱).
+   * tap  — 올려서 선택되는 일이 없고, 누르면 언제나 그 구가 선택된다 (폰).
+   *
+   * 폰에서 hover 를 쓰면 한 번 탭할 때 mouseenter 와 click 이 잇달아 들어와,
+   * 방금 선택된 구를 같은 탭이 곧바로 해제해 버린다(시트가 열렸다 닫힌다).
+   */
+  interactionMode?: 'hover' | 'tap';
   ariaLabel: string;
   className?: string;
 }) {
@@ -87,6 +96,8 @@ export function DistrictMap({
           const isOld = f.properties.is_old_downtown;
           const dimmed = onlyOldDowntown && !isOld;
           const isSelected = selected === code;
+          const hover = interactionMode === 'hover';
+          const activate = () => onSelect?.(hover && isSelected ? null : code);
 
           // 상호작용은 일반 <g> 가 맡고, motion.path 는 그리기만 한다.
           // framer-motion 컴포넌트에 직접 onFocus/onMouseEnter 를 달면
@@ -98,13 +109,13 @@ export function DistrictMap({
               role="button"
               aria-label={`${f.properties.sgg_name}${value !== null ? `, ${value}` : ', 값 없음'}`}
               className="cursor-pointer outline-none"
-              onMouseEnter={() => onSelect?.(code)}
-              onFocus={() => onSelect?.(code)}
-              onClick={() => onSelect?.(isSelected ? null : code)}
+              onMouseEnter={hover ? () => onSelect?.(code) : undefined}
+              onFocus={hover ? () => onSelect?.(code) : undefined}
+              onClick={activate}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  onSelect?.(isSelected ? null : code);
+                  activate();
                 }
               }}
             >

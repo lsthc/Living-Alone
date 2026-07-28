@@ -2,11 +2,29 @@ import { useId, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EmptyState } from '@/components/EmptyState';
 import { SourceNote } from '@/components/SourceNote';
-import { NextChapter } from '@/components/StoryNav';
+import { UpNext } from '@/components/deck/UpNext';
+import { BottomSheet } from '@/components/ui/BottomSheet';
+import { WheelPicker } from '@/components/ui/WheelPicker';
 import { WindowGrid } from '@/charts/WindowGrid';
 import { rowsOf, useData } from '@/lib/DataProvider';
-import { fmtInt } from '@/lib/utils';
+import { useIsMobile } from '@/lib/useIsMobile';
+import { cn, fmtInt } from '@/lib/utils';
 import type { AgeBand, Sex } from '@/data/schema';
+
+/**
+ * 데이터가 끝내 재지 못한 축.
+ *
+ * ★ 이것은 위험도 점수가 아니다. 어떤 값을 고르든 좋고 나쁨을 매기지 않는다.
+ *   고독사는 건강·관계·소득에서 비롯되는데 우리에겐 그런 자료가 한 줄도 없다.
+ *   여기서 하는 일은 딱 하나 — 통계에 없는 칸이 하나 있다는 것을 눈으로 보여주는 것.
+ */
+const LAST_CALL = [
+  { id: 'today', label: '오늘·어제', line: '그 거리는 이미 좁혀져 있습니다. 어떤 통계도 이 칸을 세지 못합니다.' },
+  { id: 'week', label: '이번 주', line: '이번 주에 한 번. 어느 표에도 안 잡히지만 그분에게는 가장 크게 잡히는 숫자입니다.' },
+  { id: 'month', label: '이번 달', line: '한 달 사이. 다음 챕터의 번호 하나면 오늘 다시 좁힐 수 있습니다.' },
+  { id: 'year', label: '올해 안', line: '올해 안. 통계는 이 간격을 재지 않습니다. 재는 사람은 여러분뿐입니다.' },
+  { id: 'unknown', label: '기억나지 않습니다', line: '기억나지 않는다면, 그것이 지금 한 번 물어볼 이유입니다.' },
+] as const;
 
 /** 사각형 하나가 뜻하는 가구 수. Chapter 0 은 1,000가구였고 여기서는 구 단위라 100가구. */
 const UNIT = 100;
@@ -14,7 +32,14 @@ const UNIT = 100;
 const BANDS: AgeBand[] = ['40대', '50대', '60대', '70대', '80대이상'];
 const SEXES: Sex[] = ['남', '여'];
 
-/** 종이색 배경에 맞춘 선택 상자. 네이티브 select 라 키보드·스크린리더가 그냥 동작한다. */
+/**
+ * 선택 칸.
+ *
+ * 넓은 화면 — 네이티브 select. 키보드·스크린리더가 그냥 동작하고, 발표자는 마우스로 고른다.
+ * 폰        — 누르면 아래에서 시트가 올라오고, 손으로 세로로 굴려 가운데에 맞춘 뒤
+ *             확인을 눌러야 확정된다. 굴리는 동안 값이 바로 확정되면 지나가는 값마다
+ *             아래 화면 전체가 다시 계산돼 손가락이 무거워진다.
+ */
 function Field({
   label,
   value,
@@ -29,24 +54,84 @@ function Field({
   placeholder: string;
 }) {
   const id = useId();
+  const mobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+  // 시트 안에서 굴리는 동안의 임시 값. 확인을 눌러야 바깥으로 나간다.
+  const [draft, setDraft] = useState('');
+
+  const current = options.find((o) => o.value === value);
+
+  if (!mobile) {
+    return (
+      <div className="flex flex-col gap-2">
+        <label htmlFor={id} className="text-sm text-ink/65">
+          {label}
+        </label>
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full rounded-md border border-ink/25 bg-paper px-4 py-3 text-base text-ink transition-colors hover:border-ink/45 focus-visible:ring-lamp focus-visible:ring-offset-paper"
+        >
+          <option value="">{placeholder}</option>
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm text-ink/65">
-        {label}
-      </label>
-      <select
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-ink/25 bg-paper px-4 py-3 text-base text-ink transition-colors hover:border-ink/45 focus-visible:ring-lamp focus-visible:ring-offset-paper"
+      <span className="text-sm text-ink/65">{label}</span>
+      <button
+        type="button"
+        onClick={() => {
+          setDraft(value || options[0]?.value || '');
+          setOpen(true);
+        }}
+        aria-haspopup="dialog"
+        className={cn(
+          'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-lg border px-4 text-left transition-colors',
+          current ? 'border-weakfg/45 bg-weakbg/50 text-ink' : 'border-ink/25 bg-paper text-ink/45'
+        )}
       >
-        <option value="">{placeholder}</option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+        <span className="text-base">{current?.label ?? placeholder}</span>
+        <span className="shrink-0 text-ink/35" aria-hidden>
+          ⌄
+        </span>
+      </button>
+
+      <BottomSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        tone="light"
+        title={label}
+        subtitle="손으로 위아래로 굴려 가운데에 맞춘 뒤 확인을 눌러 주세요"
+        footer={
+          <button
+            type="button"
+            onClick={() => {
+              onChange(draft);
+              setOpen(false);
+            }}
+            className="flex min-h-[56px] w-full items-center justify-center rounded-lg bg-lamp text-[17px] font-semibold text-paper transition-colors active:bg-[#2272eb]"
+          >
+            확인
+          </button>
+        }
+      >
+        <WheelPicker
+          options={options}
+          value={draft || options[0]?.value || ''}
+          onChange={setDraft}
+          tone="light"
+          ariaLabel={label}
+        />
+      </BottomSheet>
     </div>
   );
 }
@@ -82,6 +167,7 @@ export function Ch4MyFamily() {
   const [sgg, setSgg] = useState('');
   const [band, setBand] = useState('');
   const [sex, setSex] = useState('');
+  const [lastCall, setLastCall] = useState<string>('');
 
   const allDistricts = rowsOf(districts);
   const districtYear = allDistricts.length ? Math.max(...allDistricts.map((r) => r.year)) : null;
@@ -138,15 +224,12 @@ export function Ch4MyFamily() {
     return h % squares;
   }, [picked, squares]);
 
-  if (loading) return <section id="ch4" className="chapter min-h-screen" aria-busy="true" />;
+  if (loading) return <section id="ch4" className="chapter min-h-full" aria-busy="true" />;
 
   return (
-    // 2막 — 여기서부터 배경이 종이색으로 바뀐다
+    // 2막 — 이 챕터부터 배경이 종이색이다 (덱 패널이 톤을 깔고, 여기서 글자색을 맞춘다)
     <div className="w-full bg-paper text-ink">
-      {/* 심야 남색에서 종이색으로 넘어가는 띠 */}
-      <div className="h-40 w-full bg-gradient-to-b from-ink to-paper" aria-hidden />
-
-      <section id="ch4" className="chapter flex flex-col gap-10 md:gap-14 pt-8" aria-labelledby="ch4-heading">
+      <section id="ch4" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch4-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
           <span className="num text-xs tracking-[0.25em] text-weakfg">CHAPTER 4</span>
           <h2 id="ch4-heading" className="font-serif text-headline text-ink">
@@ -332,14 +415,57 @@ export function Ch4MyFamily() {
                     </p>
                   </div>
 
-                  {/* 다음 장으로 */}
-                  <div className="max-w-[70ch]">
+                  {/* 데이터가 재지 못한 마지막 축 */}
+                  <div className="flex max-w-[74ch] flex-col gap-5 border-t border-ink/15 pt-8">
                     <p className="font-serif text-xl leading-relaxed text-ink/85 md:text-2xl">
                       그리고 데이터가 끝내 재지 못한 것이 하나 있습니다. 거리입니다.
                     </p>
-                    <p className="mt-4 leading-relaxed text-ink/65">
-                      마지막으로 안부를 물은 게 언제인지는 어떤 통계에도 없습니다. 그건 이 화면이 아니라
-                      여러분만 압니다. 다음 장에서는, 그 거리를 좁히려고 이미 만들어져 있는 것들을 봅니다.
+                    <p className="leading-relaxed text-ink/65">
+                      마지막으로 안부를 물은 게 언제인지는 어떤 통계에도 없습니다. 그건 이 화면이 아니라 여러분만
+                      압니다. 이 칸만은 직접 채워 보세요.
+                    </p>
+
+                    <div className="flex flex-wrap gap-2" role="group" aria-label="마지막으로 안부를 물은 때">
+                      {LAST_CALL.map((o) => (
+                        <button
+                          key={o.id}
+                          type="button"
+                          onClick={() => setLastCall(lastCall === o.id ? '' : o.id)}
+                          aria-pressed={lastCall === o.id}
+                          className={cn(
+                            'rounded-full border px-4 py-2 text-sm transition-colors focus-visible:ring-lamp focus-visible:ring-offset-paper',
+                            lastCall === o.id
+                              ? 'border-weakfg/50 bg-weakbg text-weakfg'
+                              : 'border-ink/20 text-ink/65 hover:border-ink/45 hover:text-ink'
+                          )}
+                        >
+                          {o.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <AnimatePresence mode="wait">
+                      <motion.p
+                        key={lastCall || 'empty'}
+                        className="min-h-[3rem] font-serif text-lg leading-relaxed text-ink/80 md:text-xl"
+                        initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        role="status"
+                        aria-live="polite"
+                      >
+                        {LAST_CALL.find((o) => o.id === lastCall)?.line ?? ''}
+                      </motion.p>
+                    </AnimatePresence>
+
+                    <p className="text-sm leading-relaxed text-ink/55">
+                      고른 값은 저장되지도 전송되지도 않고, 어떤 위험도 계산하지 않습니다. 앞의 세 칸과 달리 이
+                      칸에는 정답도 평균도 없습니다 — 어디에도 그 값을 모아 둔 데이터가 없기 때문입니다.
+                    </p>
+
+                    <p className="leading-relaxed text-ink/65">
+                      다음 챕터에서는, 그 거리를 좁히려고 이미 만들어져 있는 것들을 봅니다.
                     </p>
                   </div>
                 </motion.div>
@@ -358,7 +484,7 @@ export function Ch4MyFamily() {
               )}
             </AnimatePresence>
 
-            <NextChapter to="ch5" label="지금 바로 할 수 있는 일 보기" tone="light" />
+            <UpNext />
           </>
         )}
       </section>

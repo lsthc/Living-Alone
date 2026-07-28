@@ -1,11 +1,13 @@
-import { useMemo } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { BlurText } from '@/components/reactbits/BlurText';
 import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
+import { UpNext } from '@/components/deck/UpNext';
 import { ShareButton } from '@/components/StoryNav';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { judgeH1, judgeH2, judgeH3, type Verdict } from '@/lib/hypothesis';
 import { HOTLINES, PROGRAMS } from '@/data/programs';
+import { cn } from '@/lib/utils';
 
 const TEAM = {
   org: '부산정보영재교육원',
@@ -76,6 +78,22 @@ export function Ch6ResearchNote() {
     [trendRows, deathRows, districtRows, demoRows]
   );
 
+  // 표는 근거 한 줄만 보여주고, 왜 그 판정이 나왔는지는 눌러서 편다.
+  // 발표에서 질문이 나온 줄만 열어 보이면 화면이 글로 덮이지 않는다.
+  const [openVerdict, setOpenVerdict] = useState<string | null>(null);
+  // 한계도 같은 규칙. 처음엔 제목만 보이고, 궁금한 것만 편다.
+  const [openLimit, setOpenLimit] = useState<string | null>(null);
+  // 출처가 20건 가까이 된다. "그 수치 어디서 났나요"에 바로 답하려면 찾을 수 있어야 한다.
+  const [query, setQuery] = useState('');
+
+  const filteredSources = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return sourceRows;
+    return sourceRows.filter((s) =>
+      [s.org, s.title, String(s.year), s.note ?? ''].join(' ').toLowerCase().includes(q)
+    );
+  }, [sourceRows, query]);
+
   return (
     <div className="w-full bg-paper text-ink">
       <section id="ch6" className="chapter flex flex-col gap-12 md:gap-16" aria-labelledby="ch6-heading">
@@ -97,52 +115,69 @@ export function Ch6ResearchNote() {
             아래 표는 손으로 쓴 것이 아닙니다.{' '}
             <code className="font-mono rounded bg-ink/[0.06] px-1.5 py-0.5 text-[0.85em]">src/lib/hypothesis.ts</code> 의
             순수 함수가 CSV 를 읽어 계산한 결과를 그대로 그린 것입니다. 데이터를 갱신하면 판정도 따라 바뀝니다.
-            결론을 먼저 정해 놓고 데이터를 맞추지 않으려고 이렇게 만들었습니다.
+            결론을 먼저 정해 놓고 데이터를 맞추지 않으려고 이렇게 만들었습니다. 각 줄을 누르면 왜 그 판정이
+            나왔는지 펼쳐집니다.
           </p>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-left">
-              <caption className="sr-only">가설별 판정과 근거 요약</caption>
-              <thead>
-                <tr className="border-b border-ink/25 text-sm text-ink/65">
-                  <th scope="col" className="py-3 pr-4 font-normal">
-                    가설
-                  </th>
-                  <th scope="col" className="py-3 pr-4 font-normal">
-                    판정
-                  </th>
-                  <th scope="col" className="py-3 font-normal">
-                    근거
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.map((r, i) => (
-                  <motion.tr
-                    key={r.id}
-                    className="border-b border-ink/12 align-top"
-                    initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 0.45, delay: reduced ? 0 : i * 0.1 }}
+          <ul className="flex flex-col">
+            {results.map((r, i) => {
+              const open = openVerdict === r.id;
+              return (
+                <motion.li
+                  key={r.id}
+                  className="border-b border-ink/12"
+                  initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.45, delay: reduced ? 0 : i * 0.1 }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenVerdict(open ? null : r.id)}
+                    aria-expanded={open}
+                    className="flex w-full items-start gap-4 py-5 text-left transition-colors hover:bg-ink/[0.03] focus-visible:ring-lamp focus-visible:ring-offset-paper md:gap-6"
                   >
-                    <th scope="row" className="py-5 pr-4 font-normal">
+                    <span className="flex w-[9rem] shrink-0 flex-col gap-1 md:w-[13rem]">
                       <span className="num text-xs text-ink/65">{r.id}</span>
-                      <span className="mt-1 block font-serif text-lg text-ink">{r.title}</span>
-                    </th>
-                    <td className="py-5 pr-4">
-                      <span
-                        className={`inline-block whitespace-nowrap rounded-full border px-3 py-1 text-sm ${VERDICT_STYLE[r.verdict]}`}
+                      <span className="font-serif text-lg leading-snug text-ink">{r.title}</span>
+                    </span>
+                    <span
+                      className={cn(
+                        'mt-0.5 inline-block shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-sm',
+                        VERDICT_STYLE[r.verdict]
+                      )}
+                    >
+                      {r.verdict}
+                    </span>
+                    <span className="num flex-1 text-sm leading-relaxed text-ink/70">{r.evidence}</span>
+                    <span
+                      className={cn(
+                        'mt-1 shrink-0 text-ink/45 transition-transform',
+                        open && 'rotate-180'
+                      )}
+                      aria-hidden
+                    >
+                      ⌄
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div
+                        className="overflow-hidden"
+                        initial={{ height: reduced ? 'auto' : 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: reduced ? 'auto' : 0, opacity: 0 }}
+                        transition={{ duration: reduced ? 0 : 0.3, ease: 'easeOut' }}
                       >
-                        {r.verdict}
-                      </span>
-                    </td>
-                    <td className="num py-5 text-sm leading-relaxed text-ink/70">{r.evidence}</td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        <p className="max-w-[74ch] pb-6 text-sm leading-relaxed text-ink/70">{r.interpretation}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.li>
+              );
+            })}
+          </ul>
 
           <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             세 개 중 하나가 <span className="text-ink">검증불가</span>로 남았습니다. 저희는 이것을 실패가 아니라
@@ -189,20 +224,48 @@ export function Ch6ResearchNote() {
           <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             질문받기 전에 먼저 적습니다. 감추면 신뢰를 잃고 먼저 말하면 신뢰를 얻는다고 생각했습니다.
           </p>
-          <div className="grid gap-5 md:grid-cols-2">
-            {LIMITATIONS.map((l, i) => (
-              <motion.div
-                key={l.title}
-                className="flex flex-col gap-2 border-l-2 border-ink/20 pl-5"
-                initial={{ opacity: reduced ? 1 : 0, x: reduced ? 0 : -6 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.45, delay: reduced ? 0 : (i % 2) * 0.08 }}
-              >
-                <h4 className="font-serif text-base text-ink">{l.title}</h4>
-                <p className="text-sm leading-relaxed text-ink/65">{l.body}</p>
-              </motion.div>
-            ))}
+          <div className="grid gap-x-8 gap-y-3 md:grid-cols-2">
+            {LIMITATIONS.map((l, i) => {
+              const open = openLimit === l.title;
+              return (
+                <motion.div
+                  key={l.title}
+                  className={cn(
+                    'flex flex-col gap-2 border-l-2 pl-5 transition-colors',
+                    open ? 'border-weakfg/60' : 'border-ink/20'
+                  )}
+                  initial={{ opacity: reduced ? 1 : 0, x: reduced ? 0 : -6 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.45, delay: reduced ? 0 : (i % 2) * 0.08 }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenLimit(open ? null : l.title)}
+                    aria-expanded={open}
+                    className="flex items-start justify-between gap-3 py-1 text-left focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                  >
+                    <h4 className="font-serif text-base text-ink">{l.title}</h4>
+                    <span className={cn('shrink-0 text-ink/45 transition-transform', open && 'rotate-180')} aria-hidden>
+                      ⌄
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.p
+                        className="overflow-hidden text-sm leading-relaxed text-ink/65"
+                        initial={{ height: reduced ? 'auto' : 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: reduced ? 'auto' : 0, opacity: 0 }}
+                        transition={{ duration: reduced ? 0 : 0.28, ease: 'easeOut' }}
+                      >
+                        {l.body}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
@@ -211,12 +274,34 @@ export function Ch6ResearchNote() {
           <h3 className="font-serif text-2xl text-ink">쓴 자료 전부</h3>
 
           <div className="flex flex-col gap-3">
-            <h4 className="text-sm text-ink/65">데이터</h4>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h4 className="text-sm text-ink/65">
+                데이터{' '}
+                <span className="num text-ink/45">
+                  {query ? `${filteredSources.length} / ${sourceRows.length}` : sourceRows.length}건
+                </span>
+              </h4>
+              <label className="flex items-center gap-2 text-sm text-ink/65">
+                <span className="sr-only">출처 검색</span>
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="기관·자료 이름으로 찾기"
+                  className="w-56 rounded-md border border-ink/20 bg-paper px-3 py-2 text-sm text-ink transition-colors placeholder:text-ink/40 hover:border-ink/40 focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                />
+              </label>
+            </div>
             {sourceRows.length === 0 ? (
               <p className="text-sm text-ink/65">출처 목록을 불러오지 못했습니다.</p>
+            ) : filteredSources.length === 0 ? (
+              <p className="text-sm text-ink/65">
+                &lsquo;{query}&rsquo; 로 찾은 자료가 없습니다. 기관 이름(예: 통계청)이나 자료 이름의 일부로 찾아
+                보세요.
+              </p>
             ) : (
               <ol className="flex flex-col gap-3">
-                {sourceRows.map((s, i) => (
+                {filteredSources.map((s, i) => (
                   <li key={s.id} className="flex gap-4 border-b border-ink/12 pb-3 text-sm">
                     <span className="num shrink-0 text-ink/65">{String(i + 1).padStart(2, '0')}</span>
                     <span className="flex flex-col gap-1">
@@ -293,7 +378,10 @@ export function Ch6ResearchNote() {
             검증하지 못했고, 그 칸은 비워 둔 채로 두었습니다.
           </p>
 
-          <ShareButton tone="light" />
+          <div className="flex flex-col gap-3">
+            <ShareButton tone="light" />
+            <UpNext />
+          </div>
         </footer>
       </section>
     </div>

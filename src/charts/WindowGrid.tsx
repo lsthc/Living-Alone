@@ -26,6 +26,14 @@ export interface WindowGridProps {
   fill?: string;
   /** 딱 한 칸만 다른 색으로 켠다. Chapter 4 에서 '당신의 창문'을 가리키는 데 쓴다. */
   highlight?: { index: number; fill: string } | null;
+  /**
+   * 칸을 직접 눌러 볼 수 있게 한다 (Chapter 0).
+   * 18만이라는 수는 너무 커서 아무도 아닌 사람처럼 보인다. 한 칸을 골라 세워 두면
+   * 그 큰 수가 몇 개의 창문으로 이루어져 있는지를 손으로 확인하게 된다.
+   */
+  onPick?: (index: number | null) => void;
+  /** 지금 골라 둔 칸 */
+  picked?: number | null;
 }
 
 export function WindowGrid({
@@ -38,6 +46,8 @@ export function WindowGrid({
   label,
   fill = 'var(--lamp)',
   highlight = null,
+  onPick,
+  picked = null,
 }: WindowGridProps) {
   const reduced = useReducedMotion();
 
@@ -79,7 +89,8 @@ export function WindowGrid({
           const col = i % columns;
           const row = Math.floor(i / columns);
           const isMine = highlight?.index === i;
-          return (
+          const isPicked = picked === i;
+          const rect = (
             <motion.rect
               key={i}
               x={col * (size + gap)}
@@ -87,8 +98,10 @@ export function WindowGrid({
               width={size}
               height={size}
               fill={isMine ? highlight.fill : fill}
+              stroke={isPicked ? 'var(--paper)' : undefined}
+              strokeWidth={isPicked ? 2 : undefined}
               initial={{ opacity: reduced ? (isMine ? 1 : 0.85) : 0 }}
-              animate={{ opacity: isMine ? 1 : 0.85 }}
+              animate={{ opacity: isMine || isPicked ? 1 : 0.85 }}
               transition={
                 reduced
                   ? { duration: 0 }
@@ -96,6 +109,23 @@ export function WindowGrid({
                     { duration: 0.7, delay: isMine ? duration / 1000 + 0.3 : order[i], ease: 'easeOut' }
               }
             />
+          );
+
+          if (!onPick) return rect;
+
+          // 사각형이 13~14px 라 손가락으로 정확히 누르기 어렵다.
+          // 눈에 보이지 않는 넉넉한 판을 겹쳐 두고 그쪽이 입력을 받는다.
+          return (
+            <g key={i} className="cursor-pointer" onClick={() => onPick(isPicked ? null : i)}>
+              {rect}
+              <rect
+                x={col * (size + gap) - gap / 2}
+                y={row * (size + gap) - gap / 2}
+                width={size + gap}
+                height={size + gap}
+                fill="transparent"
+              />
+            </g>
           );
         })}
       </svg>

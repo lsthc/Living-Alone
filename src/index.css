@@ -21,47 +21,30 @@
 
   html {
     font-size: calc(16px * var(--font-scale));
-    /* 스무스 스크롤은 Lenis(SmoothScroll.tsx)가 맡는다. 네이티브 smooth 를 같이 켜 두면
-       둘이 겹쳐 스크롤이 덜컹인다. reduced-motion 이면 Lenis 가 아예 안 켜지므로 auto 가 곧 정답이다. */
     scroll-behavior: auto;
-    /* 스크롤은 계속 되지만 막대는 숨긴다 (Firefox) */
-    scrollbar-width: none;
-    /* 끝까지 내렸을 때 튕기며 body 배경이 드러나는 것을 막는다.
-       이 앱은 위쪽이 남색, Chapter 4 아래로는 종이색이라 body 배경(남색)과
-       마지막 화면(종이색)이 서로 다르다. 튕기면 종이색 푸터 아래로 남색 띠가
-       크게 나타난다. Lenis 의 관성 스크롤이 이 튕김을 더 길고 잦게 만든다.
-       튕김 자체를 없애 해결한다. 발표 중 당겨서 새로고침되는 사고도 함께 막힌다. */
-    overscroll-behavior-y: none;
-  }
-
-  html::-webkit-scrollbar {
-    /* 스크롤은 계속 되지만 막대는 숨긴다 (Chrome·Safari·Edge) */
-    display: none;
+    /* 페이지 자체는 절대 스크롤되지 않는다. 스크롤은 지금 보고 있는 챕터 패널 안에서만
+       일어나고, 아무리 굴려도 다음 챕터로 넘어가지 않는다.
+       챕터를 넘기는 것은 ← → · 좌우 버튼 · 챕터 목록뿐이다 (src/lib/ChapterDeck.tsx). */
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   body {
     @apply bg-ink font-sans text-paper antialiased;
-    /* 배경 전환(심야 남색 → 종이색)은 Chapter 4 에서 일어난다 */
-    transition: background-color 1200ms ease-out;
-    overscroll-behavior-y: none;
+    height: 100%;
+    overflow: hidden;
+    /* 챕터 톤(남색 ↔ 종이색)이 바뀔 때 브라우저 여백까지 같이 넘어가게 한다 */
+    transition: background-color 600ms ease-out;
+    overscroll-behavior: none;
     /* 한글은 음절 블록 사이 어디서나 줄바꿈이 허용돼 단어가 쪼개진다.
        keep-all 로 띄어쓰기 단위를 지키게 한다 (숫자+단위는 whitespace-nowrap 으로 별도 처리). */
     word-break: keep-all;
     overflow-wrap: break-word;
   }
 
-  /* Lenis 공식 권장 기본 스타일. .lenis-smooth 는 Lenis 가 켜졌을 때 <html> 에 스스로 붙인다. */
-  html.lenis,
-  html.lenis body {
-    height: auto;
-  }
-
-  html.lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  html.lenis.lenis-stopped {
-    overflow: hidden;
+  body[data-tone='light'] {
+    @apply bg-paper;
   }
 
   /* 모든 숫자는 tabular-nums 로. 값이 바뀔 때 자릿수가 흔들리지 않게 한다.
@@ -73,6 +56,11 @@
   /* 키보드 포커스 링은 항상 보이게 한다 (접근성 요구사항) */
   :focus-visible {
     @apply outline-none ring-2 ring-lamp ring-offset-2 ring-offset-ink;
+  }
+
+  /* 종이색 챕터(Ch4~)에서는 링 바깥 테두리 색을 배경에 맞춘다 */
+  body[data-tone='light'] :focus-visible {
+    @apply ring-offset-paper;
   }
 
   /* 모션을 줄이도록 설정한 사용자에게는 애니메이션을 끈다 */
@@ -89,20 +77,66 @@
 }
 
 @layer components {
-  /* 챕터 공통 여백. 1920×1080 프로젝터를 먼저 맞추고 모바일로 좁힌다.
-     폰에서는 세로 여백을 줄여 스크롤 길이를 줄인다. */
-  .chapter {
-    @apply relative mx-auto w-full max-w-[1400px] px-5 py-16 md:px-12 md:py-24 lg:py-32;
+  /*
+   * 챕터 하나가 차지하는 판. 화면을 통째로 덮고, 넘치는 내용은 이 안에서만 스크롤한다.
+   * overscroll-behavior: contain 이 핵심이다 — 패널을 끝까지 내렸을 때 스크롤이
+   * 바깥(문서)으로 새어 나가 화면이 튀거나 당겨서 새로고침되는 것을 막는다.
+   * 위아래 여백은 고정된 상단 바(56px)와 진행 막대(52px) 자리다.
+   */
+  .deck-panel {
+    @apply fixed inset-0 z-10;
+    padding-top: 56px;
+    /* 진행 막대(52px) + 아이폰 홈 인디케이터 자리 */
+    padding-bottom: calc(52px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    /* 스크롤은 되지만 막대는 숨긴다 (Firefox) */
+    scrollbar-width: none;
   }
 
-  /* 발표 모드에서 숨길 장식 요소 (스크롤 유도 화살표 등) */
+  .deck-panel::-webkit-scrollbar {
+    /* 스크롤은 되지만 막대는 숨긴다 (Chrome·Safari·Edge) */
+    display: none;
+  }
+
+  /* 챕터 목록(deck-browsing)이나 바텀시트(deck-locked)가 떠 있는 동안 뒤쪽 패널을 얼려 둔다 */
+  body.deck-locked .deck-panel,
+  body.deck-browsing .deck-panel {
+    overflow: hidden;
+  }
+
+  /* 가로 레일(챕터 목록·표 넘기기) — 막대는 숨기고 손가락·버튼으로 민다 */
+  .deck-rail {
+    scrollbar-width: none;
+  }
+  .deck-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 세로 선택기(WheelPicker) — 막대가 보이면 칸 가운데가 어긋나 보인다 */
+  .wheel-scroll {
+    scrollbar-width: none;
+  }
+  .wheel-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 챕터 공통 여백. 1920×1080 프로젝터를 먼저 맞추고 모바일로 좁힌다.
+     한 챕터가 한 화면이라, 예전 스크롤 문서일 때보다 위아래 여백을 줄였다. */
+  .chapter {
+    @apply relative mx-auto w-full max-w-[1400px] px-5 py-10 md:px-12 md:py-14;
+  }
+
+  /* 발표 모드에서 숨길 장식 요소 */
   body.present .present-hide {
     display: none !important;
   }
 
   /* 발표 모드에서는 챕터가 한 화면에 들어오도록 위아래 여백을 줄인다 */
   body.present .chapter {
-    @apply py-16 lg:py-20;
+    @apply py-8 md:py-10;
   }
 
   /* 키보드로 건너뛰기 — Tab 을 처음 누르면 나타난다 */

@@ -44,6 +44,7 @@ export function DemoPyramid({
   bracket,
   ariaLabel,
   mobile = false,
+  focusSex = null,
 }: {
   /** 아래에서 위로 올라가는 순서 (예: 40대 → 80대이상) */
   bands: string[];
@@ -54,6 +55,12 @@ export function DemoPyramid({
   ariaLabel: string;
   /** 폰 화면이면 좁은 viewBox 로 그린다 */
   mobile?: boolean;
+  /**
+   * 한쪽 성별만 남기고 반대쪽을 흐리게 한다.
+   * 두 그림(전국 고독사 / 부산 1인세대)의 모양이 어떻게 어긋나는지는
+   * 한쪽씩 지워 보면 훨씬 빨리 보인다. null 이면 양쪽 다 또렷하게.
+   */
+  focusSex?: '남' | '여' | null;
 }) {
   const { W, H, M, GAP } = DIMS[mobile ? 'mobile' : 'desktop'];
   const HALF = (W - M.left - M.right - GAP) / 2;
@@ -195,6 +202,7 @@ export function DemoPyramid({
                 );
               }
 
+              const faded = focusSex !== null && focusSex !== sex;
               const l = len(pct);
               // 막대가 길면 값을 안쪽에, 짧으면 바깥쪽에 쓴다
               const inside = l > HALF * 0.72;
@@ -203,7 +211,7 @@ export function DemoPyramid({
                 : centerR + l - (inside ? 8 : -6);
 
               return (
-                <g key={sex}>
+                <g key={sex} style={{ transition: 'opacity 300ms ease-out' }} opacity={faded ? 0.2 : 1}>
                   <motion.rect
                     x={left ? centerL - l : centerR}
                     y={y}
