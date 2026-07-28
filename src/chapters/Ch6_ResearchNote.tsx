@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { BlurText } from '@/components/reactbits/BlurText';
+import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { judgeH1, judgeH2, judgeH3, type Verdict } from '@/lib/hypothesis';
 import { HOTLINES, PROGRAMS } from '@/data/programs';
@@ -79,12 +81,12 @@ export function Ch6ResearchNote() {
         <header className="flex max-w-[70ch] flex-col gap-4">
           <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 6</span>
           <h2 id="ch6-heading" className="font-serif text-headline text-ink">
-            연구 노트
+            <BlurText text="연구 노트" />
           </h2>
-          <p className="leading-relaxed text-ink/65">
+          <ScrollRevealText className="leading-relaxed text-ink/65">
             지금까지 본 것을 어떻게 만들었는지, 그리고 무엇을 못 했는지 적습니다. 이 장은 발표를 잘 보이게
             하려고 쓰는 것이 아니라, 다음 사람이 저희 작업을 검증하고 이어받을 수 있게 하려고 씁니다.
-          </p>
+          </ScrollRevealText>
         </header>
 
         {/* 가설 판정 요약 */}

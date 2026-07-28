@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { useLenis } from './SmoothScroll';
 
 /**
  * 발표 모드.
@@ -70,13 +71,23 @@ export function PresentModeProvider({ children }: { children: ReactNode }) {
     return new URLSearchParams(window.location.search).get('present') === '1';
   });
   const [index, setIndex] = useState(0);
+  const lenis = useLenis();
 
-  const scrollToChapter = useCallback((i: number) => {
-    const el = document.getElementById(CHAPTERS[i].id);
-    if (!el) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-  }, []);
+  const scrollToChapter = useCallback(
+    (i: number) => {
+      const el = document.getElementById(CHAPTERS[i].id);
+      if (!el) return;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Lenis 가 스크롤을 잡고 있을 때 el.scrollIntoView 를 직접 부르면 Lenis 가 모르는 사이에
+      // 위치가 바뀌어 다음 사용자 스크롤이 튄다. lenis.scrollTo 로 같은 경로를 태운다.
+      if (lenis) {
+        lenis.scrollTo(el, { offset: 0, duration: reduced ? 0 : 1.2 });
+      } else {
+        el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      }
+    },
+    [lenis]
+  );
 
   const goTo = useCallback(
     (i: number) => {

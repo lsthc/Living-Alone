@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ChartFrame } from '@/components/ChartFrame';
 import { EmptyState } from '@/components/EmptyState';
 import { VerdictCard } from '@/components/VerdictCard';
+import { BlurText } from '@/components/reactbits/BlurText';
+import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { Slider } from '@/components/ui/slider';
 import { IndexTrend, toIndex, type TrendSeries } from '@/charts/IndexTrend';
 import { rowsOf, useData } from '@/lib/DataProvider';
@@ -93,12 +95,12 @@ export function Ch1Faster() {
       <header className="flex max-w-[70ch] flex-col gap-4">
         <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 1 · 가설 H1</span>
         <h2 id="ch1-heading" className="font-serif text-headline text-paper">
-          부산은 정말 더 빠른가
+          <BlurText text="부산은 정말 더 빠른가" />
         </h2>
-        <p className="leading-relaxed text-paper/60">
+        <ScrollRevealText className="leading-relaxed text-paper/60">
           부산은 전국에서 가장 먼저 초고령사회에 들어섰습니다. 그렇다면 고립이 늘어나는 <em className="not-italic text-paper/90">속도</em>도
           전국보다 빠를까요. 도시 크기가 다르면 사람 수를 그냥 비교할 수 없으니, 첫 연도를 100으로 놓고 얼마나 늘었는지만 봅니다.
-        </p>
+        </ScrollRevealText>
       </header>
 
       {/* 지표 전환 */}

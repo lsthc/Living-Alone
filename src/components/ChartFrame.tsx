@@ -47,7 +47,7 @@ export function ChartFrame({
       </div>
 
       {caveat && (
-        <p className="border-l-2 border-slate/60 pl-3 text-xs leading-relaxed text-paper/55">
+        <p className="border-l-2 border-slate/60 pl-3 text-sm leading-relaxed text-paper/60">
           <span className="text-paper/70">읽을 때 주의</span> — {caveat}
         </p>
       )}

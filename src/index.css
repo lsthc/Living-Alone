@@ -18,13 +18,40 @@
 
   html {
     font-size: calc(16px * var(--font-scale));
-    scroll-behavior: smooth;
+    /* 스무스 스크롤은 Lenis(SmoothScroll.tsx)가 맡는다. 네이티브 smooth 를 같이 켜 두면
+       둘이 겹쳐 스크롤이 덜컹인다. reduced-motion 이면 Lenis 가 아예 안 켜지므로 auto 가 곧 정답이다. */
+    scroll-behavior: auto;
+    /* 스크롤은 계속 되지만 막대는 숨긴다 (Firefox) */
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    /* 스크롤은 계속 되지만 막대는 숨긴다 (Chrome·Safari·Edge) */
+    display: none;
   }
 
   body {
     @apply bg-ink font-sans text-paper antialiased;
     /* 배경 전환(심야 남색 → 종이색)은 Chapter 4 에서 일어난다 */
     transition: background-color 1200ms ease-out;
+    /* 한글은 음절 블록 사이 어디서나 줄바꿈이 허용돼 단어가 쪼개진다.
+       keep-all 로 띄어쓰기 단위를 지키게 한다 (숫자+단위는 whitespace-nowrap 으로 별도 처리). */
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Lenis 공식 권장 기본 스타일. .lenis-smooth 는 Lenis 가 켜졌을 때 <html> 에 스스로 붙인다. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  html.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  html.lenis.lenis-stopped {
+    overflow: hidden;
   }
 
   /* 모든 숫자는 고정폭으로. 값이 바뀔 때 자릿수가 흔들리지 않게 한다. */

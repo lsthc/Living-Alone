@@ -3,6 +3,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChartFrame } from '@/components/ChartFrame';
 import { EmptyState } from '@/components/EmptyState';
 import { VerdictCard } from '@/components/VerdictCard';
+import { BlurText } from '@/components/reactbits/BlurText';
+import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { Switch } from '@/components/ui/switch';
 import { DistrictMap, MapLegend } from '@/charts/DistrictMap';
 import { Scatter, type ScatterPoint } from '@/charts/Scatter';
@@ -70,12 +72,12 @@ export function Ch2Where() {
       <header className="flex max-w-[70ch] flex-col gap-4">
         <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 2 · 가설 H2</span>
         <h2 id="ch2-heading" className="font-serif text-headline text-paper">
-          어디가 가장 외로운가
+          <BlurText text="어디가 가장 외로운가" />
         </h2>
-        <p className="leading-relaxed text-paper/60">
+        <ScrollRevealText className="leading-relaxed text-paper/60">
           부산은 하나가 아닙니다. 산업이 떠난 원도심과 새로 지은 신도시는 같은 도시 안에서 다른 시간을 살고 있습니다.
           오래된 동네일수록 혼자 사는 노인이 많은지, 16개 구·군을 하나씩 켜서 확인합니다.
-        </p>
+        </ScrollRevealText>
       </header>
 
       {!geoData || rows.length === 0 ? (
@@ -115,7 +117,7 @@ export function Ch2Where() {
                   </label>
                 </div>
                 {onlyOldDowntown && (
-                  <p className="text-xs leading-relaxed text-paper/55">
+                  <p className="text-sm leading-relaxed text-paper/60">
                     원도심은 연구팀이 영도구·동구·중구·사상구·사하구로 정의했습니다. 행정적으로 정해진 구분이 아니라
                     이 연구의 기준입니다.
                   </p>

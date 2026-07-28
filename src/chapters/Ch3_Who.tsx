@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ChartFrame } from '@/components/ChartFrame';
 import { EmptyState } from '@/components/EmptyState';
 import { VerdictCard } from '@/components/VerdictCard';
+import { BlurText } from '@/components/reactbits/BlurText';
+import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { DemoPyramid, type PyramidDatum } from '@/charts/DemoPyramid';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { judgeH3 } from '@/lib/hypothesis';
@@ -121,14 +123,14 @@ export function Ch3Who() {
       <header className="flex max-w-[70ch] flex-col gap-4">
         <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 3 · 가설 H3</span>
         <h2 id="ch3-heading" className="font-serif text-headline text-paper">
-          누가 혼자 떠나는가
+          <BlurText text="누가 혼자 떠나는가" />
         </h2>
-        <p className="leading-relaxed text-paper/60">
+        <ScrollRevealText className="leading-relaxed text-paper/60">
           앞의 두 장에서 <em className="not-italic text-paper/90">얼마나</em>와{' '}
           <em className="not-italic text-paper/90">어디서</em>를 확인했습니다. 남은 질문은 누구인가입니다. 그런데
           여기서 우리 연구는 벽에 부딪혔습니다. 부산만 따로 본 성별·연령대별 고독사 표는 공표되지 않습니다. 없는
           숫자를 만들어 넣는 대신, 있는 것과 없는 것을 그대로 보여드립니다.
-        </p>
+        </ScrollRevealText>
       </header>
 
       {!hasData || year === null ? (
@@ -194,7 +196,7 @@ export function Ch3Who() {
                 합계 <span className="num text-paper/70">{fmtInt(deathTotal)}</span>명 · 40대 이상
               </p>
               {deathPair && deathPairPublished !== null && (
-                <p className="mt-2 text-center text-xs leading-relaxed text-paper/55">
+                <p className="mt-2 text-center text-sm leading-relaxed text-paper/60">
                   같은 묶음을 보도자료 기준(연령미상까지 포함한 전체 고독사 대비)으로 세면{' '}
                   <span className="num text-paper/60">{deathPairPublished.toFixed(1)}%</span>입니다. 아래 판정
                   카드의 숫자가 이 기준입니다.

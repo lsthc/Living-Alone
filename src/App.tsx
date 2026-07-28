@@ -1,5 +1,6 @@
 import { DataProvider } from '@/lib/DataProvider';
 import { PresentControls, PresentModeProvider } from '@/lib/PresentMode';
+import { SmoothScrollProvider } from '@/lib/SmoothScroll';
 import { Ch0Window } from '@/chapters/Ch0_Window';
 import { Ch1Faster } from '@/chapters/Ch1_Faster';
 import { Ch2Where } from '@/chapters/Ch2_Where';
@@ -16,25 +17,27 @@ import { Ch6ResearchNote } from '@/chapters/Ch6_ResearchNote';
  */
 export default function App() {
   return (
-    <PresentModeProvider>
-      <DataProvider>
-        {/* 키보드 사용자가 챕터 목록을 지나 본문으로 바로 갈 수 있게 */}
-        <a href="#ch0" className="skip-link">
-          본문으로 건너뛰기
-        </a>
+    <SmoothScrollProvider>
+      <PresentModeProvider>
+        <DataProvider>
+          {/* 키보드 사용자가 챕터 목록을 지나 본문으로 바로 갈 수 있게 */}
+          <a href="#ch0" className="skip-link">
+            본문으로 건너뛰기
+          </a>
 
-        <main className="min-h-screen">
-          <Ch0Window />
-          <Ch1Faster />
-          <Ch2Where />
-          <Ch3Who />
-          <Ch4MyFamily />
-          <Ch5WhatNow />
-          <Ch6ResearchNote />
-        </main>
+          <main className="min-h-screen">
+            <Ch0Window />
+            <Ch1Faster />
+            <Ch2Where />
+            <Ch3Who />
+            <Ch4MyFamily />
+            <Ch5WhatNow />
+            <Ch6ResearchNote />
+          </main>
 
-        <PresentControls />
-      </DataProvider>
-    </PresentModeProvider>
+          <PresentControls />
+        </DataProvider>
+      </PresentModeProvider>
+    </SmoothScrollProvider>
   );
 }

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { BlurText } from '@/components/reactbits/BlurText';
+import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { HOTLINES, NEIGHBOR_ACTIONS, PROGRAMS, type Program } from '@/data/programs';
 
 /** 공식 사이트에서 확인한 날짜를 사람이 읽는 형태로 */
@@ -82,13 +84,13 @@ export function Ch5WhatNow() {
         <header className="flex max-w-[70ch] flex-col gap-4">
           <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 5</span>
           <h2 id="ch5-heading" className="font-serif text-headline text-ink">
-            그래서 지금 무엇을 할 수 있나
+            <BlurText text="그래서 지금 무엇을 할 수 있나" />
           </h2>
-          <p className="leading-relaxed text-ink/65">
+          <ScrollRevealText className="leading-relaxed text-ink/65">
             여기까지 오면 대개 이런 말로 끝납니다. "관심을 가집시다." 저희는 그 말이 아무것도 바꾸지 않는다고
             생각했습니다. 그래서 이미 만들어져 있는 제도를 찾아봤습니다. 아래 내용은 전부 각 기관 공식
             사이트에서 직접 확인한 것이고, 확인하지 못한 것은 넣지 않았습니다.
-          </p>
+          </ScrollRevealText>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -114,7 +116,7 @@ export function Ch5WhatNow() {
                 <div className="flex flex-col gap-2">
                   <p className="text-base text-ink">{h.name}</p>
                   <p className="text-sm leading-relaxed text-ink/65">{h.what}</p>
-                  <p className="text-xs leading-relaxed text-ink/65">{h.when}</p>
+                  <p className="text-sm leading-relaxed text-ink/65">{h.when}</p>
                   <a
                     href={h.url}
                     target="_blank"
@@ -180,7 +182,7 @@ export function Ch5WhatNow() {
             부산에는 「부산광역시 고독사 예방 및 사회적 고립가구 지원을 위한 조례」(2019년 제정)가 있어,
             고독사 현황 파악과 단계별 정책 수립이 시의 의무로 정해져 있습니다.
           </p>
-          <p className="border-t border-ink/12 pt-3 text-xs leading-relaxed text-ink/65">
+          <p className="border-t border-ink/12 pt-3 text-sm leading-relaxed text-ink/65">
             이 페이지의 모든 정보는 <span className="num">2026년 7월 25일</span> 각 기관 공식 사이트에서
             확인했습니다. 제도는 바뀝니다. 실제로 신청하기 전에 129나 주민센터에서 한 번 더 확인해 주세요.
           </p>

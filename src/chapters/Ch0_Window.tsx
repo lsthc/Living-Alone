@@ -64,7 +64,7 @@ export function Ch0Window() {
         >
           <h1 id="ch0-heading" className="font-serif text-display text-paper">
             부산의 밤에 켜지는 불빛 중{' '}
-            <span className="num text-lamp">
+            <span className="num whitespace-nowrap text-lamp">
               <CountUp
                 to={households}
                 delay={gridDuration + 200}

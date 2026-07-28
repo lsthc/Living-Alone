@@ -22,7 +22,9 @@ export default {
       fontFamily: {
         // CDN 대신 로컬 번들 폰트를 쓴다 (발표장 오프라인 대비)
         sans: ['Pretendard', 'system-ui', 'sans-serif'],
-        serif: ['"Gowun Batang"', 'serif'],
+        // 표제도 Pretendard 로 통일했다 — Gowun Batang(명조) 은 큰 글자에서 획이 가늘어져
+        // 가독성이 떨어진다는 피드백을 받았다.
+        serif: ['Pretendard', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       // 프로젝터(1920×1080) 뒷줄까지 읽히도록 큰 제목 단계를 따로 둔다

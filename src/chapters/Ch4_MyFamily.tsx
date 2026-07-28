@@ -199,7 +199,7 @@ export function Ch4MyFamily() {
               </fieldset>
 
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-xs leading-relaxed text-ink/65">
+                <p className="text-sm leading-relaxed text-ink/70">
                   고른 내용은 이 브라우저 안에서만 계산됩니다. 어디로도 전송되지 않고 저장되지도 않습니다.
                   <br />
                   연령대는 원자료의 공표 구간을 그대로 썼습니다. 40대 미만 1인세대는 이 표에 없습니다.

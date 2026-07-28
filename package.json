@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "data:fetch": "node scripts/fetch_mois.mjs && node scripts/fetch_kosis.mjs",
-    "data:build": "node scripts/build_csv.mjs"
+    "data:build": "node scripts/build_csv.mjs",
+    "welcome:build": "node scripts/build_welcome.mjs"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",
@@ -25,6 +26,8 @@
     "clsx": "^2.1.1",
     "d3-geo": "^3.1.1",
     "framer-motion": "^11.15.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.25",
     "papaparse": "^5.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
