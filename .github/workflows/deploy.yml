@@ -56,11 +56,11 @@ jobs:
       - name: 빌드
         run: npm run build
 
-      # enablement: true 면 저장소에 Pages 가 꺼져 있어도 이 워크플로가 켜 준다.
-      # (없으면 Settings → Pages 에서 손으로 켤 때까지 "Get Pages site failed" 로 멈춘다)
+      # enablement: true 로 Pages 를 자동으로 켜 보려 했지만
+      # GITHUB_TOKEN 에는 Pages 사이트 생성 권한이 없어 실패한다
+      # ("Resource not accessible by integration"). 저장소 소유자가
+      # Settings → Pages → Source 를 "GitHub Actions" 로 바꿔 두는 수밖에 없다.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
