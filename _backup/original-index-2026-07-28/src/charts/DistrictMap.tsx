@@ -8,15 +8,15 @@ import { cn } from '@/lib/utils';
 /**
  * 부산 16개 구·군 코로플레스 지도.
  *
- * 색은 어두운 회청 → 밝은 파랑(TDS primary) 한 방향으로만 간다.
+ * 색은 어두운 회청 → 밝은 앰버 한 방향으로만 간다.
  * 고립이 심한 곳일수록 창문처럼 밝게 켜진다 — Chapter 0 의 격자와 같은 은유다.
  * 위험을 뜻하는 빨강은 쓰지 않는다.
  */
 
-const LOW = [78, 89, 104]; //  --slate #4e5968
-const HIGH = [49, 130, 246]; // --lamp  #3182f6
+const LOW = [51, 70, 92]; //  --slate #33465C
+const HIGH = [255, 196, 107]; // --lamp  #FFC46B
 
-/** 0~1 값을 회청 → 파랑 사이 색으로 바꾼다. */
+/** 0~1 값을 회청 → 앰버 사이 색으로 바꾼다. */
 export function rampColor(t: number) {
   const c = LOW.map((lo, i) => Math.round(lo + (HIGH[i] - lo) * Math.min(Math.max(t, 0), 1)));
   return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
@@ -112,7 +112,7 @@ export function DistrictMap({
                 d={pathFor(f)}
                 // 값이 없는 구는 색을 칠하지 않는다. 0 으로 취급하지 않는다.
                 fill={t === null ? 'transparent' : rampColor(t)}
-                stroke={isSelected ? '#ffffff' : '#191f28'}
+                stroke={isSelected ? '#EDE8DF' : '#0B1420'}
                 strokeWidth={isSelected ? 2.5 : 1.2}
                 initial={{ opacity: reduced ? 1 : 0 }}
                 animate={{ opacity: shown ? (dimmed ? 0.18 : 1) : 0 }}
@@ -134,7 +134,7 @@ export function DistrictMap({
               key={`empty-${f.properties.sgg_code}`}
               d={pathFor(f)}
               fill="none"
-              stroke="#4e5968"
+              stroke="#33465C"
               strokeWidth={1}
               strokeDasharray="3 3"
             />

@@ -2,7 +2,6 @@ import { useId, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EmptyState } from '@/components/EmptyState';
 import { SourceNote } from '@/components/SourceNote';
-import { NextChapter } from '@/components/StoryNav';
 import { WindowGrid } from '@/charts/WindowGrid';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { fmtInt } from '@/lib/utils';
@@ -38,7 +37,7 @@ function Field({
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-ink/25 bg-paper px-4 py-3 text-base text-ink transition-colors hover:border-ink/45 focus-visible:ring-lamp focus-visible:ring-offset-paper"
+        className="w-full rounded-md border border-ink/25 bg-paper px-4 py-3 text-base text-ink transition-colors hover:border-ink/45 focus-visible:ring-rust focus-visible:ring-offset-paper"
       >
         <option value="">{placeholder}</option>
         {options.map((o) => (
@@ -146,9 +145,9 @@ export function Ch4MyFamily() {
       {/* 심야 남색에서 종이색으로 넘어가는 띠 */}
       <div className="h-40 w-full bg-gradient-to-b from-ink to-paper" aria-hidden />
 
-      <section id="ch4" className="chapter flex flex-col gap-10 md:gap-14 pt-8" aria-labelledby="ch4-heading">
+      <section id="ch4" className="chapter flex flex-col gap-14 pt-8" aria-labelledby="ch4-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-weakfg">CHAPTER 4</span>
+          <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 4</span>
           <h2 id="ch4-heading" className="font-serif text-headline text-ink">
             우리 가족의 거리
           </h2>
@@ -213,7 +212,7 @@ export function Ch4MyFamily() {
                       setBand('');
                       setSex('');
                     }}
-                    className="rounded-full border border-ink/25 px-4 py-2 text-sm text-ink/65 transition-colors hover:border-ink/50 hover:text-ink focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                    className="rounded-full border border-ink/25 px-4 py-2 text-sm text-ink/65 transition-colors hover:border-ink/50 hover:text-ink focus-visible:ring-rust focus-visible:ring-offset-paper"
                   >
                     다시 고르기
                   </button>
@@ -357,8 +356,6 @@ export function Ch4MyFamily() {
                 </motion.p>
               )}
             </AnimatePresence>
-
-            <NextChapter to="ch5" label="지금 바로 할 수 있는 일 보기" tone="light" />
           </>
         )}
       </section>

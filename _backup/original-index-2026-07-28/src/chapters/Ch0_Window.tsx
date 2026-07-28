@@ -1,10 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { CountUp } from '@/components/CountUp';
 import { EmptyState } from '@/components/EmptyState';
-import { StoryCta } from '@/components/StoryNav';
 import { WindowGrid } from '@/charts/WindowGrid';
 import { rowsOf, useData } from '@/lib/DataProvider';
-import { useIsMobile } from '@/lib/useIsMobile';
 import { fmtManwon } from '@/lib/utils';
 
 /** 사각형 하나가 뜻하는 가구 수 */
@@ -19,7 +17,6 @@ const UNIT = 1000;
 export function Ch0Window() {
   const { trend, loading } = useData();
   const reduced = useReducedMotion();
-  const mobile = useIsMobile();
 
   // 부산의 가장 최근 연도 독거노인 수
   const latest = rowsOf(trend)
@@ -43,9 +40,8 @@ export function Ch0Window() {
 
   const households = latest.elderly_alone!;
   const squares = Math.round(households / UNIT);
-  // 격자가 다 켜진 뒤에 카운터를 시작한다.
-  // 폰에서는 4초를 다 기다리지 못하고 이탈한다 — 절반으로 줄인다.
-  const gridDuration = reduced ? 0 : mobile ? 2200 : 4200;
+  // 격자가 다 켜진 뒤에 카운터를 시작한다
+  const gridDuration = reduced ? 0 : 4200;
 
   return (
     <section
@@ -56,7 +52,6 @@ export function Ch0Window() {
       <div className="flex w-full max-w-[1100px] flex-col items-center gap-14">
         <WindowGrid
           count={squares}
-          duration={gridDuration || 4200}
           label={`사각형 ${squares}개로 표현한 ${latest.year}년 부산의 독거노인 ${households.toLocaleString('ko-KR')}가구. 사각형 하나가 ${UNIT}가구를 뜻한다.`}
           className="w-full max-w-[820px]"
         />
@@ -85,22 +80,6 @@ export function Ch0Window() {
           <p className="num text-sm tracking-wide text-paper/55">
             {latest.year} · 부산 · 65세 이상 1인가구 {households.toLocaleString('ko-KR')}
           </p>
-        </motion.div>
-
-        {/* 모바일 전용 유도 버튼 — 학부모가 처음 여는 화면에서 '눌러볼 곳'을 준다.
-            발표장(데스크톱) 화면에는 나타나지 않는다. */}
-        <motion.div
-          className="flex w-full max-w-[420px] flex-col gap-2.5 md:hidden"
-          initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: gridDuration / 1000 + 0.8, ease: 'easeOut' }}
-        >
-          <StoryCta
-            to="ch4"
-            label="혼자 계신 그분의 자리 찾아보기"
-            sub="구·군과 연령을 고르면 그분의 자리가 보입니다"
-          />
-          <StoryCta to="ch1" variant="weak" label="처음부터 순서대로 읽기" sub="가설 세 개를 데이터로 확인합니다" />
         </motion.div>
       </div>
 

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BlurText } from '@/components/reactbits/BlurText';
 import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
-import { NextChapter, ShareButton } from '@/components/StoryNav';
 import { HOTLINES, NEIGHBOR_ACTIONS, PROGRAMS, type Program } from '@/data/programs';
 
 /** 공식 사이트에서 확인한 날짜를 사람이 읽는 형태로 */
@@ -41,7 +40,7 @@ function ProgramCard({ program }: { program: Program }) {
       </dl>
 
       {program.highlight && (
-        <p className="rounded-md border-l-2 border-lamp bg-weakbg/60 px-4 py-3 text-sm leading-relaxed text-ink/80">
+        <p className="rounded-md border-l-2 border-rust bg-rust/[0.07] px-4 py-3 text-sm leading-relaxed text-ink/80">
           {program.highlight}
         </p>
       )}
@@ -81,9 +80,9 @@ export function Ch5WhatNow() {
 
   return (
     <div className="w-full bg-paper text-ink">
-      <section id="ch5" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch5-heading">
+      <section id="ch5" className="chapter flex flex-col gap-14" aria-labelledby="ch5-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-weakfg">CHAPTER 5</span>
+          <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 5</span>
           <h2 id="ch5-heading" className="font-serif text-headline text-ink">
             <BlurText text="그래서 지금 무엇을 할 수 있나" />
           </h2>
@@ -113,14 +112,7 @@ export function Ch5WhatNow() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.45, ease: 'easeOut' }}
               >
-                {/* 번호 자체가 전화 링크다 — 휴대폰에서 누르면 바로 걸린다 */}
-                <a
-                  href={`tel:${h.number}`}
-                  aria-label={`${h.name} ${h.number}에 전화 걸기`}
-                  className="num text-5xl leading-none text-rust underline decoration-rust/25 decoration-2 underline-offset-8 transition-colors active:text-rustdeep md:text-6xl"
-                >
-                  {h.number}
-                </a>
+                <span className="num text-5xl leading-none text-rust md:text-6xl">{h.number}</span>
                 <div className="flex flex-col gap-2">
                   <p className="text-base text-ink">{h.name}</p>
                   <p className="text-sm leading-relaxed text-ink/65">{h.what}</p>
@@ -132,13 +124,6 @@ export function Ch5WhatNow() {
                     className="text-xs text-ink/65 underline decoration-ink/30 underline-offset-2 hover:text-ink/75"
                   >
                     공식 안내 · <span className="num">{fmtDate(h.verifiedOn)}</span> 확인
-                  </a>
-                  {/* 모바일 전용 통화 버튼 — 번호보다 훨씬 큰 탭 목표 */}
-                  <a
-                    href={`tel:${h.number}`}
-                    className="mt-1 flex min-h-[48px] items-center justify-center rounded-lg bg-rust/[0.08] px-5 text-[15px] font-semibold text-rustdeep transition-colors active:bg-rust/[0.15] md:hidden"
-                  >
-                    {h.number} 전화 걸기
                   </a>
                 </div>
               </motion.div>
@@ -160,14 +145,14 @@ export function Ch5WhatNow() {
                 <li key={a.id}>
                   <label
                     className={`flex cursor-pointer items-start gap-4 rounded-lg border p-5 transition-colors ${
-                      on ? 'border-lamp/45 bg-weakbg/60' : 'border-ink/15 hover:border-ink/30'
+                      on ? 'border-rust/45 bg-rust/[0.06]' : 'border-ink/15 hover:border-ink/30'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={on}
                       onChange={() => toggle(a.id)}
-                      className="mt-1 h-4 w-4 shrink-0 accent-lamp focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                      className="mt-1 h-4 w-4 shrink-0 accent-rust focus-visible:ring-rust focus-visible:ring-offset-paper"
                     />
                     <span className="flex flex-col gap-1.5">
                       <span className="text-sm leading-relaxed text-ink/85">{a.text}</span>
@@ -201,12 +186,6 @@ export function Ch5WhatNow() {
             이 페이지의 모든 정보는 <span className="num">2026년 7월 25일</span> 각 기관 공식 사이트에서
             확인했습니다. 제도는 바뀝니다. 실제로 신청하기 전에 129나 주민센터에서 한 번 더 확인해 주세요.
           </p>
-        </div>
-
-        {/* 제도 정보야말로 학부모가 다른 가족에게 건네고 싶은 내용이다 — 여기서 공유를 권한다 */}
-        <div className="flex flex-col gap-2.5 md:hidden">
-          <ShareButton tone="light" />
-          <NextChapter to="ch6" label="저희가 어떻게 연구했나" tone="light" />
         </div>
       </section>
     </div>

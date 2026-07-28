@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BlurText } from '@/components/reactbits/BlurText';
 import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
-import { ShareButton } from '@/components/StoryNav';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { judgeH1, judgeH2, judgeH3, type Verdict } from '@/lib/hypothesis';
 import { HOTLINES, PROGRAMS } from '@/data/programs';
@@ -15,8 +14,8 @@ const TEAM = {
 
 /** 종이색 배경에서 쓰는 판정 배지 색 */
 const VERDICT_STYLE: Record<Verdict, string> = {
-  채택: 'border-weakfg/40 bg-weakbg text-weakfg',
-  부분채택: 'border-weakfg/40 text-weakfg',
+  채택: 'border-rustdeep/50 bg-rustdeep/10 text-rustdeep',
+  부분채택: 'border-tide/60 bg-tide/10 text-tide',
   기각: 'border-ink/25 bg-ink/[0.05] text-ink/65',
   검증불가: 'border-ink/25 bg-ink/[0.05] text-ink/65',
 };
@@ -78,9 +77,9 @@ export function Ch6ResearchNote() {
 
   return (
     <div className="w-full bg-paper text-ink">
-      <section id="ch6" className="chapter flex flex-col gap-12 md:gap-16" aria-labelledby="ch6-heading">
+      <section id="ch6" className="chapter flex flex-col gap-16" aria-labelledby="ch6-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-weakfg">CHAPTER 6</span>
+          <span className="num text-xs tracking-[0.25em] text-rustdeep">CHAPTER 6</span>
           <h2 id="ch6-heading" className="font-serif text-headline text-ink">
             <BlurText text="연구 노트" />
           </h2>
@@ -95,7 +94,7 @@ export function Ch6ResearchNote() {
           <h3 className="font-serif text-2xl text-ink">가설 세 개, 판정 세 개</h3>
           <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
             아래 표는 손으로 쓴 것이 아닙니다.{' '}
-            <code className="font-mono rounded bg-ink/[0.06] px-1.5 py-0.5 text-[0.85em]">src/lib/hypothesis.ts</code> 의
+            <code className="num rounded bg-ink/[0.06] px-1.5 py-0.5 text-[0.85em]">src/lib/hypothesis.ts</code> 의
             순수 함수가 CSV 를 읽어 계산한 결과를 그대로 그린 것입니다. 데이터를 갱신하면 판정도 따라 바뀝니다.
             결론을 먼저 정해 놓고 데이터를 맞추지 않으려고 이렇게 만들었습니다.
           </p>
@@ -177,7 +176,7 @@ export function Ch6ResearchNote() {
 
           <div className="max-w-[74ch] rounded-lg border border-ink/15 bg-ink/[0.04] p-5">
             <p className="mb-3 text-sm text-ink/65">누구든 아래 명령으로 데이터를 다시 만들 수 있습니다.</p>
-            <pre className="font-mono overflow-x-auto text-xs leading-relaxed text-ink/75 tabular-nums">
+            <pre className="num overflow-x-auto text-xs leading-relaxed text-ink/75">
               <code>{`npm install\nnpm run data:fetch   # 원자료 내려받기 (KOSIS API 키 필요)\nnpm run data:build   # public/data/*.csv 생성\nnpm test             # 가설 판정 함수 테스트`}</code>
             </pre>
           </div>
@@ -292,8 +291,6 @@ export function Ch6ResearchNote() {
             저희가 이 작업에서 지킨 규칙은 하나였습니다. 가설이 틀리면 틀렸다고 쓴다. 세 개 중 하나는 끝내
             검증하지 못했고, 그 칸은 비워 둔 채로 두었습니다.
           </p>
-
-          <ShareButton tone="light" />
         </footer>
       </section>
     </div>

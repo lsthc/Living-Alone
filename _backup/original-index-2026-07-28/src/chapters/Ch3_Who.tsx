@@ -2,14 +2,12 @@ import { useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChartFrame } from '@/components/ChartFrame';
 import { EmptyState } from '@/components/EmptyState';
-import { NextChapter } from '@/components/StoryNav';
 import { VerdictCard } from '@/components/VerdictCard';
 import { BlurText } from '@/components/reactbits/BlurText';
 import { ScrollRevealText } from '@/components/reactbits/ScrollRevealText';
 import { DemoPyramid, type PyramidDatum } from '@/charts/DemoPyramid';
 import { rowsOf, useData } from '@/lib/DataProvider';
 import { judgeH3 } from '@/lib/hypothesis';
-import { useIsMobile } from '@/lib/useIsMobile';
 import { cn, fmtInt } from '@/lib/utils';
 import type { AgeBand } from '@/data/schema';
 
@@ -59,7 +57,6 @@ function topAdjacentPair(data: PyramidDatum[]) {
 export function Ch3Who() {
   const { demo, singleDemo, loading } = useData();
   const reduced = useReducedMotion();
-  const mobile = useIsMobile();
 
   const demoRows = rowsOf(demo);
   const singleRows = rowsOf(singleDemo);
@@ -122,7 +119,7 @@ export function Ch3Who() {
   const sexDiffers = !!deathTop && !!aloneTop && deathTop.sex !== aloneTop.sex;
 
   return (
-    <section id="ch3" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch3-heading">
+    <section id="ch3" className="chapter flex flex-col gap-14" aria-labelledby="ch3-heading">
       <header className="flex max-w-[70ch] flex-col gap-4">
         <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 3 · 가설 H3</span>
         <h2 id="ch3-heading" className="font-serif text-headline text-paper">
@@ -193,7 +190,6 @@ export function Ch3Who() {
                       }
                     : undefined
                 }
-                mobile={mobile}
                 ariaLabel={`${year}년 전국 고독사 사망자의 성별·연령대 구조 피라미드`}
               />
               <p className="mt-3 text-center text-sm text-paper/55">
@@ -233,7 +229,6 @@ export function Ch3Who() {
                       }
                     : undefined
                 }
-                mobile={mobile}
                 ariaLabel={`${year}년 부산 1인세대의 성별·연령대 구조 피라미드`}
               />
               <p className="mt-3 text-center text-sm text-paper/55">
@@ -286,8 +281,6 @@ export function Ch3Who() {
       )}
 
       <VerdictCard result={verdict as never} />
-
-      <NextChapter to="ch4" label="우리 가족의 자리 찾아보기" />
     </section>
   );
 }

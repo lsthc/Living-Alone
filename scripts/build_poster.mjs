@@ -1,15 +1,22 @@
 /**
- * 발표회 포스터(600×900, 2:3 세로)를 만든다.
+ * 발표회 포스터(2:3 세로)를 만든다. 레이아웃은 600×900 기준으로 짜여 있고,
+ * SCALE 배수만큼 CSS transform 으로 확대해 벡터(텍스트·SVG)를 뭉개지지 않고
+ * 더 높은 해상도로 캡처할 수 있게 한다.
  *
  * 포스터에 찍히는 숫자는 하나도 손으로 적지 않는다. public/data/ 의 CSV 를 읽어
  * src/lib/hypothesis.ts 와 같은 규칙으로 계산한 값만 넣는다.
  * 보고서·화면·포스터의 숫자가 서로 어긋나지 않게 하려는 것이다.
  *
- * 실행: node scripts/build_poster.mjs   → dist/_poster.html
- * 그 뒤 헤드리스 크롬으로 600×900 캡처 → JPEG.
+ * 실행: node scripts/build_poster.mjs [scale]   → dist/_poster.html
+ *   예) node scripts/build_poster.mjs 4   → 2400×3600 캡처용 HTML
+ * 그 뒤 헤드리스 크롬으로 (600×scale)×(900×scale) 캡처 → PNG/JPEG.
  */
 import fs from 'node:fs';
 import path from 'node:path';
+
+const SCALE = Number(process.argv[2]) || 1;
+const OUT_W = 600 * SCALE;
+const OUT_H = 900 * SCALE;
 
 const DATA = path.resolve('public/data');
 
@@ -157,8 +164,10 @@ const html = `<!doctype html>
 <link rel="stylesheet" href="./fonts/fonts.css"/>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { width:600px; height:900px; background:#0B1420; color:#EDE8DF;
-         font-family:'Pretendard',system-ui,sans-serif; overflow:hidden; }
+  html, body { width:${OUT_W}px; height:${OUT_H}px; background:#0B1420; overflow:hidden; }
+  #stage { width:600px; height:900px; position:relative; background:#0B1420; color:#EDE8DF;
+           font-family:'Pretendard',system-ui,sans-serif; overflow:hidden;
+           transform:scale(${SCALE}); transform-origin:top left; }
   .num { font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; }
   .serif { font-family:'Gowun Batang',serif; }
   header { padding:26px 30px 16px; border-bottom:1px solid rgba(237,232,223,.16); }
@@ -206,6 +215,7 @@ const html = `<!doctype html>
 </style>
 </head>
 <body>
+<div id="stage">
   <header>
     <h1 class="serif">혼자 남겨진 도시,<br/><em>부산</em></h1>
     <p class="sub">전국에서 가장 먼저 초고령사회에 들어선 도시의 독거노인·고독사 데이터</p>
@@ -265,11 +275,13 @@ const html = `<!doctype html>
     </div>
     <div class="qr">QR<br/>7.28<br/>배포 후</div>
   </footer>
+</div>
 </body>
 </html>`;
 
 fs.mkdirSync(path.resolve('dist'), { recursive: true });
-fs.writeFileSync(path.resolve('dist/_poster.html'), html, 'utf8');
-console.log('dist/_poster.html 생성');
+const outFile = SCALE === 1 ? 'dist/_poster.html' : `dist/_poster_${OUT_W}x${OUT_H}.html`;
+fs.writeFileSync(path.resolve(outFile), html, 'utf8');
+console.log(`${outFile} 생성 (캡처 크기 ${OUT_W}×${OUT_H})`);
 console.log(`H1 축별 격차: ${axes.map((a) => `${a.label} ${fmt(a.gap)}%p ${a.pass ? '충족' : '미달'}`).join(' / ')}`);
 console.log(`H2 원도심 ${fmt(oldMean, 1)}% vs 나머지 ${fmt(otherMean, 1)}%`);
