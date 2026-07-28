@@ -56,7 +56,11 @@ jobs:
       - name: 빌드
         run: npm run build
 
+      # enablement: true 면 저장소에 Pages 가 꺼져 있어도 이 워크플로가 켜 준다.
+      # (없으면 Settings → Pages 에서 손으로 켤 때까지 "Get Pages site failed" 로 멈춘다)
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
