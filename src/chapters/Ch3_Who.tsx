@@ -145,7 +145,7 @@ export function Ch3Who() {
       <div className="grid grid-cols-2 gap-3">
         {(['남', '여'] as const).map((sex) => (
           <div key={sex} className="flex flex-col gap-1.5">
-            <span className="text-xs text-paper/55">{sex}성</span>
+            <span className="text-xs text-muted">{sex}성</span>
             {BANDS.map((band) => {
               const mine = guess?.sex === sex && guess.band === band;
               const answer = deathTop.sex === sex && deathTop.band === band;
@@ -158,15 +158,15 @@ export function Ch3Who() {
                   className={cn(
                     'min-h-[44px] rounded-md border px-3 text-sm transition-colors',
                     guess && answer
-                      ? 'border-lamp bg-lamp/20 text-lamp'
+                      ? 'border-primary bg-primary/20 text-primary'
                       : mine
-                        ? 'border-rust/60 bg-rust/10 text-paper/85'
-                        : 'border-slate/50 text-paper/60 hover:border-slate hover:text-paper/85'
+                        ? 'border-danger/60 bg-danger/10 text-body'
+                        : 'border-border text-muted hover:border-muted hover:text-body'
                   )}
                 >
                   {band}
                   {guess && answer && <span className="ml-2 text-xs">정답</span>}
-                  {guess && mine && !answer && <span className="ml-2 text-xs text-paper/55">내 답</span>}
+                  {guess && mine && !answer && <span className="ml-2 text-xs text-muted">내 답</span>}
                 </button>
               );
             })}
@@ -175,11 +175,11 @@ export function Ch3Who() {
       </div>
 
       {guess && (
-        <p className="text-sm leading-relaxed text-paper/70">
+        <p className="text-sm leading-relaxed text-body">
           {guess.sex === deathTop.sex && guess.band === deathTop.band ? (
             <>
               맞혔습니다.{' '}
-              <span className="num text-lamp">
+              <span className="num text-primary">
                 {deathTop.band} {deathTop.sex}성
               </span>
               이 {year}년 전국 고독사에서 가장 두꺼운 칸입니다
@@ -194,11 +194,11 @@ export function Ch3Who() {
           ) : (
             <>
               고르신 칸은{' '}
-              <span className="num text-paper/85">
+              <span className="num text-body">
                 {guess.band} {guess.sex}성
               </span>
               입니다. 실제로 가장 두꺼운 칸은{' '}
-              <span className="num text-lamp">
+              <span className="num text-primary">
                 {deathTop.band} {deathTop.sex}성
               </span>
               이었습니다
@@ -220,13 +220,13 @@ export function Ch3Who() {
   return (
     <section id="ch3" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch3-heading">
       <header className="flex max-w-[70ch] flex-col gap-4">
-        <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 3 · 가설 H3</span>
-        <h2 id="ch3-heading" className="font-serif text-headline text-paper">
+        <span className="num text-xs tracking-[0.25em] text-primary/70">CHAPTER 3 · 가설 H3</span>
+        <h2 id="ch3-heading" className="text-headline text-foreground">
           <BlurText text="누가 혼자 떠나는가" />
         </h2>
-        <ScrollRevealText className="leading-relaxed text-paper/60">
-          앞의 두 장에서 <em className="not-italic text-paper/90">얼마나</em>와{' '}
-          <em className="not-italic text-paper/90">어디서</em>를 확인했습니다. 남은 질문은 누구인가입니다. 그런데
+        <ScrollRevealText className="leading-relaxed text-muted">
+          앞의 두 장에서 <em className="not-italic text-body">얼마나</em>와{' '}
+          <em className="not-italic text-body">어디서</em>를 확인했습니다. 남은 질문은 누구인가입니다. 그런데
           여기서 우리 연구는 벽에 부딪혔습니다. 부산만 따로 본 성별·연령대별 고독사 표는 공표되지 않습니다. 없는
           숫자를 만들어 넣는 대신, 있는 것과 없는 것을 그대로 보여드립니다.
         </ScrollRevealText>
@@ -252,8 +252,8 @@ export function Ch3Who() {
                     className={cn(
                       'num rounded-full border px-4 py-2 text-sm transition-colors',
                       y === year
-                        ? 'border-lamp/60 bg-lamp/15 text-lamp'
-                        : 'border-slate/60 text-paper/55 hover:border-slate hover:text-paper/80'
+                        ? 'border-primary/60 bg-primary/15 text-primary'
+                        : 'border-border text-muted hover:border-muted hover:text-body'
                     )}
                   >
                     {y}년
@@ -264,7 +264,7 @@ export function Ch3Who() {
 
             {/* 성별 강조 — 두 피라미드에 동시에 걸린다 */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-paper/55">한쪽만 보기</span>
+              <span className="text-sm text-muted">한쪽만 보기</span>
               {([null, '남', '여'] as const).map((s) => (
                 <button
                   key={s ?? 'all'}
@@ -274,8 +274,8 @@ export function Ch3Who() {
                   className={cn(
                     'rounded-full border px-3.5 py-1.5 text-sm transition-colors',
                     focusSex === s
-                      ? 'border-lamp/60 bg-lamp/15 text-lamp'
-                      : 'border-slate/60 text-paper/55 hover:border-slate hover:text-paper/80'
+                      ? 'border-primary/60 bg-primary/15 text-primary'
+                      : 'border-border text-muted hover:border-muted hover:text-body'
                   )}
                 >
                   {s === null ? '둘 다' : `${s}성만`}
@@ -286,16 +286,16 @@ export function Ch3Who() {
 
           {/* 먼저 맞혀 보기 — 폰에서는 아래에서 시트로 올라온다 */}
           {deathTop && (
-            <div className="flex max-w-[74ch] flex-col gap-4 rounded-lg border border-slate/50 bg-ink/50 p-6">
+            <div className="flex max-w-[74ch] flex-col gap-4 rounded-btn-lg border border-border bg-surface p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h3 className="font-serif text-lg text-paper/85">
+                <h3 className="text-lg text-body">
                   아래 그림을 보기 전에 — {year}년 전국에서 혼자 떠난 분이 가장 많은 칸은 어디일까요
                 </h3>
                 {!(quizOpen && !mobile) && (
                   <button
                     type="button"
                     onClick={() => setQuizOpen(true)}
-                    className="min-h-[44px] shrink-0 rounded-full border border-lamp/50 px-4 text-sm text-lamp transition-colors hover:bg-lamp/15"
+                    className="min-h-[44px] shrink-0 rounded-full border border-primary/50 px-4 text-sm text-primary transition-colors hover:bg-primary/15"
                   >
                     {guess ? '다시 맞혀 보기' : '맞혀 보기'}
                   </button>
@@ -332,7 +332,7 @@ export function Ch3Who() {
                       <button
                         type="button"
                         onClick={() => setQuizOpen(false)}
-                        className="flex min-h-[56px] w-full items-center justify-center rounded-lg bg-lamp text-[17px] font-semibold text-paper transition-colors active:bg-[#2272eb]"
+                        className="flex min-h-[56px] w-full items-center justify-center rounded-btn-xl bg-primary text-[17px] font-semibold text-primary-fg transition-colors active:bg-primary-hover"
                       >
                         그림에서 확인하기
                       </button>
@@ -379,13 +379,13 @@ export function Ch3Who() {
                 focusSex={focusSex}
                 ariaLabel={`${year}년 전국 고독사 사망자의 성별·연령대 구조 피라미드`}
               />
-              <p className="mt-3 text-center text-sm text-paper/55">
-                합계 <span className="num text-paper/70">{fmtInt(deathTotal)}</span>명 · 40대 이상
+              <p className="mt-3 text-center text-sm text-muted">
+                합계 <span className="num text-body">{fmtInt(deathTotal)}</span>명 · 40대 이상
               </p>
               {deathPair && deathPairPublished !== null && (
-                <p className="mt-2 text-center text-sm leading-relaxed text-paper/60">
+                <p className="mt-2 text-center text-sm leading-relaxed text-muted">
                   같은 묶음을 보도자료 기준(연령미상까지 포함한 전체 고독사 대비)으로 세면{' '}
-                  <span className="num text-paper/60">{deathPairPublished.toFixed(1)}%</span>입니다. 아래 판정
+                  <span className="num text-muted">{deathPairPublished.toFixed(1)}%</span>입니다. 아래 판정
                   카드의 숫자가 이 기준입니다.
                 </p>
               )}
@@ -420,8 +420,8 @@ export function Ch3Who() {
                 focusSex={focusSex}
                 ariaLabel={`${year}년 부산 1인세대의 성별·연령대 구조 피라미드`}
               />
-              <p className="mt-3 text-center text-sm text-paper/55">
-                합계 <span className="num text-paper/70">{fmtInt(aloneTotal)}</span>세대 · 40대 이상
+              <p className="mt-3 text-center text-sm text-muted">
+                합계 <span className="num text-body">{fmtInt(aloneTotal)}</span>세대 · 40대 이상
               </p>
             </ChartFrame>
           </SwipeDeck>
@@ -429,19 +429,19 @@ export function Ch3Who() {
           {/* 두 그림을 잇는 문장 — 이 챕터의 핵심 */}
           {deathTop && aloneTop && (
             <motion.div
-              className="max-w-[74ch] border-l-2 border-lamp/50 pl-6"
+              className="max-w-[74ch] border-l-2 border-primary/50 pl-6"
               initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
             >
-              <p className="text-lg leading-relaxed text-paper/85 md:text-xl">
+              <p className="text-lg leading-relaxed text-body md:text-xl">
                 부산에서 혼자 사는 사람이 가장 많은 칸은{' '}
-                <span className="num text-tide">
+                <span className="num text-muted">
                   {aloneTop.band} {aloneTop.sex}성
                 </span>
                 입니다. 그런데 전국에서 혼자 죽는 사람이 가장 많은 칸은{' '}
-                <span className="num text-lamp">
+                <span className="num text-primary">
                   {deathTop.band} {deathTop.sex}성
                 </span>
                 입니다.{' '}
@@ -449,7 +449,7 @@ export function Ch3Who() {
                   ? '혼자 사는 사람과 혼자 죽는 사람은 같지 않습니다. 고립을 사람 수로만 세면 이 어긋남이 보이지 않습니다.'
                   : '두 그림에서 가장 두꺼운 칸이 같은 집단을 가리킵니다.'}
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-paper/55">
+              <p className="mt-4 text-sm leading-relaxed text-muted">
                 다만 왼쪽은 전국, 오른쪽은 부산입니다. 부산의 고독사 교차표가 없어 같은 지역끼리 비교하지
                 못했습니다. 이 문장은 정황일 뿐 증명이 아닙니다.
               </p>
@@ -457,10 +457,10 @@ export function Ch3Who() {
           )}
 
           {/* 없는 데이터를 없다고 그리는 자리 */}
-          <div className="flex max-w-[74ch] flex-col gap-3 rounded-lg border border-dashed border-slate/60 p-6">
-            <h3 className="font-serif text-xl text-paper/80">여기 있어야 할 세 번째 그림</h3>
-            <p className="text-sm leading-relaxed text-paper/55">
-              이 자리에는 <span className="text-paper/80">부산의 성별·연령대별 고독사 피라미드</span>가 와야
+          <div className="flex max-w-[74ch] flex-col gap-3 rounded-btn-lg border border-dashed border-border p-6">
+            <h3 className="text-xl text-body">여기 있어야 할 세 번째 그림</h3>
+            <p className="text-sm leading-relaxed text-muted">
+              이 자리에는 <span className="text-body">부산의 성별·연령대별 고독사 피라미드</span>가 와야
               합니다. 보건복지부 고독사 실태조사는 시·도별 발생 건수까지만 공개하고, 성별과 연령을 교차한 표는
               전국 단위로만 공개합니다. 전국 비율을 부산 건수에 곱해 추정치를 만들 수는 있었지만, 그렇게 만든
               숫자는 데이터가 아니라 가정입니다. 우리는 그 칸을 비워 두기로 했습니다.

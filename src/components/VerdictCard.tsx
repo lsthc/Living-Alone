@@ -10,10 +10,10 @@ import { cn } from '@/lib/utils';
  */
 
 const STYLE: Record<Verdict, { label: string; badge: string; rule: string }> = {
-  채택: { label: '가설 채택', badge: 'bg-lamp/15 text-lamp border-lamp/40', rule: 'bg-lamp/50' },
-  부분채택: { label: '가설 부분 채택', badge: 'bg-tide/15 text-tide border-tide/40', rule: 'bg-tide/50' },
-  기각: { label: '가설 기각', badge: 'bg-slate/25 text-paper/70 border-slate', rule: 'bg-slate' },
-  검증불가: { label: '검증 불가', badge: 'bg-slate/25 text-paper/70 border-slate', rule: 'bg-slate' },
+  채택: { label: '가설 채택', badge: 'bg-primary/15 text-primary border-primary/40', rule: 'bg-primary/50' },
+  부분채택: { label: '가설 부분 채택', badge: 'bg-muted/15 text-muted border-muted/40', rule: 'bg-muted/50' },
+  기각: { label: '가설 기각', badge: 'bg-elevated text-body border-border', rule: 'bg-border' },
+  검증불가: { label: '검증 불가', badge: 'bg-elevated text-body border-border', rule: 'bg-border' },
 };
 
 export function VerdictCard({ result, className }: { result: HypothesisResult<never>; className?: string }) {
@@ -22,7 +22,7 @@ export function VerdictCard({ result, className }: { result: HypothesisResult<ne
 
   return (
     <motion.section
-      className={cn('relative overflow-hidden rounded-lg border border-slate/50 bg-ink/60 p-7 md:p-9', className)}
+      className={cn('relative overflow-hidden rounded-btn-lg border border-border bg-surface p-7 md:p-9', className)}
       initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
@@ -34,13 +34,13 @@ export function VerdictCard({ result, className }: { result: HypothesisResult<ne
 
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="num text-xs tracking-[0.2em] text-paper/55">{result.id}</span>
+          <span className="num text-xs tracking-[0.2em] text-muted">{result.id}</span>
           <span className={cn('rounded-full border px-3 py-1 text-sm font-medium', style.badge)}>{style.label}</span>
         </div>
 
-        <p className="num text-base leading-relaxed text-paper/85 md:text-lg">{result.evidence}</p>
+        <p className="num text-base leading-relaxed text-foreground md:text-lg">{result.evidence}</p>
 
-        <p className="max-w-[68ch] text-sm leading-relaxed text-paper/60 md:text-base">{result.interpretation}</p>
+        <p className="max-w-[68ch] text-sm leading-relaxed text-muted md:text-base">{result.interpretation}</p>
       </div>
     </motion.section>
   );

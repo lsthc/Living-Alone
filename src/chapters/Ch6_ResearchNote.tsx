@@ -15,12 +15,12 @@ const TEAM = {
   members: ['김동윤', '박찬우', '이연우', '이선호'],
 };
 
-/** 종이색 배경에서 쓰는 판정 배지 색 */
+/** 어두운 표면 위에서 쓰는 판정 배지 색 */
 const VERDICT_STYLE: Record<Verdict, string> = {
-  채택: 'border-weakfg/40 bg-weakbg text-weakfg',
-  부분채택: 'border-weakfg/40 text-weakfg',
-  기각: 'border-ink/25 bg-ink/[0.05] text-ink/65',
-  검증불가: 'border-ink/25 bg-ink/[0.05] text-ink/65',
+  채택: 'border-weak-fg/40 bg-weak-bg text-weak-fg',
+  부분채택: 'border-weak-fg/40 text-weak-fg',
+  기각: 'border-border bg-surface text-muted',
+  검증불가: 'border-border bg-surface text-muted',
 };
 
 /**
@@ -95,14 +95,14 @@ export function Ch6ResearchNote() {
   }, [sourceRows, query]);
 
   return (
-    <div className="w-full bg-paper text-ink">
+    <div className="w-full text-foreground">
       <section id="ch6" className="chapter flex flex-col gap-12 md:gap-16" aria-labelledby="ch6-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-weakfg">CHAPTER 6</span>
-          <h2 id="ch6-heading" className="font-serif text-headline text-ink">
+          <span className="num text-xs tracking-[0.25em] text-weak-fg">CHAPTER 6</span>
+          <h2 id="ch6-heading" className="text-headline text-foreground">
             <BlurText text="연구 노트" />
           </h2>
-          <ScrollRevealText className="leading-relaxed text-ink/65">
+          <ScrollRevealText className="leading-relaxed text-body">
             지금까지 본 것을 어떻게 만들었는지, 그리고 무엇을 못 했는지 적습니다. 이 장은 발표를 잘 보이게
             하려고 쓰는 것이 아니라, 다음 사람이 저희 작업을 검증하고 이어받을 수 있게 하려고 씁니다.
           </ScrollRevealText>
@@ -110,10 +110,10 @@ export function Ch6ResearchNote() {
 
         {/* 가설 판정 요약 */}
         <div className="flex flex-col gap-5">
-          <h3 className="font-serif text-2xl text-ink">가설 세 개, 판정 세 개</h3>
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
+          <h3 className="text-2xl text-foreground">가설 세 개, 판정 세 개</h3>
+          <p className="max-w-[70ch] text-sm leading-relaxed text-body">
             아래 표는 손으로 쓴 것이 아닙니다.{' '}
-            <code className="font-mono rounded bg-ink/[0.06] px-1.5 py-0.5 text-[0.85em]">src/lib/hypothesis.ts</code> 의
+            <code className="font-mono rounded bg-elevated px-1.5 py-0.5 text-[0.85em]">src/lib/hypothesis.ts</code> 의
             순수 함수가 CSV 를 읽어 계산한 결과를 그대로 그린 것입니다. 데이터를 갱신하면 판정도 따라 바뀝니다.
             결론을 먼저 정해 놓고 데이터를 맞추지 않으려고 이렇게 만들었습니다. 각 줄을 누르면 왜 그 판정이
             나왔는지 펼쳐집니다.
@@ -125,7 +125,7 @@ export function Ch6ResearchNote() {
               return (
                 <motion.li
                   key={r.id}
-                  className="border-b border-ink/12"
+                  className="border-b border-border"
                   initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.4 }}
@@ -135,11 +135,11 @@ export function Ch6ResearchNote() {
                     type="button"
                     onClick={() => setOpenVerdict(open ? null : r.id)}
                     aria-expanded={open}
-                    className="flex w-full items-start gap-4 py-5 text-left transition-colors hover:bg-ink/[0.03] focus-visible:ring-lamp focus-visible:ring-offset-paper md:gap-6"
+                    className="flex w-full items-start gap-4 py-5 text-left transition-colors hover:bg-surface focus-visible:ring-primary focus-visible:ring-offset-bg md:gap-6"
                   >
                     <span className="flex w-[9rem] shrink-0 flex-col gap-1 md:w-[13rem]">
-                      <span className="num text-xs text-ink/65">{r.id}</span>
-                      <span className="font-serif text-lg leading-snug text-ink">{r.title}</span>
+                      <span className="num text-xs text-muted">{r.id}</span>
+                      <span className="text-lg leading-snug text-foreground">{r.title}</span>
                     </span>
                     <span
                       className={cn(
@@ -149,10 +149,10 @@ export function Ch6ResearchNote() {
                     >
                       {r.verdict}
                     </span>
-                    <span className="num flex-1 text-sm leading-relaxed text-ink/70">{r.evidence}</span>
+                    <span className="num flex-1 text-sm leading-relaxed text-body">{r.evidence}</span>
                     <span
                       className={cn(
-                        'mt-1 shrink-0 text-ink/45 transition-transform',
+                        'mt-1 shrink-0 text-muted transition-transform',
                         open && 'rotate-180'
                       )}
                       aria-hidden
@@ -170,7 +170,7 @@ export function Ch6ResearchNote() {
                         exit={{ height: reduced ? 'auto' : 0, opacity: 0 }}
                         transition={{ duration: reduced ? 0 : 0.3, ease: 'easeOut' }}
                       >
-                        <p className="max-w-[74ch] pb-6 text-sm leading-relaxed text-ink/70">{r.interpretation}</p>
+                        <p className="max-w-[74ch] pb-6 text-sm leading-relaxed text-body">{r.interpretation}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -179,18 +179,18 @@ export function Ch6ResearchNote() {
             })}
           </ul>
 
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
-            세 개 중 하나가 <span className="text-ink">검증불가</span>로 남았습니다. 저희는 이것을 실패가 아니라
+          <p className="max-w-[70ch] text-sm leading-relaxed text-body">
+            세 개 중 하나가 <span className="text-foreground">검증불가</span>로 남았습니다. 저희는 이것을 실패가 아니라
             결과로 봅니다. 공개된 데이터로 알 수 없는 것이 무엇인지 아는 것도 연구가 알아낸 것입니다.
           </p>
         </div>
 
         {/* 어떻게 만들었나 */}
         <div className="flex flex-col gap-5">
-          <h3 className="font-serif text-2xl text-ink">어떻게 만들었나</h3>
-          <ol className="flex max-w-[74ch] list-decimal flex-col gap-3 pl-5 text-sm leading-relaxed text-ink/70">
+          <h3 className="text-2xl text-foreground">어떻게 만들었나</h3>
+          <ol className="flex max-w-[74ch] list-decimal flex-col gap-3 pl-5 text-sm leading-relaxed text-body">
             <li>
-              가설 세 개와 <span className="text-ink">판정 기준을 먼저</span> 정했습니다. 데이터를 보고 나서 기준을
+              가설 세 개와 <span className="text-foreground">판정 기준을 먼저</span> 정했습니다. 데이터를 보고 나서 기준을
               만들면 무엇이든 맞출 수 있기 때문입니다. H1 의 기준(2019년부터의 연평균 증가율 격차 1%p)은 코드에 상수로
               박아 뒀고, 실제로 그 기준 때문에 H1 은 채택이 아니라 부분채택이 됐습니다.
             </li>
@@ -210,9 +210,9 @@ export function Ch6ResearchNote() {
             <li>제도 정보는 각 기관 공식 사이트에서 직접 확인하고, 확인 못 한 것은 뺐다고 화면에 적었습니다.</li>
           </ol>
 
-          <div className="max-w-[74ch] rounded-lg border border-ink/15 bg-ink/[0.04] p-5">
-            <p className="mb-3 text-sm text-ink/65">누구든 아래 명령으로 데이터를 다시 만들 수 있습니다.</p>
-            <pre className="font-mono overflow-x-auto text-xs leading-relaxed text-ink/75 tabular-nums">
+          <div className="max-w-[74ch] rounded-btn-lg border border-border bg-surface p-5">
+            <p className="mb-3 text-sm text-muted">누구든 아래 명령으로 데이터를 다시 만들 수 있습니다.</p>
+            <pre className="font-mono overflow-x-auto text-xs leading-relaxed text-body tabular-nums">
               <code>{`npm install\nnpm run data:fetch   # 원자료 내려받기 (KOSIS API 키 필요)\nnpm run data:build   # public/data/*.csv 생성\nnpm test             # 가설 판정 함수 테스트`}</code>
             </pre>
           </div>
@@ -220,8 +220,8 @@ export function Ch6ResearchNote() {
 
         {/* 한계 */}
         <div className="flex flex-col gap-5">
-          <h3 className="font-serif text-2xl text-ink">이 연구가 못 한 것</h3>
-          <p className="max-w-[70ch] text-sm leading-relaxed text-ink/65">
+          <h3 className="text-2xl text-foreground">이 연구가 못 한 것</h3>
+          <p className="max-w-[70ch] text-sm leading-relaxed text-body">
             질문받기 전에 먼저 적습니다. 감추면 신뢰를 잃고 먼저 말하면 신뢰를 얻는다고 생각했습니다.
           </p>
           <div className="grid gap-x-8 gap-y-3 md:grid-cols-2">
@@ -232,7 +232,7 @@ export function Ch6ResearchNote() {
                   key={l.title}
                   className={cn(
                     'flex flex-col gap-2 border-l-2 pl-5 transition-colors',
-                    open ? 'border-weakfg/60' : 'border-ink/20'
+                    open ? 'border-weak-fg/60' : 'border-border'
                   )}
                   initial={{ opacity: reduced ? 1 : 0, x: reduced ? 0 : -6 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -243,17 +243,17 @@ export function Ch6ResearchNote() {
                     type="button"
                     onClick={() => setOpenLimit(open ? null : l.title)}
                     aria-expanded={open}
-                    className="flex items-start justify-between gap-3 py-1 text-left focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                    className="flex items-start justify-between gap-3 py-1 text-left focus-visible:ring-primary focus-visible:ring-offset-bg"
                   >
-                    <h4 className="font-serif text-base text-ink">{l.title}</h4>
-                    <span className={cn('shrink-0 text-ink/45 transition-transform', open && 'rotate-180')} aria-hidden>
+                    <h4 className="text-base text-foreground">{l.title}</h4>
+                    <span className={cn('shrink-0 text-muted transition-transform', open && 'rotate-180')} aria-hidden>
                       ⌄
                     </span>
                   </button>
                   <AnimatePresence initial={false}>
                     {open && (
                       <motion.p
-                        className="overflow-hidden text-sm leading-relaxed text-ink/65"
+                        className="overflow-hidden text-sm leading-relaxed text-body"
                         initial={{ height: reduced ? 'auto' : 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: reduced ? 'auto' : 0, opacity: 0 }}
@@ -271,49 +271,49 @@ export function Ch6ResearchNote() {
 
         {/* 출처 전체 */}
         <div className="flex flex-col gap-5">
-          <h3 className="font-serif text-2xl text-ink">쓴 자료 전부</h3>
+          <h3 className="text-2xl text-foreground">쓴 자료 전부</h3>
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h4 className="text-sm text-ink/65">
+              <h4 className="text-sm text-muted">
                 데이터{' '}
-                <span className="num text-ink/45">
+                <span className="num text-muted">
                   {query ? `${filteredSources.length} / ${sourceRows.length}` : sourceRows.length}건
                 </span>
               </h4>
-              <label className="flex items-center gap-2 text-sm text-ink/65">
+              <label className="flex items-center gap-2 text-sm text-muted">
                 <span className="sr-only">출처 검색</span>
                 <input
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="기관·자료 이름으로 찾기"
-                  className="w-56 rounded-md border border-ink/20 bg-paper px-3 py-2 text-sm text-ink transition-colors placeholder:text-ink/40 hover:border-ink/40 focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                  className="w-56 rounded-md border border-border bg-elevated px-3 py-2 text-sm text-foreground transition-colors placeholder:text-muted hover:border-muted focus-visible:ring-primary focus-visible:ring-offset-bg"
                 />
               </label>
             </div>
             {sourceRows.length === 0 ? (
-              <p className="text-sm text-ink/65">출처 목록을 불러오지 못했습니다.</p>
+              <p className="text-sm text-muted">출처 목록을 불러오지 못했습니다.</p>
             ) : filteredSources.length === 0 ? (
-              <p className="text-sm text-ink/65">
+              <p className="text-sm text-muted">
                 &lsquo;{query}&rsquo; 로 찾은 자료가 없습니다. 기관 이름(예: 통계청)이나 자료 이름의 일부로 찾아
                 보세요.
               </p>
             ) : (
               <ol className="flex flex-col gap-3">
                 {filteredSources.map((s, i) => (
-                  <li key={s.id} className="flex gap-4 border-b border-ink/12 pb-3 text-sm">
-                    <span className="num shrink-0 text-ink/65">{String(i + 1).padStart(2, '0')}</span>
+                  <li key={s.id} className="flex gap-4 border-b border-border pb-3 text-sm">
+                    <span className="num shrink-0 text-muted">{String(i + 1).padStart(2, '0')}</span>
                     <span className="flex flex-col gap-1">
-                      <span className="text-ink/80">
+                      <span className="text-foreground">
                         {s.org}, 「{s.title}」({s.year})
                       </span>
-                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/65">
+                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
                         <a
                           href={s.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="underline decoration-ink/30 underline-offset-2 hover:text-ink/75"
+                          className="underline decoration-border underline-offset-2 hover:text-body"
                         >
                           원자료
                         </a>
@@ -328,7 +328,7 @@ export function Ch6ResearchNote() {
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
-            <h4 className="text-sm text-ink/65">제도 정보 (Chapter 5)</h4>
+            <h4 className="text-sm text-muted">제도 정보 (Chapter 5)</h4>
             <ol className="flex flex-col gap-3">
               {[
                 ...PROGRAMS.map((p) => ({ id: p.id, label: `${p.org} — ${p.name}`, url: p.url, on: p.verifiedOn })),
@@ -339,16 +339,16 @@ export function Ch6ResearchNote() {
                   on: h.verifiedOn,
                 })),
               ].map((s, i) => (
-                <li key={s.id} className="flex gap-4 border-b border-ink/12 pb-3 text-sm">
-                  <span className="num shrink-0 text-ink/65">{String(i + 1).padStart(2, '0')}</span>
+                <li key={s.id} className="flex gap-4 border-b border-border pb-3 text-sm">
+                  <span className="num shrink-0 text-muted">{String(i + 1).padStart(2, '0')}</span>
                   <span className="flex flex-col gap-1">
-                    <span className="text-ink/80">{s.label}</span>
-                    <span className="flex flex-wrap items-center gap-x-3 text-xs text-ink/65">
+                    <span className="text-foreground">{s.label}</span>
+                    <span className="flex flex-wrap items-center gap-x-3 text-xs text-muted">
                       <a
                         href={s.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="underline decoration-ink/30 underline-offset-2 hover:text-ink/75"
+                        className="underline decoration-border underline-offset-2 hover:text-body"
                       >
                         공식 안내
                       </a>
@@ -362,24 +362,24 @@ export function Ch6ResearchNote() {
         </div>
 
         {/* 팀 */}
-        <footer className="flex flex-col gap-5 border-t border-ink/20 pt-10">
+        <footer className="flex flex-col gap-5 border-t border-border pt-10">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-ink/65">
+              <p className="text-sm text-muted">
                 {TEAM.org} · {TEAM.grade}
               </p>
-              <p className="font-serif text-2xl text-ink">{TEAM.members.join(' · ')}</p>
+              <p className="text-2xl text-foreground">{TEAM.members.join(' · ')}</p>
             </div>
-            <p className="num text-sm text-ink/65">혼자 남겨진 도시, 부산 · 2026</p>
+            <p className="num text-sm text-muted">혼자 남겨진 도시, 부산 · 2026</p>
           </div>
 
-          <p className="max-w-[70ch] font-serif text-lg leading-relaxed text-ink/75">
+          <p className="max-w-[70ch] text-lg leading-relaxed text-body">
             저희가 이 작업에서 지킨 규칙은 하나였습니다. 가설이 틀리면 틀렸다고 쓴다. 세 개 중 하나는 끝내
             검증하지 못했고, 그 칸은 비워 둔 채로 두었습니다.
           </p>
 
           <div className="flex flex-col gap-3">
-            <ShareButton tone="light" />
+            <ShareButton />
             <UpNext />
           </div>
         </footer>

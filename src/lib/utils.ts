@@ -1,5 +1,22 @@
 import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { extendTailwindMerge } from 'tailwind-merge';
+
+/**
+ * tailwind-merge 는 기본 스케일(text-sm/lg/xl…)만 글자 크기로 안다.
+ * Lux 에서 가져온 타이포 토큰(text-h1~h4, text-body-sm, text-display, text-headline)은
+ * 모르는 값이라 색상 클래스로 오인하고, 같은 cn() 안의 text-foreground 같은 색과
+ * 충돌 처리해 크기 쪽을 지워버린다.
+ *
+ * text-body 는 fontSize 와 color 양쪽에 정의돼 있어 모호하므로 등록하지 않는다 —
+ * 이 코드베이스에서는 대부분 색으로 쓴다.
+ */
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [{ text: ['h1', 'h2', 'h3', 'h4', 'body-sm', 'display', 'headline'] }],
+    },
+  },
+});
 
 /** Tailwind 클래스를 안전하게 합친다 (shadcn/ui 관례) */
 export function cn(...inputs: ClassValue[]) {

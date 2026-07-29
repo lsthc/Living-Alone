@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { CHAPTERS, useDeck } from '@/lib/ChapterDeck';
 import { ChapterThumb } from './ChapterThumb';
-import { cn } from '@/lib/utils';
 
 /**
  * 챕터 끝에 놓는 '다음 챕터' 카드 — 넷플릭스의 다음 화 카드와 같은 자리.
@@ -19,39 +18,32 @@ export function UpNext() {
   const isLast = index === CHAPTERS.length - 1;
   const target = isLast ? CHAPTERS[0] : CHAPTERS[index + 1];
   const targetIndex = isLast ? 0 : index + 1;
-  const dark = CHAPTERS[index].tone === 'dark';
 
   return (
     <motion.button
       type="button"
       onClick={() => goTo(targetIndex)}
-      className={cn(
-        'group flex w-full max-w-[640px] items-stretch gap-0 overflow-hidden rounded-lg border text-left transition-colors',
-        dark ? 'border-slate/50 bg-ink/60 hover:border-lamp/60' : 'border-ink/15 bg-ink/[0.03] hover:border-weakfg/50'
-      )}
+      className="group flex w-full max-w-[640px] items-stretch gap-0 overflow-hidden rounded-btn-lg bg-surface text-left transition-colors hover:bg-elevated"
       initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.45, ease: 'easeOut' }}
     >
       <span className="hidden w-[168px] shrink-0 sm:block">
-        <ChapterThumb id={target.id} tone={target.tone} />
+        <ChapterThumb id={target.id} />
       </span>
 
       <span className="flex flex-1 flex-col gap-1.5 p-5">
-        <span className={cn('text-xs', dark ? 'text-paper/45' : 'text-ink/45')}>
+        <span className="text-body-sm text-muted">
           {isLast ? '처음부터 다시 보기' : '다음 챕터'}
           <span className="num ml-2 opacity-70">{target.num}</span>
         </span>
-        <span className={cn('font-serif text-xl leading-snug', dark ? 'text-paper' : 'text-ink')}>{target.title}</span>
-        <span className={cn('text-sm leading-relaxed', dark ? 'text-paper/55' : 'text-ink/60')}>{target.blurb}</span>
+        <span className="text-h4 leading-snug text-foreground">{target.title}</span>
+        <span className="text-body-sm leading-relaxed text-body">{target.blurb}</span>
       </span>
 
       <span
-        className={cn(
-          'flex w-14 shrink-0 items-center justify-center text-2xl transition-transform group-hover:translate-x-1',
-          dark ? 'text-lamp' : 'text-weakfg'
-        )}
+        className="flex w-14 shrink-0 items-center justify-center text-2xl text-primary transition-transform group-hover:translate-x-1"
         aria-hidden
       >
         {isLast ? '↺' : '→'}

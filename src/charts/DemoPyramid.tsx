@@ -35,7 +35,7 @@ const DIMS = {
   mobile: { W: 420, H: 380, M: { top: 42, right: 10, bottom: 40, left: 10 }, GAP: 72 },
 } as const;
 
-const COLOR = { 남: 'var(--lamp)', 여: 'var(--tide)' } as const;
+const COLOR = { 남: 'var(--primary)', 여: 'var(--muted)' } as const;
 
 export function DemoPyramid({
   bands,
@@ -108,25 +108,25 @@ export function DemoPyramid({
       {/* 눈금선 — 좌우 대칭 */}
       {ticks.map((t) => (
         <g key={t} aria-hidden>
-          <line x1={centerL - len(t)} x2={centerL - len(t)} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} strokeOpacity={0.35} />
-          <line x1={centerR + len(t)} x2={centerR + len(t)} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} strokeOpacity={0.35} />
-          <text x={centerL - len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-sans text-[11px]">
+          <line x1={centerL - len(t)} x2={centerL - len(t)} y1={M.top} y2={M.top + PH} stroke="var(--muted)" strokeWidth={1} strokeOpacity={0.35} />
+          <line x1={centerR + len(t)} x2={centerR + len(t)} y1={M.top} y2={M.top + PH} stroke="var(--muted)" strokeWidth={1} strokeOpacity={0.35} />
+          <text x={centerL - len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-muted font-sans text-[11px]">
             {t.toFixed(0)}
           </text>
-          <text x={centerR + len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-paper/55 font-sans text-[11px]">
+          <text x={centerR + len(t)} y={M.top + PH + 20} textAnchor="middle" className="fill-muted font-sans text-[11px]">
             {t.toFixed(0)}
           </text>
         </g>
       ))}
-      <text x={W / 2} y={M.top + PH + 36} textAnchor="middle" className="fill-paper/55 font-sans text-[11px]">
+      <text x={W / 2} y={M.top + PH + 36} textAnchor="middle" className="fill-muted font-sans text-[11px]">
         가로축 단위 %
       </text>
 
       {/* 성별 이름표 */}
-      <text x={centerL} y={M.top - 24} textAnchor="end" className="font-sans text-[14px]" fill="var(--lamp)">
+      <text x={centerL} y={M.top - 24} textAnchor="end" className="font-sans text-[14px]" fill="var(--primary)">
         남성
       </text>
-      <text x={centerR} y={M.top - 24} textAnchor="start" className="font-sans text-[14px]" fill="var(--tide)">
+      <text x={centerR} y={M.top - 24} textAnchor="start" className="font-sans text-[14px]" fill="var(--muted)">
         여성
       </text>
 
@@ -150,7 +150,7 @@ export function DemoPyramid({
               <path
                 d={`M ${bx + tick} ${top} L ${bx} ${top} L ${bx} ${bottom} L ${bx + tick} ${bottom}`}
                 fill="none"
-                stroke="var(--paper)"
+                stroke="var(--muted)"
                 strokeOpacity={0.45}
                 strokeWidth={1.5}
               />
@@ -159,7 +159,7 @@ export function DemoPyramid({
                 y={top - 9}
                 textAnchor={left ? 'start' : 'end'}
                 className="font-sans text-[12px]"
-                fill="var(--paper)"
+                fill="var(--body)"
                 fillOpacity={0.7}
               >
                 {bracket.label}
@@ -178,7 +178,7 @@ export function DemoPyramid({
               x={W / 2}
               y={y + barH / 2 + 5}
               textAnchor="middle"
-              className="fill-paper/70 font-sans text-[13px]"
+              className="fill-body font-sans text-[13px]"
             >
               {band}
             </text>
@@ -195,7 +195,7 @@ export function DemoPyramid({
                     x={left ? centerL - 8 : centerR + 8}
                     y={y + barH / 2 + 4}
                     textAnchor={left ? 'end' : 'start'}
-                    className="fill-paper/55 font-sans text-[11px]"
+                    className="fill-muted font-sans text-[11px]"
                   >
                     데이터 없음
                   </text>
@@ -233,7 +233,7 @@ export function DemoPyramid({
                     y={y + barH / 2 + 4}
                     textAnchor={left ? (inside ? 'start' : 'end') : inside ? 'end' : 'start'}
                     className="num text-[12px]"
-                    fill={inside ? 'var(--ink)' : 'var(--paper)'}
+                    fill="var(--foreground)"
                     fillOpacity={inside ? 0.85 : 0.65}
                     initial={{ opacity: reduced ? 1 : 0 }}
                     animate={{ opacity: shown ? 1 : 0 }}
@@ -251,8 +251,8 @@ export function DemoPyramid({
       })}
 
       {/* 가운데 세로선 */}
-      <line x1={centerL} x2={centerL} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} />
-      <line x1={centerR} x2={centerR} y1={M.top} y2={M.top + PH} stroke="#4e5968" strokeWidth={1} />
+      <line x1={centerL} x2={centerL} y1={M.top} y2={M.top + PH} stroke="var(--muted)" strokeWidth={1} />
+      <line x1={centerR} x2={centerR} y1={M.top} y2={M.top + PH} stroke="var(--muted)" strokeWidth={1} />
     </svg>
   );
 }

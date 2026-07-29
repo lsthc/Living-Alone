@@ -95,18 +95,27 @@ const lenisJs = fs
 const lenisVersion = JSON.parse(fs.readFileSync(path.resolve('node_modules/lenis/package.json'), 'utf8')).version;
 
 /*
- * 스타일 — Toss 디자인 시스템(TDS Mobile)
+ * 스타일 — Lux 디자인 시스템 (Lux/apps/web)
  *
- * 지킨 것
- *   · UI primary 는 #3182f6 을 쓴다. 로고 브랜드 블루(#0064ff)로 대신하지 않는다.
- *   · 그림자를 쓰지 않는다. TDS 는 공개 근거가 있는 elevation 토큰을 promote 하지 않으므로
- *     surface(#f2f4f6)와 border(#e5e8eb)로만 층을 나눈다.
- *   · 파랑은 상호작용에만 쓴다. 큰 숫자는 장식이 아니라 정보라서 foreground(#191f28)로 둔다.
- *   · 버튼은 TDS Mobile xlarge(높이 56px · 반경 16px · 17px/600) 규격.
- *     toss.im 마케팅 버튼(40~46px · 반경 7px)과 섞지 않는다. 이 페이지는 휴대폰용이다.
- *   · 글꼴은 Toss Product Sans 를 먼저 부르되 재배포 권한이 없으므로 번들하지 않는다.
- *     설치돼 있지 않은 기기에서는 이미 서브셋해 둔 Pretendard 로 떨어진다.
- *   · 모션 토큰은 공개 근거가 없어 promote 하지 않는다. 아래 transition 은 이 페이지 한정이다.
+ * 이 페이지와 대시보드(index.html)는 같은 디자인 시스템을 쓴다. QR 로 들어온 학부모가
+ * 두 화면을 오갈 때 같은 앱처럼 느껴져야 하기 때문이다. Lux 쪽은 Tailwind 로 토큰을
+ * 주입하지만 이 페이지는 번들러 없이 도는 단일 HTML 이라, 같은 값을 CSS 변수로 그대로 옮겼다.
+ *
+ * Lux 에서 그대로 가져온 것
+ *   · 색 토큰 — apps/web/src/styles/tokens.css 의 값 그대로. 다크 전용이고 라이트 테마가 없다.
+ *   · 층 쌓기 — 그림자를 쓰지 않는다. bg(#101116) → surface(#1a1c22) → elevated(#23262e)
+ *     세 단계의 평면 색상 레이어링으로만 깊이를 낸다.
+ *   · 타이포 스케일 — h1 36/54·700, h2 30/45·600, h3 24/36·600, h4 22/33·600,
+ *     body 16/24, body-sm 14/21. 640px 아래에서 h1·h2 를 한 단계 줄이는 규칙까지 같다.
+ *   · 반경 스케일 — sm 4 / md 6 / btn 10 / btn-lg 14 / btn-xl 16.
+ *   · 버튼 — variant(fill·weak) × size(large 48px·xlarge 56px). 주 동선은 xlarge.
+ *   · 히어로 — elevated → surface 세로 그라디언트에 반경 btn-xl (apps/web/src/pages/Home.tsx).
+ *   · 헤더/푸터 — sticky 헤더 + bg 90% 반투명 + backdrop-blur, 푸터는 링크 줄 + 안내문.
+ *
+ * 이 페이지 한정으로 더한 것
+ *   · 파랑은 상호작용에만 쓴다. 큰 숫자는 장식이 아니라 정보라서 foreground 로 둔다.
+ *   · 글꼴은 이 페이지에 실제로 쓰인 글자만 남긴 Pretendard 서브셋. 발표장 회선 때문이다.
+ *   · transition 값(모션 토큰)은 Lux 에 정의가 없어 여기서 정했다.
  */
 const html = `<!doctype html>
 <html lang="ko">
@@ -115,14 +124,14 @@ const html = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>혼자 남겨진 도시, 부산 — 발표 안내</title>
 <meta name="description" content="${LAST}년 부산의 독거노인은 ${comma(aloneBusan)}명입니다. 부산정보영재교육원 중학교 2학년 칠면조 팀의 독거노인·고독사 데이터 연구 발표 안내."/>
-<meta name="theme-color" content="#191f28"/>
+<meta name="theme-color" content="#101116"/>
 <meta name="color-scheme" content="dark"/>
 <meta property="og:title" content="혼자 남겨진 도시, 부산"/>
 <meta property="og:description" content="${LAST}년 부산의 독거노인 ${comma(aloneBusan)}명. 중학교 2학년 네 명이 공공데이터로 확인한 것과, 끝내 확인하지 못한 것."/>
 <meta property="og:type" content="website"/>
 <style>
   /* 이 페이지에 쓰인 글자만 남긴 서브셋. 전체 Pretendard 는 2MB 라 발표장 회선에 맞지 않는다.
-     Toss Product Sans 가 설치된 기기에서는 그쪽이 먼저 잡힌다. */
+     Lux 도 Pretendard 한 벌만 쓴다 — 대시보드와 글자 모양이 같아야 한 앱처럼 보인다. */
   @font-face {
     font-family: 'PretendardSubset';
     font-style: normal;
@@ -131,33 +140,41 @@ const html = `<!doctype html>
     src: url('./fonts/pretendard-subset.woff2') format('woff2-variations');
   }
 
+  /* Lux 토큰 (apps/web/src/styles/tokens.css) — 값 그대로 */
   :root {
-    /* TDS Mobile 색 토큰 */
+    color-scheme: dark;
+
     --primary: #3182f6;
-    --primary-pressed: #2272eb;
-    /* welcome 화면은 기기 설정과 관계없이 이 다크 팔레트만 사용한다. */
-    --canvas: #191f28;
-    --foreground: #f9fafb;
-    --body: #b0b8c1;
-    --muted: #8b95a1;
-    --surface: #242d3a;
-    --border: #333d4b;
+    --primary-hover: #2272eb;
     --on-primary: #ffffff;
-    --weak-bg: rgba(49, 130, 246, 0.16);
-    --weak-fg: #90c2ff;
-    --danger: #f04452;
-    /* 간격 스케일 4 / 6 / 8 / 16 / 24 / 32 */
-    --s-xs: 4px; --s-sm: 6px; --s-md: 8px; --s-lg: 16px; --s-xl: 24px; --s-xxl: 32px;
-    /* 반경 스케일 */
-    --r-sm: 4px; --r-md: 6px; --r-btn: 16px;
+    --danger: #f0505e;
+
+    --bg: #101116;
+    --surface: #1a1c22;
+    --elevated: #23262e;
+    --border: #2e323b;
+    --foreground: #f2f4f6;
+    --body: #b0b8c1;
+    --muted: #6b7684;
+    --weak-bg: rgba(49, 130, 246, 0.14);
+    --weak-fg: #6aa6ff;
+    --success: #1fc16b;
+    --warning: #f5a524;
+
+    /* 간격 스케일 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 */
+    --s-xs: 4px; --s-sm: 8px; --s-md: 12px; --s-lg: 16px; --s-xl: 20px; --s-2xl: 24px; --s-3xl: 32px; --s-4xl: 40px;
+    /* Lux 반경 스케일 */
+    --r-sm: 4px; --r-md: 6px; --r-btn: 10px; --r-btn-lg: 14px; --r-btn-xl: 16px;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; border-color: var(--border); }
 
   html {
+    background: var(--bg);
+    color: var(--foreground);
+    /* iOS 입력 확대 방지: 기본 16px */
+    font-size: 16px;
     -webkit-text-size-adjust: 100%;
-    background: var(--canvas);
-    color-scheme: dark;
     /* 스크롤은 그대로 되고 막대만 숨긴다 */
     scrollbar-width: none;
     /* 끝에서 튕기며 배경이 드러나는 것을 막는다. 관성 스크롤을 쓰면 튕김이 길어진다.
@@ -172,12 +189,15 @@ const html = `<!doctype html>
   html.lenis.lenis-stopped { overflow: clip; }
 
   body {
-    background: var(--canvas);
-    color: var(--body);
-    font-family: 'Toss Product Sans', 'PretendardSubset', -apple-system, BlinkMacSystemFont,
+    background: var(--bg);
+    color: var(--foreground);
+    font-family: 'PretendardSubset', -apple-system, BlinkMacSystemFont,
                  system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    /* body 16 / 400 / 24px */
+    /* Lux body 16 / 400 / 24px */
     font-size: 16px; font-weight: 400; line-height: 24px;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex; flex-direction: column;
     /* 한글은 음절 사이 어디서나 줄바꿈이 허용돼 단어가 쪼개진다. 띄어쓰기 단위를 지킨다. */
     word-break: keep-all; overflow-wrap: break-word;
     -webkit-font-smoothing: antialiased;
@@ -189,102 +209,145 @@ const html = `<!doctype html>
 
   .num { font-variant-numeric: tabular-nums; }
 
-  /* 노치·홈바가 있는 기기에서 내용이 가리지 않게 한다 */
-  .wrap {
-    max-width: 480px;
-    margin: 0 auto;
-    padding-left: max(var(--s-xl), env(safe-area-inset-left));
-    padding-right: max(var(--s-xl), env(safe-area-inset-right));
-    padding-bottom: calc(var(--s-xxl) + env(safe-area-inset-bottom));
+  /* ── Lux 레이아웃 (apps/web/src/components/Layout.tsx) ───────────
+     max-w-3xl 가운데 정렬 · sticky 헤더 · flex-1 본문 · 푸터.
+     노치·홈바가 있는 기기에서 내용이 가리지 않게 안전영역을 더한다. */
+  .shell {
+    width: 100%; max-width: 768px; margin: 0 auto;
+    display: flex; flex-direction: column; flex: 1 1 auto;
+  }
+  .pad {
+    padding-left: max(var(--s-lg), env(safe-area-inset-left));
+    padding-right: max(var(--s-lg), env(safe-area-inset-right));
   }
 
-  /* ── 표지 ─────────────────────────────────────────── */
-  /* 14px 본문에는 muted(#8b95a1)를 쓰지 않는다. 흰 배경에서 3.04:1 이라
-     WCAG AA 기준(작은 글자 4.5:1)에 못 미친다. 색을 새로 만들지 않고
-     같은 TDS 팔레트 안에서 한 단계 진한 body(#4e5968, 7.11:1)를 쓴다.
-     학부모가 휴대폰으로 읽는 화면이라 여기서는 대비를 우선했다. */
-  header { padding: var(--s-xxl) 0 var(--s-xl); }
-  .eyebrow { font-size: 14px; line-height: 21px; color: var(--body); }
-  h1 {
-    /* h1 36 / 700 / 54px */
-    margin-top: var(--s-md);
-    font-size: 36px; font-weight: 700; line-height: 54px;
-    letter-spacing: -0.02em; color: var(--foreground);
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    border-bottom: 1px solid var(--border);
+    background: rgba(16, 17, 22, 0.9);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
-  .lede { margin-top: var(--s-lg); color: var(--body); }
+  .topbar-in {
+    display: flex; height: 56px; align-items: center; justify-content: space-between; gap: var(--s-md);
+  }
+  /* Lux 헤더 브랜드 — h4 22/33 · 700 · tracking-tight */
+  .brand {
+    font-size: 17px; font-weight: 700; line-height: 24px;
+    letter-spacing: -0.02em; color: var(--foreground);
+    text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .topbar-note { flex: none; font-size: 14px; line-height: 21px; color: var(--muted); }
+
+  main { flex: 1 1 auto; padding-top: var(--s-2xl); padding-bottom: var(--s-2xl); }
+
+  /* 섹션 사이 간격은 Lux Home 의 space-y-8 (32px) */
+  .stack { display: flex; flex-direction: column; gap: var(--s-3xl); }
+
+  /* ── 타이포 (Lux fontSize 토큰) ────────────────────── */
+  h1 { font-size: 36px; font-weight: 700; line-height: 54px; letter-spacing: -0.02em; color: var(--foreground); }
+  h2 { font-size: 24px; font-weight: 600; line-height: 36px; letter-spacing: -0.01em; color: var(--foreground); }
+  @media (max-width: 640px) {
+    h1 { font-size: 28px; line-height: 40px; }
+    h2 { font-size: 22px; line-height: 33px; }
+  }
+
+  /* ── 히어로 (Lux Home.tsx) ─────────────────────────
+     elevated → surface 세로 그라디언트 · 반경 btn-xl · p-6 (넓은 화면 p-10) */
+  .hero {
+    border-radius: var(--r-btn-xl);
+    background: linear-gradient(to bottom, var(--elevated), var(--surface));
+    padding: var(--s-2xl);
+  }
+  @media (min-width: 640px) { .hero { padding: var(--s-4xl); } }
+  .hero h1 { margin-top: var(--s-md); }
+  .lede { margin-top: var(--s-md); max-width: 34rem; color: var(--body); }
   .lede b { color: var(--foreground); font-weight: 700; }
   .team {
-    margin-top: var(--s-lg); padding-top: var(--s-lg);
+    margin-top: var(--s-xl); padding-top: var(--s-lg);
     border-top: 1px solid var(--border);
-    font-size: 14px; line-height: 21px; color: var(--body);
+    font-size: 14px; line-height: 21px; color: var(--muted);
   }
+  .team b { color: var(--body); font-weight: 600; }
 
-  /* ── 버튼 (TDS Mobile xlarge) ─────────────────────── */
-  .actions { display: flex; flex-direction: column; gap: var(--s-md); margin-bottom: var(--s-xxl); }
-  .btn {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 56px; padding: 0 20px; border-radius: var(--r-btn);
-    font-size: 17px; font-weight: 600; line-height: 24px;
-    text-decoration: none; text-align: center;
-    /* 모션 토큰은 공개 근거가 없다. 이 transition 은 이 페이지 한정 확장이다. */
-    transition: background-color .15s ease;
+  /* ── 배지 (Lux badge.tsx) — rounded-sm · 12/18 · 600 ── */
+  .badge {
+    display: inline-flex; align-items: center; border-radius: var(--r-sm);
+    padding: 2px var(--s-sm); font-size: 12px; font-weight: 600; line-height: 18px;
   }
+  .badge-primary { background: var(--weak-bg); color: var(--weak-fg); }
+  .badge-neutral { background: var(--elevated); color: var(--body); }
+  .badge-warning { background: rgba(245, 165, 36, 0.15); color: var(--warning); }
+  .badge-success { background: rgba(31, 193, 107, 0.15); color: var(--success); }
+
+  /* ── 버튼 (Lux button.tsx) — xlarge 56px / 반경 btn-xl / 17px·600 ── */
+  .actions { display: flex; flex-direction: column; gap: var(--s-sm); margin-top: var(--s-2xl); }
+  .btn {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    min-height: 56px; padding: 0 var(--s-2xl); border-radius: var(--r-btn-xl);
+    font-size: 17px; font-weight: 600; line-height: 24px;
+    text-decoration: none; text-align: center; user-select: none;
+    transition: background-color .15s ease, filter .15s ease;
+  }
+  .btn:active { opacity: .8; }
   .btn-fill { background: var(--primary); color: var(--on-primary); }
-  .btn-fill:active { background: var(--primary-pressed); }
+  .btn-fill:hover, .btn-fill:active { background: var(--primary-hover); }
   .btn-weak { background: var(--weak-bg); color: var(--weak-fg); }
-  .btn-weak:active { background: rgba(49, 130, 246, 0.24); }
+  .btn-weak:hover { filter: brightness(1.1); }
   .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-  .btn-sub { display: block; margin-top: var(--s-xs); font-size: 14px; font-weight: 400; line-height: 21px; opacity: .82; }
+  .btn-sub { display: block; margin-top: 2px; font-size: 14px; font-weight: 400; line-height: 21px; opacity: .82; }
   .btn-stack { display: flex; flex-direction: column; align-items: center; }
 
-  /* ── 섹션 ─────────────────────────────────────────── */
-  section { padding: var(--s-xl) 0; border-top: 1px solid var(--border); }
-  h2 {
-    /* h3 24 / 600 / 36px — 페이지 안의 절 제목으로 쓴다 */
-    font-size: 24px; font-weight: 600; line-height: 36px;
-    letter-spacing: -0.01em; color: var(--foreground);
-  }
+  /* ── 섹션 머리 (Lux Home 의 mb-4 flex items-end justify-between) ── */
+  .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s-lg); }
+  .sec-more { flex: none; font-size: 14px; line-height: 21px; color: var(--weak-fg); text-decoration: none; }
   .sec-note { margin-top: var(--s-md); color: var(--body); }
   .sec-note b { color: var(--foreground); font-weight: 600; }
 
-  /* ── 숫자 (파랑을 쓰지 않는다 — 상호작용이 아니라 정보다) ── */
-  .kpis { margin-top: var(--s-lg); display: flex; flex-direction: column; gap: var(--s-md); }
-  .kpi {
-    background: var(--surface); border-radius: var(--r-md);
-    padding: var(--s-lg); display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-lg);
-  }
-  .kpi .v { font-size: 24px; font-weight: 700; line-height: 36px; color: var(--foreground); white-space: nowrap; }
-  .kpi .v small { font-size: 16px; font-weight: 600; }
-  .kpi .l { font-size: 14px; line-height: 21px; color: var(--body); text-align: right; }
+  /* ── 카드 (Lux card.tsx) — rounded-btn-lg · bg-surface · p-5 ── */
+  .card { border-radius: var(--r-btn-lg); background: var(--surface); padding: var(--s-xl); }
 
-  /* ── 판정 ─────────────────────────────────────────── */
-  .verdicts { margin-top: var(--s-lg); display: flex; flex-direction: column; gap: var(--s-md); }
-  .vr { border: 1px solid var(--border); border-radius: var(--r-md); padding: var(--s-lg); }
-  .badge {
-    display: inline-block; border-radius: var(--r-sm);
-    padding: var(--s-xs) var(--s-md); font-size: 14px; font-weight: 600; line-height: 21px;
+  /* ── 숫자 타일 ─────────────────────────────────────
+     파랑을 쓰지 않는다. 큰 숫자는 상호작용이 아니라 정보라서 foreground 로 둔다. */
+  .kpis { margin-top: var(--s-lg); display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-md); }
+  .kpi-wide { grid-column: span 2; }
+  .kpi .k { font-size: 14px; line-height: 21px; color: var(--muted); }
+  .kpi .v {
+    display: block; margin-top: var(--s-sm);
+    font-size: 30px; font-weight: 700; line-height: 40px;
+    letter-spacing: -0.01em; color: var(--foreground); white-space: nowrap;
   }
-  .b-yes  { background: var(--weak-bg); color: var(--weak-fg); }
-  .b-part { background: var(--surface); color: var(--body); }
-  .b-none { background: var(--canvas); color: var(--body); border: 1px solid var(--border); }
+  .kpi .v small { font-size: 18px; font-weight: 600; }
+  .kpi .l { display: block; margin-top: var(--s-xs); font-size: 14px; line-height: 21px; color: var(--body); }
+
+  /* ── 판정 (Lux Status.tsx 의 점 + 카드) ────────────── */
+  .verdicts { margin-top: var(--s-lg); display: flex; flex-direction: column; gap: var(--s-md); }
+  .vr-head { display: flex; align-items: center; gap: var(--s-sm); }
+  .dot { width: 10px; height: 10px; border-radius: 9999px; flex: none; }
+  .d-yes { background: var(--success); }
+  .d-part { background: var(--warning); }
+  .d-none { background: var(--muted); }
   .vq { display: block; margin-top: var(--s-md); font-size: 16px; font-weight: 600; line-height: 24px; color: var(--foreground); }
-  .vw { display: block; margin-top: var(--s-xs); font-size: 14px; line-height: 21px; color: var(--body); }
+  .vw {
+    display: block; margin-top: var(--s-sm);
+    border-radius: var(--r-btn); background: var(--elevated);
+    padding: var(--s-md) var(--s-lg); font-size: 14px; line-height: 21px; color: var(--body);
+  }
 
   .honest {
-    margin-top: var(--s-lg); padding: var(--s-lg);
-    background: var(--weak-bg); border-radius: var(--r-md); color: var(--weak-fg);
+    margin-top: var(--s-md); padding: var(--s-xl);
+    background: var(--weak-bg); border-radius: var(--r-btn-lg); color: var(--weak-fg);
   }
-  .honest b { font-weight: 700; }
+  .honest b { color: var(--foreground); font-weight: 700; }
 
   /* ── 전화 (탭 대상이므로 56px 이상) ───────────────── */
+  .tels { margin-top: var(--s-lg); display: flex; flex-direction: column; gap: var(--s-md); }
   .tel {
-    display: flex; align-items: center; gap: var(--s-lg);
-    min-height: 56px; padding: var(--s-lg);
-    margin-top: var(--s-md);
-    border: 1px solid var(--border); border-radius: var(--r-md);
+    display: flex; align-items: center; gap: var(--s-xl);
+    min-height: 56px; padding: var(--s-xl);
+    border-radius: var(--r-btn-lg); background: var(--surface);
     text-decoration: none; transition: background-color .15s ease;
   }
-  .tel:active { background: var(--surface); }
+  .tel:hover, .tel:active { background: var(--elevated); }
   .tel:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   /* .tel span 처럼 넓은 선택자를 쓰면 번호 span 까지 잡아 색을 덮어쓴다.
      (요소 선택자가 섞인 .tel span 이 .n-129 보다 특이도가 높다) 그래서 전부 클래스로 지정한다. */
@@ -294,124 +357,183 @@ const html = `<!doctype html>
   .tel-body { display: block; }
   .tel-body b { display: block; font-size: 16px; font-weight: 600; line-height: 24px; color: var(--foreground); }
   .tel-desc { display: block; margin-top: var(--s-xs); font-size: 14px; line-height: 21px; color: var(--body); }
-  .tel-hint { margin-top: var(--s-lg); font-size: 14px; line-height: 21px; color: var(--body); }
+  .tel-arrow { margin-left: auto; flex: none; font-size: 20px; color: var(--muted); }
+  .tel-hint { margin-top: var(--s-md); font-size: 14px; line-height: 21px; color: var(--muted); }
   .tel-hint b { color: var(--foreground); font-weight: 600; }
 
   /* ── 마무리 ───────────────────────────────────────── */
-  .rule {
-    margin-top: var(--s-xl); padding: var(--s-xl) var(--s-lg);
-    background: var(--surface); border-radius: var(--r-md); text-align: center;
-    font-size: 16px; line-height: 24px; color: var(--body);
+  .rule { text-align: center; }
+  .rule .cap { font-size: 14px; line-height: 21px; color: var(--muted); }
+  .rule b {
+    display: block; margin-top: var(--s-sm);
+    font-size: 22px; font-weight: 700; line-height: 33px;
+    letter-spacing: -0.01em; color: var(--foreground);
   }
-  .rule b { display: block; margin-top: var(--s-md); font-size: 17px; font-weight: 700; color: var(--foreground); }
 
+  /* ── 푸터 (Lux Layout.tsx) ─────────────────────────
+     border-t + 링크 줄 + 안내문. 글자는 body-sm/muted. */
   footer {
-    padding-top: var(--s-xl); margin-top: var(--s-xl); border-top: 1px solid var(--border);
-    font-size: 14px; line-height: 21px; color: var(--body);
+    flex: none; border-top: 1px solid var(--border);
+    padding-top: var(--s-2xl);
+    padding-bottom: calc(var(--s-2xl) + env(safe-area-inset-bottom));
+    font-size: 14px; line-height: 21px; color: var(--muted);
   }
-  footer p + p { margin-top: var(--s-md); }
+  .flinks { display: flex; flex-wrap: wrap; gap: var(--s-xs) var(--s-lg); }
+  .flinks a { color: var(--muted); text-decoration: none; }
+  .flinks a:hover { color: var(--body); }
+  footer p { margin-top: var(--s-md); }
   footer b { color: var(--body); font-weight: 600; }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="shell">
 
-  <header>
-    <p class="eyebrow">부산정보영재교육원 · 중학교 2학년 · 칠면조</p>
-    <h1>혼자 남겨진 도시,<br/>부산</h1>
-    <p class="lede">
-      ${LAST}년 부산에서 혼자 사는 65세 이상 어르신은
-      <b class="num">${comma(aloneBusan)}</b>명입니다.
-      저희 넷이 공공데이터로 확인한 것과, 끝내 확인하지 못한 것을 그대로 보여드립니다.
-    </p>
-    <p class="team">김동윤 · 박찬우 · 이연우 · 이선호</p>
+  <header class="topbar">
+    <div class="topbar-in pad">
+      <a class="brand" href="./index.html">혼자 남겨진 도시, 부산</a>
+      <span class="topbar-note">발표 안내</span>
+    </div>
   </header>
 
-  <div class="actions">
-    <a class="btn btn-fill" href="${CANVA_VIEW}" target="_blank" rel="noopener noreferrer">
-      <span class="btn-stack">발표자료 함께 보기<span class="btn-sub">지금 발표하는 슬라이드를 내 손안에서</span></span>
-    </a>
-    <a class="btn btn-weak" href="./index.html">
-      <span class="btn-stack">데이터 직접 만져보기<span class="btn-sub">지도와 그래프를 눌러 보는 웹 대시보드</span></span>
-    </a>
+  <main class="pad">
+  <div class="stack">
+
+    <!-- 히어로 -->
+    <section class="hero">
+      <span class="badge badge-primary">부산정보영재교육원 · 중학교 2학년 · 칠면조</span>
+      <h1>혼자 남겨진 도시,<br/>부산</h1>
+      <p class="lede">
+        ${LAST}년 부산에서 혼자 사는 65세 이상 어르신은
+        <b class="num">${comma(aloneBusan)}</b>명입니다.
+        저희 넷이 공공데이터로 확인한 것과, 끝내 확인하지 못한 것을 그대로 보여드립니다.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn-fill" href="${CANVA_VIEW}" target="_blank" rel="noopener noreferrer">
+          <span class="btn-stack">발표자료 함께 보기<span class="btn-sub">지금 발표하는 슬라이드를 내 손안에서</span></span>
+        </a>
+        <a class="btn btn-weak" href="./index.html">
+          <span class="btn-stack">데이터 직접 만져보기<span class="btn-sub">지도와 그래프를 눌러 보는 웹 대시보드</span></span>
+        </a>
+      </div>
+
+      <p class="team">만든 사람 · <b>김동윤 · 박찬우 · 이연우 · 이선호</b></p>
+    </section>
+
+    <!-- 저희가 던진 질문 -->
+    <section>
+      <div class="sec-head">
+        <h2>저희가 던진 질문</h2>
+        <a class="sec-more" href="./index.html#ch1">자세히 보기</a>
+      </div>
+      <p class="sec-note">부산은 전국에서 가장 먼저 초고령사회에 들어선 도시입니다. 그렇다면 고립도 전국보다 빠를까요. 그리고 그것은 부산 안 어디에서 가장 심할까요.</p>
+
+      <div class="kpis">
+        <div class="card kpi kpi-wide">
+          <span class="k">${LAST}년 부산 독거노인</span>
+          <span class="v num">${comma(aloneBusan)}<small>명</small></span>
+          <span class="l">65세 이상 1인가구</span>
+        </div>
+        <div class="card kpi">
+          <span class="k">10만 명당 고독사</span>
+          <span class="v num">${fmt(per100kBusan)}<small>명</small></span>
+          <span class="l">전국 ${fmt(per100kNation)}명의 ${fmt(per100kBusan / per100kNation, 2)}배</span>
+        </div>
+        <div class="card kpi">
+          <span class="k">가장 높은 ${topDistrict.sgg_name}</span>
+          <span class="v num">${fmt(topDistrict.elderly_alone_rate, 1)}<small>%</small></span>
+          <span class="l">원도심 ${fmt(oldMean, 1)}% vs 나머지 ${fmt(otherMean, 1)}%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 가설 세 개, 판정 세 개 -->
+    <section>
+      <div class="sec-head">
+        <h2>가설 세 개, 판정 세 개</h2>
+        <a class="sec-more" href="./index.html#ch6">연구 노트</a>
+      </div>
+      <p class="sec-note">판정 기준은 <b>데이터를 보기 전에</b> 미리 정해 코드에 박아 뒀습니다. 결과를 보고 기준을 고치면 검증이 아니라 변명이기 때문입니다.</p>
+
+      <div class="verdicts">
+        <div class="card">
+          <span class="vr-head">
+            <span class="dot d-part"></span>
+            <span class="badge badge-warning">부분채택</span>
+          </span>
+          <b class="vq">부산은 전국보다 더 가파르게 고립되는가</b>
+          <span class="vw">고독사 격차 ${fmt(axes[1].gap)}%p 충족 · 독거노인 ${fmt(axes[0].gap)}%p 미달</span>
+        </div>
+        <div class="card">
+          <span class="vr-head">
+            <span class="dot d-yes"></span>
+            <span class="badge badge-success">채택</span>
+          </span>
+          <b class="vq">어디가 가장 외로운가</b>
+          <span class="vw">원도심 ${fmt(oldMean, 1)}% vs 나머지 ${fmt(otherMean, 1)}% · 원도심 정의를 바꿔도 결론 유지</span>
+        </div>
+        <div class="card">
+          <span class="vr-head">
+            <span class="dot d-none"></span>
+            <span class="badge badge-neutral">검증불가</span>
+          </span>
+          <b class="vq">누가 혼자 떠나는가</b>
+          <span class="vw">부산의 성별×연령 고독사 표가 공표되지 않습니다. 추정치를 만들어 넣지 않았습니다</span>
+        </div>
+      </div>
+
+      <p class="honest">
+        세 개 중 온전히 확인된 것은 하나뿐입니다. 저희는 이것을 실패가 아니라 결과로 봅니다.
+        공개된 데이터로 <b>알 수 없는 것이 무엇인지</b> 아는 것도 연구가 알아낸 것이라고 생각했습니다.
+      </p>
+    </section>
+
+    <!-- 혼자 계신 분이 걱정된다면 -->
+    <section>
+      <div class="sec-head">
+        <h2>혼자 계신 분이 걱정된다면</h2>
+        <a class="sec-more" href="./index.html#ch5">제도 전체 보기</a>
+      </div>
+      <p class="sec-note">발표를 보시고 마음이 쓰이는 분이 떠오르셨다면, 이미 만들어져 있는 제도가 있습니다. 번호를 누르면 바로 걸립니다.</p>
+
+      <div class="tels">
+        <a class="tel" href="tel:129">
+          <span class="n num n-129">129</span>
+          <span class="tel-body"><b>보건복지상담센터</b>
+          <span class="tel-desc">어떤 제도를 신청해야 할지 모를 때. 복지사각지대 상담은 24시간입니다.</span></span>
+          <span class="tel-arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="tel" href="tel:109">
+          <span class="n num n-109">109</span>
+          <span class="tel-body"><b>자살예방 상담전화</b>
+          <span class="tel-desc">당장 위험해 보일 때. 24시간 받습니다.</span></span>
+          <span class="tel-arrow" aria-hidden="true">›</span>
+        </a>
+      </div>
+
+      <p class="tel-hint">
+        저희가 이 연구에서 가장 뜻밖이었던 사실 하나 — <b>노인맞춤돌봄서비스는 가족이 아니어도,
+        이웃도 신청할 수 있습니다.</b> 읍·면·동 행정복지센터로 가면 됩니다.
+        제도 내용은 ${VERIFIED_ON} 각 기관 공식 사이트에서 직접 확인했지만, 제도는 바뀝니다. 신청 전에 129 로 한 번 더 확인해 주세요.
+      </p>
+    </section>
+
+    <!-- 마무리 -->
+    <section class="card rule">
+      <span class="cap">저희가 이 작업에서 지킨 규칙은 하나였습니다.</span>
+      <b>가설이 틀리면 틀렸다고 쓴다.</b>
+    </section>
+
   </div>
+  </main>
 
-  <section>
-    <h2>저희가 던진 질문</h2>
-    <p class="sec-note">부산은 전국에서 가장 먼저 초고령사회에 들어선 도시입니다. 그렇다면 고립도 전국보다 빠를까요. 그리고 그것은 부산 안 어디에서 가장 심할까요.</p>
-
-    <div class="kpis">
-      <div class="kpi">
-        <span class="v num">${comma(aloneBusan)}</span>
-        <span class="l">${LAST}년 부산 독거노인<br/>65세 이상 1인가구</span>
-      </div>
-      <div class="kpi">
-        <span class="v num">${fmt(per100kBusan)}<small>명</small></span>
-        <span class="l">인구 10만 명당 고독사<br/>전국 ${fmt(per100kNation)}명의 ${fmt(per100kBusan / per100kNation, 2)}배</span>
-      </div>
-      <div class="kpi">
-        <span class="v num">${fmt(topDistrict.elderly_alone_rate, 1)}<small>%</small></span>
-        <span class="l">가장 높은 ${topDistrict.sgg_name}<br/>원도심 ${fmt(oldMean, 1)}% vs 나머지 ${fmt(otherMean, 1)}%</span>
-      </div>
+  <footer class="pad">
+    <div class="flinks">
+      <a href="./index.html">데이터 대시보드</a>
+      <a href="${CANVA_VIEW}" target="_blank" rel="noopener noreferrer">발표자료</a>
+      <a href="./index.html#ch6">연구 노트</a>
+      <a href="tel:129">129 상담</a>
     </div>
-  </section>
-
-  <section>
-    <h2>가설 세 개, 판정 세 개</h2>
-    <p class="sec-note">판정 기준은 <b>데이터를 보기 전에</b> 미리 정해 코드에 박아 뒀습니다. 결과를 보고 기준을 고치면 검증이 아니라 변명이기 때문입니다.</p>
-
-    <div class="verdicts">
-      <div class="vr">
-        <span class="badge b-part">부분채택</span>
-        <b class="vq">부산은 전국보다 더 가파르게 고립되는가</b>
-        <span class="vw">고독사 격차 ${fmt(axes[1].gap)}%p 충족 · 독거노인 ${fmt(axes[0].gap)}%p 미달</span>
-      </div>
-      <div class="vr">
-        <span class="badge b-yes">채택</span>
-        <b class="vq">어디가 가장 외로운가</b>
-        <span class="vw">원도심 ${fmt(oldMean, 1)}% vs 나머지 ${fmt(otherMean, 1)}% · 원도심 정의를 바꿔도 결론 유지</span>
-      </div>
-      <div class="vr">
-        <span class="badge b-none">검증불가</span>
-        <b class="vq">누가 혼자 떠나는가</b>
-        <span class="vw">부산의 성별×연령 고독사 표가 공표되지 않습니다. 추정치를 만들어 넣지 않았습니다</span>
-      </div>
-    </div>
-
-    <p class="honest">
-      세 개 중 온전히 확인된 것은 하나뿐입니다. 저희는 이것을 실패가 아니라 결과로 봅니다.
-      공개된 데이터로 <b>알 수 없는 것이 무엇인지</b> 아는 것도 연구가 알아낸 것이라고 생각했습니다.
-    </p>
-  </section>
-
-  <section>
-    <h2>혼자 계신 분이 걱정된다면</h2>
-    <p class="sec-note">발표를 보시고 마음이 쓰이는 분이 떠오르셨다면, 이미 만들어져 있는 제도가 있습니다. 번호를 누르면 바로 걸립니다.</p>
-
-    <a class="tel" href="tel:129">
-      <span class="n num n-129">129</span>
-      <span class="tel-body"><b>보건복지상담센터</b>
-      <span class="tel-desc">어떤 제도를 신청해야 할지 모를 때. 복지사각지대 상담은 24시간입니다.</span></span>
-    </a>
-    <a class="tel" href="tel:109">
-      <span class="n num n-109">109</span>
-      <span class="tel-body"><b>자살예방 상담전화</b>
-      <span class="tel-desc">당장 위험해 보일 때. 24시간 받습니다.</span></span>
-    </a>
-
-    <p class="tel-hint">
-      저희가 이 연구에서 가장 뜻밖이었던 사실 하나 — <b>노인맞춤돌봄서비스는 가족이 아니어도,
-      이웃도 신청할 수 있습니다.</b> 읍·면·동 행정복지센터로 가면 됩니다.
-      제도 내용은 ${VERIFIED_ON} 각 기관 공식 사이트에서 직접 확인했지만, 제도는 바뀝니다. 신청 전에 129 로 한 번 더 확인해 주세요.
-    </p>
-  </section>
-
-  <div class="rule">
-    저희가 이 작업에서 지킨 규칙은 하나였습니다.
-    <b>가설이 틀리면 틀렸다고 쓴다.</b>
-  </div>
-
-  <footer>
     <p><b>출처</b> · 국가데이터처(통계청) 인구총조사·주택총조사 · 행정안전부 주민등록 인구통계 ·
     보건복지부 고독사 사망자 실태조사(2024)·${LAST}년 고독사 발생 현황(2025) · 통계청 센서스용 행정구역경계.
     전체 목록과 원자료 링크는 대시보드 마지막 장에 있습니다.</p>

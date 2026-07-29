@@ -18,18 +18,18 @@ export function EmptyState({
     <div
       role="status"
       className={cn(
-        'flex min-h-[240px] flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-slate/60 p-8 text-center',
+        'flex min-h-[240px] flex-col items-center justify-center gap-3 rounded-btn-lg border border-dashed border-border p-8 text-center',
         className
       )}
     >
       {/* 꺼진 창문. 이 앱의 격자 모티프를 빈 상태에도 그대로 쓴다. */}
       <div className="grid grid-cols-4 gap-1.5" aria-hidden>
         {Array.from({ length: 12 }, (_, i) => (
-          <span key={i} className="block h-2.5 w-2.5 bg-slate/40" />
+          <span key={i} className="block h-2.5 w-2.5 bg-border" />
         ))}
       </div>
-      <p className="font-serif text-lg text-paper/80">{title}</p>
-      {detail && <p className="max-w-md text-sm text-paper/55">{detail}</p>}
+      <p className="text-lg text-foreground">{title}</p>
+      {detail && <p className="max-w-md text-sm text-muted">{detail}</p>}
     </div>
   );
 }

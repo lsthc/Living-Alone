@@ -44,7 +44,7 @@ export function WindowGrid({
   duration = 4200,
   className,
   label,
-  fill = 'var(--lamp)',
+  fill = 'var(--primary)',
   highlight = null,
   onPick,
   picked = null,
@@ -98,7 +98,7 @@ export function WindowGrid({
               width={size}
               height={size}
               fill={isMine ? highlight.fill : fill}
-              stroke={isPicked ? 'var(--paper)' : undefined}
+              stroke={isPicked ? 'var(--foreground)' : undefined}
               strokeWidth={isPicked ? 2 : undefined}
               initial={{ opacity: reduced ? (isMine ? 1 : 0.85) : 0 }}
               animate={{ opacity: isMine || isPicked ? 1 : 0.85 }}

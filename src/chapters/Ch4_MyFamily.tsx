@@ -64,14 +64,14 @@ function Field({
   if (!mobile) {
     return (
       <div className="flex flex-col gap-2">
-        <label htmlFor={id} className="text-sm text-ink/65">
+        <label htmlFor={id} className="text-sm text-muted">
           {label}
         </label>
         <select
           id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-md border border-ink/25 bg-paper px-4 py-3 text-base text-ink transition-colors hover:border-ink/45 focus-visible:ring-lamp focus-visible:ring-offset-paper"
+          className="w-full rounded-md border border-border bg-elevated px-4 py-3 text-base text-foreground transition-colors hover:border-muted focus-visible:ring-primary focus-visible:ring-offset-bg"
         >
           <option value="">{placeholder}</option>
           {options.map((o) => (
@@ -86,7 +86,7 @@ function Field({
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm text-ink/65">{label}</span>
+      <span className="text-sm text-muted">{label}</span>
       <button
         type="button"
         onClick={() => {
@@ -95,12 +95,12 @@ function Field({
         }}
         aria-haspopup="dialog"
         className={cn(
-          'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-lg border px-4 text-left transition-colors',
-          current ? 'border-weakfg/45 bg-weakbg/50 text-ink' : 'border-ink/25 bg-paper text-ink/45'
+          'flex min-h-[56px] w-full items-center justify-between gap-3 rounded-btn-lg border px-4 text-left transition-colors',
+          current ? 'border-weak-fg/45 bg-weak-bg/50 text-foreground' : 'border-border bg-elevated text-muted'
         )}
       >
         <span className="text-base">{current?.label ?? placeholder}</span>
-        <span className="shrink-0 text-ink/35" aria-hidden>
+        <span className="shrink-0 text-muted" aria-hidden>
           ⌄
         </span>
       </button>
@@ -108,7 +108,7 @@ function Field({
       <BottomSheet
         open={open}
         onClose={() => setOpen(false)}
-        tone="light"
+        tone="dark"
         title={label}
         subtitle="손으로 위아래로 굴려 가운데에 맞춘 뒤 확인을 눌러 주세요"
         footer={
@@ -118,7 +118,7 @@ function Field({
               onChange(draft);
               setOpen(false);
             }}
-            className="flex min-h-[56px] w-full items-center justify-center rounded-lg bg-lamp text-[17px] font-semibold text-paper transition-colors active:bg-[#2272eb]"
+            className="flex min-h-[56px] w-full items-center justify-center rounded-btn-xl bg-primary text-[17px] font-semibold text-primary-fg transition-colors active:bg-primary-hover"
           >
             확인
           </button>
@@ -128,7 +128,7 @@ function Field({
           options={options}
           value={draft || options[0]?.value || ''}
           onChange={setDraft}
-          tone="light"
+          tone="dark"
           ariaLabel={label}
         />
       </BottomSheet>
@@ -141,10 +141,10 @@ function Stat({ value, unit, caption }: { value: string; unit?: string; caption:
   return (
     <div className="flex flex-col gap-1">
       <p className="flex items-baseline gap-1.5">
-        <span className="num text-3xl text-ink md:text-4xl">{value}</span>
-        {unit && <span className="text-lg text-ink/65">{unit}</span>}
+        <span className="num text-3xl text-foreground md:text-4xl">{value}</span>
+        {unit && <span className="text-lg text-muted">{unit}</span>}
       </p>
-      <p className="text-sm leading-relaxed text-ink/65">{caption}</p>
+      <p className="text-sm leading-relaxed text-body">{caption}</p>
     </div>
   );
 }
@@ -227,15 +227,15 @@ export function Ch4MyFamily() {
   if (loading) return <section id="ch4" className="chapter min-h-full" aria-busy="true" />;
 
   return (
-    // 2막 — 이 챕터부터 배경이 종이색이다 (덱 패널이 톤을 깔고, 여기서 글자색을 맞춘다)
-    <div className="w-full bg-paper text-ink">
+    // 2막 — 배경은 덱 패널이 이미 어둡게 깔아 둔다. 여기서는 글자색만 맞춘다.
+    <div className="w-full text-foreground">
       <section id="ch4" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch4-heading">
         <header className="flex max-w-[70ch] flex-col gap-4">
-          <span className="num text-xs tracking-[0.25em] text-weakfg">CHAPTER 4</span>
-          <h2 id="ch4-heading" className="font-serif text-headline text-ink">
+          <span className="num text-xs tracking-[0.25em] text-weak-fg">CHAPTER 4</span>
+          <h2 id="ch4-heading" className="text-headline text-foreground">
             우리 가족의 거리
           </h2>
-          <p className="leading-relaxed text-ink/65">
+          <p className="leading-relaxed text-body">
             여기까지는 도시 전체의 숫자였습니다. 18만이라는 수는 너무 커서 아무도 아닌 사람처럼 보입니다. 이제
             같은 숫자를 여러분이 아는 한 사람의 자리 위에 다시 놓아 보겠습니다. 혼자 사시는 가족이나 이웃을 한
             분 떠올리고, 세 가지만 골라 주세요.
@@ -250,7 +250,7 @@ export function Ch4MyFamily() {
         ) : (
           <>
             <form
-              className="flex flex-col gap-5 rounded-lg border border-ink/15 bg-ink/[0.03] p-6 md:p-8"
+              className="flex flex-col gap-5 rounded-btn-lg border border-border bg-surface p-6 md:p-8"
               onSubmit={(e) => e.preventDefault()}
             >
               <fieldset className="flex flex-col gap-5">
@@ -283,7 +283,7 @@ export function Ch4MyFamily() {
               </fieldset>
 
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-sm leading-relaxed text-ink/70">
+                <p className="text-sm leading-relaxed text-body">
                   고른 내용은 이 브라우저 안에서만 계산됩니다. 어디로도 전송되지 않고 저장되지도 않습니다.
                   <br />
                   연령대는 원자료의 공표 구간을 그대로 썼습니다. 40대 미만 1인세대는 이 표에 없습니다.
@@ -296,7 +296,7 @@ export function Ch4MyFamily() {
                       setBand('');
                       setSex('');
                     }}
-                    className="rounded-full border border-ink/25 px-4 py-2 text-sm text-ink/65 transition-colors hover:border-ink/50 hover:text-ink focus-visible:ring-lamp focus-visible:ring-offset-paper"
+                    className="rounded-full border border-border px-4 py-2 text-sm text-muted transition-colors hover:border-muted hover:text-foreground focus-visible:ring-primary focus-visible:ring-offset-bg"
                   >
                     다시 고르기
                   </button>
@@ -317,10 +317,10 @@ export function Ch4MyFamily() {
                   <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
                     {/* 왼쪽 — 그 동네의 좌표 */}
                     <div className="flex flex-col gap-7">
-                      <h3 className="font-serif text-2xl text-ink">
+                      <h3 className="text-2xl text-foreground">
                         {picked!.sgg_name}에서는
                         {picked!.is_old_downtown && (
-                          <span className="ml-3 rounded-full border border-rustdeep/45 bg-rustdeep/10 px-2.5 py-0.5 align-middle text-xs text-rustdeep">
+                          <span className="ml-3 rounded-full border border-danger/45 bg-danger/10 px-2.5 py-0.5 align-middle text-xs text-danger">
                             원도심
                           </span>
                         )}
@@ -339,7 +339,7 @@ export function Ch4MyFamily() {
                           }`}
                         />
                       ) : (
-                        <p className="text-sm text-ink/65">{picked!.sgg_name}의 독거노인 비율 값이 비어 있습니다.</p>
+                        <p className="text-sm text-muted">{picked!.sgg_name}의 독거노인 비율 값이 비어 있습니다.</p>
                       )}
 
                       {picked!.elderly_alone !== null && (
@@ -350,7 +350,7 @@ export function Ch4MyFamily() {
                         />
                       )}
 
-                      <SourceNote sourceIds={['kosis_elderly_alone', 'mois_age']} tone="light" />
+                      <SourceNote sourceIds={['kosis_elderly_alone', 'mois_age']} />
                     </div>
 
                     {/* 오른쪽 — Chapter 0 의 창문이 한 칸으로 돌아온다 */}
@@ -364,26 +364,26 @@ export function Ch4MyFamily() {
                             size={13}
                             gap={5}
                             duration={2600}
-                            fill="var(--slate)"
-                            highlight={{ index: myIndex, fill: 'var(--rust)' }}
+                            fill="var(--muted)"
+                            highlight={{ index: myIndex, fill: 'var(--danger)' }}
                             label={`사각형 ${squares}개로 표현한 ${districtYear}년 ${picked!.sgg_name}의 독거노인 ${fmtInt(picked!.elderly_alone)}가구. 사각형 하나가 ${UNIT}가구를 뜻하고, 붉은 칸 하나는 방금 떠올린 그 한 분의 자리를 가리킨다.`}
                             className="w-full max-w-[560px]"
                           />
-                          <p className="max-w-[46ch] text-sm leading-relaxed text-ink/65">
+                          <p className="max-w-[46ch] text-sm leading-relaxed text-body">
                             사각형 하나가 <span className="num">{UNIT}</span>가구입니다. 붉은 칸 하나가 방금
                             떠올린 그분입니다. Chapter 0 에서 본 <span className="num">18만</span>개의 불빛은
                             이렇게 한 칸씩 모인 것이었습니다.
                           </p>
                         </>
                       ) : (
-                        <p className="text-sm text-ink/65">{picked!.sgg_name}의 독거노인 가구 수 값이 비어 있습니다.</p>
+                        <p className="text-sm text-muted">{picked!.sgg_name}의 독거노인 가구 수 값이 비어 있습니다.</p>
                       )}
                     </div>
                   </div>
 
                   {/* 같은 칸에 서 있는 사람들 */}
-                  <div className="flex flex-col gap-5 border-t border-ink/15 pt-8">
-                    <h3 className="font-serif text-2xl text-ink">같은 칸에 서 있는 사람들</h3>
+                  <div className="flex flex-col gap-5 border-t border-border pt-8">
+                    <h3 className="text-2xl text-foreground">같은 칸에 서 있는 사람들</h3>
                     <div className="grid gap-8 md:grid-cols-2">
                       <Stat
                         value={fmtInt(cell!.households)}
@@ -392,35 +392,35 @@ export function Ch4MyFamily() {
                           cell!.total
                         )}세대 가운데 ${cell!.pct.toFixed(1)}%로, ${cell!.of}개 칸 중 ${cell!.rank}번째로 큰 칸입니다.`}
                       />
-                      <div className="flex flex-col gap-3 text-sm leading-relaxed text-ink/65">
+                      <div className="flex flex-col gap-3 text-sm leading-relaxed text-body">
                         <p>
-                          이 수는 <span className="text-ink/85">혼자 사는 세대</span>의 수이지 고독사 통계가
+                          이 수는 <span className="text-foreground">혼자 사는 세대</span>의 수이지 고독사 통계가
                           아닙니다. Chapter 3 에서 본 것처럼, 부산의 성별·연령대별 고독사 표는 공표되지 않아
                           여기에 놓을 수 없습니다.
                         </p>
-                        <SourceNote sourceIds={['mois_single_age']} tone="light" />
+                        <SourceNote sourceIds={['mois_single_age']} />
                       </div>
                     </div>
                   </div>
 
                   {/* 이 챕터에서 가장 중요한 문단 */}
-                  <div className="max-w-[74ch] rounded-lg border-l-2 border-rust bg-rust/[0.06] p-6">
-                    <h4 className="mb-3 font-serif text-lg text-ink">이 숫자는 확률이 아닙니다</h4>
-                    <p className="text-sm leading-relaxed text-ink/70">
+                  <div className="max-w-[74ch] rounded-btn-lg border-l-2 border-danger bg-danger/[0.06] p-6">
+                    <h4 className="mb-3 text-lg text-foreground">이 숫자는 확률이 아닙니다</h4>
+                    <p className="text-sm leading-relaxed text-body">
                       이 화면은 떠올린 그분이 위험하다고 말하지 않습니다. 그런 말을 할 근거가 우리에게 없습니다.
                       고독사는 건강·관계·소득 같은 개인의 사정에서 비롯되는데, 우리가 가진 자료는 사람을 세어
                       놓은 집계뿐이라 그런 정보가 한 줄도 들어 있지 않습니다. 여기 있는 것은{' '}
-                      <span className="text-ink">확률이 아니라 위치</span>입니다. 같은 칸에 몇 명이 서 있는지를
+                      <span className="text-foreground">확률이 아니라 위치</span>입니다. 같은 칸에 몇 명이 서 있는지를
                       보여줄 뿐입니다.
                     </p>
                   </div>
 
                   {/* 데이터가 재지 못한 마지막 축 */}
-                  <div className="flex max-w-[74ch] flex-col gap-5 border-t border-ink/15 pt-8">
-                    <p className="font-serif text-xl leading-relaxed text-ink/85 md:text-2xl">
+                  <div className="flex max-w-[74ch] flex-col gap-5 border-t border-border pt-8">
+                    <p className="text-xl leading-relaxed text-foreground md:text-2xl">
                       그리고 데이터가 끝내 재지 못한 것이 하나 있습니다. 거리입니다.
                     </p>
-                    <p className="leading-relaxed text-ink/65">
+                    <p className="leading-relaxed text-body">
                       마지막으로 안부를 물은 게 언제인지는 어떤 통계에도 없습니다. 그건 이 화면이 아니라 여러분만
                       압니다. 이 칸만은 직접 채워 보세요.
                     </p>
@@ -433,10 +433,10 @@ export function Ch4MyFamily() {
                           onClick={() => setLastCall(lastCall === o.id ? '' : o.id)}
                           aria-pressed={lastCall === o.id}
                           className={cn(
-                            'rounded-full border px-4 py-2 text-sm transition-colors focus-visible:ring-lamp focus-visible:ring-offset-paper',
+                            'rounded-full border px-4 py-2 text-sm transition-colors focus-visible:ring-primary focus-visible:ring-offset-bg',
                             lastCall === o.id
-                              ? 'border-weakfg/50 bg-weakbg text-weakfg'
-                              : 'border-ink/20 text-ink/65 hover:border-ink/45 hover:text-ink'
+                              ? 'border-weak-fg/50 bg-weak-bg text-weak-fg'
+                              : 'border-border text-muted hover:border-muted hover:text-foreground'
                           )}
                         >
                           {o.label}
@@ -447,7 +447,7 @@ export function Ch4MyFamily() {
                     <AnimatePresence mode="wait">
                       <motion.p
                         key={lastCall || 'empty'}
-                        className="min-h-[3rem] font-serif text-lg leading-relaxed text-ink/80 md:text-xl"
+                        className="min-h-[3rem] text-lg leading-relaxed text-foreground md:text-xl"
                         initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
@@ -459,12 +459,12 @@ export function Ch4MyFamily() {
                       </motion.p>
                     </AnimatePresence>
 
-                    <p className="text-sm leading-relaxed text-ink/55">
+                    <p className="text-sm leading-relaxed text-muted">
                       고른 값은 저장되지도 전송되지도 않고, 어떤 위험도 계산하지 않습니다. 앞의 세 칸과 달리 이
                       칸에는 정답도 평균도 없습니다 — 어디에도 그 값을 모아 둔 데이터가 없기 때문입니다.
                     </p>
 
-                    <p className="leading-relaxed text-ink/65">
+                    <p className="leading-relaxed text-body">
                       다음 챕터에서는, 그 거리를 좁히려고 이미 만들어져 있는 것들을 봅니다.
                     </p>
                   </div>
@@ -472,7 +472,7 @@ export function Ch4MyFamily() {
               ) : (
                 <motion.p
                   key="hint"
-                  className="rounded-lg border border-dashed border-ink/25 p-10 text-center leading-relaxed text-ink/65"
+                  className="rounded-btn-lg border border-dashed border-border p-10 text-center leading-relaxed text-body"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}

@@ -71,11 +71,11 @@ export function SwipeTabs({
             mobile ? 'min-h-[40px] px-3.5 text-sm' : 'px-4 py-2 text-sm',
             i === index
               ? dark
-                ? 'border-lamp/60 bg-lamp/15 text-lamp'
-                : 'border-weakfg/50 bg-weakbg text-weakfg'
+                ? 'border-primary/60 bg-primary/15 text-primary'
+                : 'border-weak-fg/50 bg-weak-bg text-weak-fg'
               : dark
-                ? 'border-slate/60 text-paper/55 hover:border-slate hover:text-paper/80'
-                : 'border-ink/20 text-ink/60 hover:border-ink/45 hover:text-ink'
+                ? 'border-border text-muted hover:border-muted hover:text-body'
+                : 'border-border text-muted hover:border-muted hover:text-body'
           )}
         >
           {l}
@@ -97,7 +97,7 @@ export function SwipeTabs({
     <div className={cn('flex flex-col gap-4', className)}>
       <div className="flex items-center justify-between gap-3">
         {tabs}
-        <span className={cn('num shrink-0 text-xs', dark ? 'text-paper/45' : 'text-ink/45')}>
+        <span className={cn('num shrink-0 text-xs', dark ? 'text-muted' : 'text-muted')}>
           {index + 1} / {slides.length}
         </span>
       </div>
@@ -114,7 +114,7 @@ export function SwipeTabs({
         ))}
       </div>
 
-      <p className={cn('text-center text-xs', dark ? 'text-paper/40' : 'text-ink/45')}>
+      <p className={cn('text-center text-xs', dark ? 'text-muted' : 'text-muted')}>
         옆으로 밀면 다음 표로 넘어갑니다 · 챕터는 아래 화살표로 넘깁니다
       </p>
     </div>

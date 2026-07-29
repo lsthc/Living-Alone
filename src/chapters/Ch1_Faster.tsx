@@ -76,8 +76,8 @@ export function Ch1Faster() {
       METRIC_KEYS.map((key) => [
         key,
         [
-          { key: '부산', label: '부산', color: 'var(--lamp)', points: build(key, '부산') },
-          { key: '전국', label: '전국', color: 'var(--tide)', dashed: true, points: build(key, '전국') },
+          { key: '부산', label: '부산', color: 'var(--primary)', points: build(key, '부산') },
+          { key: '전국', label: '전국', color: 'var(--muted)', dashed: true, points: build(key, '전국') },
         ] as TrendSeries[],
       ])
     ) as Record<MetricKey, TrendSeries[]>;
@@ -149,12 +149,12 @@ export function Ch1Faster() {
   return (
     <section id="ch1" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch1-heading">
       <header className="flex max-w-[70ch] flex-col gap-4">
-        <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 1 · 가설 H1</span>
-        <h2 id="ch1-heading" className="font-serif text-headline text-paper">
+        <span className="num text-xs tracking-[0.25em] text-primary/70">CHAPTER 1 · 가설 H1</span>
+        <h2 id="ch1-heading" className="text-headline text-foreground">
           <BlurText text="부산은 정말 더 빠른가" />
         </h2>
-        <ScrollRevealText className="leading-relaxed text-paper/60">
-          부산은 전국에서 가장 먼저 초고령사회에 들어섰습니다. 그렇다면 고립이 늘어나는 <em className="not-italic text-paper/90">속도</em>도
+        <ScrollRevealText className="leading-relaxed text-muted">
+          부산은 전국에서 가장 먼저 초고령사회에 들어섰습니다. 그렇다면 고립이 늘어나는 <em className="not-italic text-body">속도</em>도
           전국보다 빠를까요. 도시 크기가 다르면 사람 수를 그냥 비교할 수 없으니, 첫 연도를 100으로 놓고 얼마나 늘었는지만 봅니다.
         </ScrollRevealText>
       </header>
@@ -169,13 +169,13 @@ export function Ch1Faster() {
             aria-pressed={shown[key]}
             className={cn(
               'flex min-h-[40px] items-center gap-2 rounded-full border px-3 text-xs transition-colors',
-              shown[key] ? 'border-slate text-paper/80' : 'border-slate/40 text-paper/35'
+              shown[key] ? 'border-border text-body' : 'border-border/40 text-muted'
             )}
           >
             <span
               className="block h-2.5 w-2.5 rounded-[2px]"
               style={{
-                backgroundColor: shown[key] ? (key === '부산' ? 'var(--lamp)' : 'var(--tide)') : 'transparent',
+                backgroundColor: shown[key] ? (key === '부산' ? 'var(--primary)' : 'var(--muted)') : 'transparent',
                 border: shown[key] ? 'none' : '1px solid currentColor',
               }}
               aria-hidden
@@ -216,7 +216,7 @@ export function Ch1Faster() {
                   caveat={METRICS[key].caveat}
                 >
                   {lines.length === 0 ? (
-                    <p className="flex min-h-[200px] items-center justify-center rounded-lg border border-dashed border-slate/50 text-sm text-paper/55">
+                    <p className="flex min-h-[200px] items-center justify-center rounded-btn-lg border border-dashed border-border text-sm text-muted">
                       두 선을 모두 껐습니다. 위에서 하나 이상 켜 주세요.
                     </p>
                   ) : (
@@ -241,7 +241,7 @@ export function Ch1Faster() {
 
           {/* 연도 슬라이더와 자동 재생 */}
           <div className="flex flex-col gap-3">
-            <label htmlFor="ch1-year" className="text-sm text-paper/55">
+            <label htmlFor="ch1-year" className="text-sm text-muted">
               연도를 움직여 두 선의 격차를 확인해 보세요
             </label>
             <div className="flex items-center gap-4">
@@ -249,7 +249,7 @@ export function Ch1Faster() {
                 type="button"
                 onClick={() => (playing ? setPlaying(false) : play())}
                 aria-label={playing ? '연도 자동 재생 멈춤' : '연도 자동 재생'}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-lamp/50 text-lamp transition-colors hover:bg-lamp/15"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/50 text-primary transition-colors hover:bg-primary/15"
               >
                 {playing ? (
                   <svg width="12" height="13" viewBox="0 0 12 13" fill="currentColor" aria-hidden>
@@ -276,42 +276,42 @@ export function Ch1Faster() {
                 thumbValueText={`${activeYear}년`}
                 className="max-w-xl"
               />
-              <span className="num text-lg text-lamp">{activeYear}</span>
+              <span className="num text-lg text-primary">{activeYear}</span>
             </div>
           </div>
 
           {/* 실시간 격차 문장 */}
           <motion.p
             key={`${metric}-${activeYear}`}
-            className="max-w-[70ch] text-lg leading-relaxed text-paper/85 md:text-xl"
+            className="max-w-[70ch] text-lg leading-relaxed text-body md:text-xl"
             initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
             {busanAt && nationAt ? (
               <>
-                <span className="num text-lamp">{activeYear}년</span>, {baseYear}년을 100으로 보면 부산은{' '}
-                <span className="num text-lamp">{busanAt.index.toFixed(0)}</span>, 전국은{' '}
-                <span className="num text-tide">{nationAt.index.toFixed(0)}</span>입니다.
+                <span className="num text-primary">{activeYear}년</span>, {baseYear}년을 100으로 보면 부산은{' '}
+                <span className="num text-primary">{busanAt.index.toFixed(0)}</span>, 전국은{' '}
+                <span className="num text-muted">{nationAt.index.toFixed(0)}</span>입니다.
                 {gapRatio !== null && (
                   <>
                     {' '}
                     늘어난 폭만 놓고 보면 부산이 전국의{' '}
-                    <span className="num text-lamp">{gapRatio.toFixed(2)}배</span>입니다.
+                    <span className="num text-primary">{gapRatio.toFixed(2)}배</span>입니다.
                   </>
                 )}
               </>
             ) : (
-              <span className="text-paper/55">{activeYear}년에는 비교할 값이 없습니다.</span>
+              <span className="text-muted">{activeYear}년에는 비교할 값이 없습니다.</span>
             )}
           </motion.p>
         </>
       )}
 
       {/* 그림과 판정의 기준이 다르다는 것을 먼저 밝힌다 */}
-      <p className="max-w-[70ch] text-sm leading-relaxed text-paper/55">
-        위 그래프는 첫 연도를 100으로 놓은 <em className="not-italic text-paper/75">지수 추세</em>입니다. 반면 아래 판정은
-        2일차 연구계획서에 <em className="not-italic text-paper/75">분석하기 전에 미리 등록해 둔 기준</em>
+      <p className="max-w-[70ch] text-sm leading-relaxed text-muted">
+        위 그래프는 첫 연도를 100으로 놓은 <em className="not-italic text-body">지수 추세</em>입니다. 반면 아래 판정은
+        2일차 연구계획서에 <em className="not-italic text-body">분석하기 전에 미리 등록해 둔 기준</em>
         — {H1_CRITERION.baseYear}년부터의 연평균 증가율을 비교해 부산이 전국보다 {H1_CRITERION.gapThresholdPp}%p 이상 높으면
         충족 — 으로 계산한 것입니다. 그래서 그림에서 보이는 인상과 판정이 어긋날 수 있습니다. 결과를 보고 기준을 고치지 않으려고
         기준을 코드에 상수로 박아 뒀습니다.

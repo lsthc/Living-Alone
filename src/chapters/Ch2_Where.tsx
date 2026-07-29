@@ -87,13 +87,13 @@ function DistrictDetail({
         return (
           <div
             key={item.k}
-            className={cn('flex items-baseline justify-between gap-4 border-b pb-2', on ? 'border-lamp/40' : 'border-slate/25')}
+            className={cn('flex items-baseline justify-between gap-4 border-b pb-2', on ? 'border-primary/40' : 'border-border')}
           >
-            <dt className={cn('text-sm', on ? 'text-lamp/80' : 'text-paper/55')}>{item.k}</dt>
+            <dt className={cn('text-sm', on ? 'text-primary/80' : 'text-muted')}>{item.k}</dt>
             <dd className="flex items-baseline gap-2">
-              <span className={cn('num text-lg', on ? 'text-lamp' : 'text-paper')}>{item.v}</span>
-              {on && rank && <span className="text-xs text-paper/55">16개 구 중 {rank}위</span>}
-              {!(on && rank) && item.sub && <span className="text-xs text-paper/55">{item.sub}</span>}
+              <span className={cn('num text-lg', on ? 'text-primary' : 'text-foreground')}>{item.v}</span>
+              {on && rank && <span className="text-xs text-muted">16개 구 중 {rank}위</span>}
+              {!(on && rank) && item.sub && <span className="text-xs text-muted">{item.sub}</span>}
             </dd>
           </div>
         );
@@ -164,11 +164,11 @@ export function Ch2Where() {
   return (
     <section id="ch2" className="chapter flex flex-col gap-10 md:gap-14" aria-labelledby="ch2-heading">
       <header className="flex max-w-[70ch] flex-col gap-4">
-        <span className="num text-xs tracking-[0.25em] text-lamp/70">CHAPTER 2 · 가설 H2</span>
-        <h2 id="ch2-heading" className="font-serif text-headline text-paper">
+        <span className="num text-xs tracking-[0.25em] text-primary/70">CHAPTER 2 · 가설 H2</span>
+        <h2 id="ch2-heading" className="text-headline text-foreground">
           <BlurText text="어디가 가장 외로운가" />
         </h2>
-        <ScrollRevealText className="leading-relaxed text-paper/60">
+        <ScrollRevealText className="leading-relaxed text-muted">
           부산은 하나가 아닙니다. 산업이 떠난 원도심과 새로 지은 신도시는 같은 도시 안에서 다른 시간을 살고 있습니다.
           오래된 동네일수록 혼자 사는 노인이 많은지, 16개 구·군을 하나씩 켜서 확인합니다.
         </ScrollRevealText>
@@ -220,7 +220,7 @@ export function Ch2Where() {
                       />
                       <div className="flex flex-wrap items-center justify-between gap-4">
                         {vals.length > 0 && <MapLegend min={Math.min(...vals)} max={Math.max(...vals)} />}
-                        <label className="flex min-h-[44px] cursor-pointer items-center gap-3 text-sm text-paper/70">
+                        <label className="flex min-h-[44px] cursor-pointer items-center gap-3 text-sm text-body">
                           <Switch
                             checked={onlyOldDowntown}
                             onCheckedChange={setOnlyOldDowntown}
@@ -230,7 +230,7 @@ export function Ch2Where() {
                         </label>
                       </div>
                       {onlyOldDowntown && (
-                        <p className="text-sm leading-relaxed text-paper/60">
+                        <p className="text-sm leading-relaxed text-muted">
                           원도심은 연구팀이 영도구·동구·중구·사상구·사하구로 정의했습니다. 행정적으로 정해진
                           구분이 아니라 이 연구의 기준입니다.
                         </p>
@@ -244,16 +244,16 @@ export function Ch2Where() {
                           {active ? (
                             <motion.div
                               key={active.sgg_code}
-                              className="flex flex-col gap-5 rounded-lg border border-slate/50 bg-ink/60 p-6"
+                              className="flex flex-col gap-5 rounded-btn-lg border border-border bg-surface p-6"
                               initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : -8 }}
                               transition={{ duration: 0.25 }}
                             >
                               <div className="flex items-baseline justify-between gap-3">
-                                <h4 className="font-serif text-2xl text-paper">{active.sgg_name}</h4>
+                                <h4 className="text-2xl text-foreground">{active.sgg_name}</h4>
                                 {active.is_old_downtown && (
-                                  <span className="rounded-full border border-lamp/40 bg-lamp/10 px-2.5 py-0.5 text-xs text-lamp">
+                                  <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
                                     원도심
                                   </span>
                                 )}
@@ -263,7 +263,7 @@ export function Ch2Where() {
                           ) : (
                             <motion.p
                               key="hint"
-                              className="flex h-full items-center justify-center rounded-lg border border-dashed border-slate/50 p-6 text-center text-sm text-paper/55"
+                              className="flex h-full items-center justify-center rounded-btn-lg border border-dashed border-border p-6 text-center text-sm text-muted"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                             >
@@ -287,9 +287,9 @@ export function Ch2Where() {
            * 누르면 지도의 선택과 그대로 이어지고, 폰에서는 시트가 올라온다.
            */}
           <div className="flex flex-col gap-2">
-            <h4 className="text-sm text-paper/55">
+            <h4 className="text-sm text-muted">
               {metric.label} 순위{' '}
-              <span className="text-paper/35">· {mobile ? '누르면 아래에서 자세히 올라옵니다' : '누르면 지도와 함께 표시됩니다'}</span>
+              <span className="text-muted">· {mobile ? '누르면 아래에서 자세히 올라옵니다' : '누르면 지도와 함께 표시됩니다'}</span>
             </h4>
             <ol className="grid gap-1.5 sm:grid-cols-2">
               {ranked.map((r, i) => {
@@ -311,20 +311,20 @@ export function Ch2Where() {
                         'flex w-full items-center gap-3 rounded-md border px-2.5 text-left transition-colors',
                         // 폰에서는 손가락이 닿는 높이(44px)를 지킨다
                         mobile ? 'min-h-[44px] py-2' : 'py-1.5',
-                        on ? 'border-lamp/60 bg-lamp/10' : 'border-transparent hover:border-slate/60',
+                        on ? 'border-primary/60 bg-primary/10' : 'border-transparent hover:border-border',
                         dimmed && 'opacity-35'
                       )}
                     >
-                      <span className="num w-5 shrink-0 text-right text-xs text-paper/40">{i + 1}</span>
+                      <span className="num w-5 shrink-0 text-right text-xs text-muted">{i + 1}</span>
                       <span
                         className={cn(
                           'w-16 shrink-0 truncate text-sm',
-                          r.is_old_downtown ? 'text-paper' : 'text-paper/70'
+                          r.is_old_downtown ? 'text-foreground' : 'text-body'
                         )}
                       >
                         {r.sgg_name}
                       </span>
-                      <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate/25">
+                      <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-elevated">
                         <motion.span
                           className="block h-full rounded-full"
                           style={{ backgroundColor: rampColor(t) }}
@@ -333,7 +333,7 @@ export function Ch2Where() {
                           transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : i * 0.02 }}
                         />
                       </span>
-                      <span className="num w-14 shrink-0 text-right text-sm text-paper/80">{fmtPct(v)}</span>
+                      <span className="num w-14 shrink-0 text-right text-sm text-body">{fmtPct(v)}</span>
                     </button>
                   </li>
                 );
@@ -359,7 +359,7 @@ export function Ch2Where() {
                 ariaLabel="노후주택 비율과 독거노인 비율의 관계를 보여주는 산점도"
               />
               {mobile && (
-                <p className="mt-2 text-xs text-paper/55">
+                <p className="mt-2 text-xs text-muted">
                   좁은 화면에서는 원도심 5개구의 이름만 보입니다. 다른 점은 탭하면 이름이 나타납니다.
                 </p>
               )}
@@ -377,12 +377,12 @@ export function Ch2Where() {
             {active && (
               <div className="flex flex-col gap-5 pb-2">
                 {active.is_old_downtown && (
-                  <span className="self-start rounded-full border border-lamp/40 bg-lamp/10 px-2.5 py-0.5 text-xs text-lamp">
+                  <span className="self-start rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
                     원도심
                   </span>
                 )}
                 <DistrictDetail row={active} activeMetric={mapMetric} rank={rankOf(active.sgg_code)} />
-                <p className="text-xs leading-relaxed text-paper/55">{metric.caveat}</p>
+                <p className="text-xs leading-relaxed text-muted">{metric.caveat}</p>
               </div>
             )}
           </BottomSheet>

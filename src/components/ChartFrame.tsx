@@ -36,8 +36,8 @@ export function ChartFrame({
   return (
     <figure className={cn('flex flex-col gap-4', className)}>
       <figcaption className="flex flex-col gap-1">
-        <h3 className="font-serif text-headline text-paper">{title}</h3>
-        {subtitle && <p className="text-sm text-paper/60">{subtitle}</p>}
+        <h3 className="text-headline text-foreground">{title}</h3>
+        {subtitle && <p className="text-sm text-muted">{subtitle}</p>}
       </figcaption>
 
       <div role="group" aria-label={title}>
@@ -47,12 +47,12 @@ export function ChartFrame({
       </div>
 
       {caveat && (
-        <p className="border-l-2 border-slate/60 pl-3 text-sm leading-relaxed text-paper/60">
-          <span className="text-paper/70">읽을 때 주의</span> — {caveat}
+        <p className="border-l-2 border-border pl-3 text-sm leading-relaxed text-muted">
+          <span className="text-body">읽을 때 주의</span> — {caveat}
         </p>
       )}
 
-      <div className="flex flex-col gap-1 text-xs text-paper/55">
+      <div className="flex flex-col gap-1 text-xs text-muted">
         {used.length === 0 ? (
           <span>출처 정보를 불러오지 못했습니다</span>
         ) : (
@@ -63,7 +63,7 @@ export function ChartFrame({
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="underline decoration-slate underline-offset-2 hover:text-paper/70"
+                className="underline decoration-border underline-offset-2 hover:text-body"
               >
                 원자료
               </a>

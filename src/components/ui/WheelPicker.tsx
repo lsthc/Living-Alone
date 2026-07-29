@@ -65,8 +65,8 @@ export function WheelPicker({
       {/* 가운데 걸림 칸 */}
       <div
         className={cn(
-          'pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-lg border',
-          dark ? 'border-lamp/45 bg-lamp/10' : 'border-weakfg/40 bg-weakbg/70'
+          'pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-btn-lg border',
+          dark ? 'border-primary/45 bg-primary/10' : 'border-weak-fg/40 bg-weak-bg/70'
         )}
         style={{ height: ITEM }}
         aria-hidden
@@ -76,8 +76,8 @@ export function WheelPicker({
         className="pointer-events-none absolute inset-0 z-10"
         style={{
           background: dark
-            ? 'linear-gradient(180deg, #191f28 0%, rgba(25,31,40,0) 34%, rgba(25,31,40,0) 66%, #191f28 100%)'
-            : 'linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0) 34%, rgba(255,255,255,0) 66%, #ffffff 100%)',
+            ? 'linear-gradient(180deg, var(--surface) 0%, rgba(26,28,34,0) 34%, rgba(26,28,34,0) 66%, var(--surface) 100%)'
+            : 'linear-gradient(180deg, var(--surface) 0%, rgba(26,28,34,0) 34%, rgba(26,28,34,0) 66%, var(--surface) 100%)',
         }}
         aria-hidden
       />
@@ -109,11 +109,11 @@ export function WheelPicker({
               'flex snap-center items-center justify-center text-center transition-colors',
               i === center
                 ? dark
-                  ? 'text-lg text-paper'
-                  : 'text-lg text-ink'
+                  ? 'text-lg text-foreground'
+                  : 'text-lg text-foreground'
                 : dark
-                  ? 'text-base text-paper/35'
-                  : 'text-base text-ink/35'
+                  ? 'text-base text-muted'
+                  : 'text-base text-muted'
             )}
             style={{ height: ITEM }}
           >

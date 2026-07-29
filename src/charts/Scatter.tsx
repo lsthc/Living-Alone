@@ -89,8 +89,8 @@ export function Scatter({
       {/* 눈금 */}
       {ticks(model.yd).map((v) => (
         <g key={`y${v}`}>
-          <line x1={M.left} x2={M.left + PW} y1={model.y(v)} y2={model.y(v)} stroke="#4e5968" strokeWidth={1} />
-          <text x={M.left - 10} y={model.y(v) + 4} textAnchor="end" className="fill-paper/55 font-sans text-[12px]">
+          <line x1={M.left} x2={M.left + PW} y1={model.y(v)} y2={model.y(v)} stroke="var(--muted)" strokeWidth={1} />
+          <text x={M.left - 10} y={model.y(v) + 4} textAnchor="end" className="fill-muted font-sans text-[12px]">
             {v.toFixed(0)}
           </text>
         </g>
@@ -101,13 +101,13 @@ export function Scatter({
           x={model.x(v)}
           y={M.top + PH + 24}
           textAnchor="middle"
-          className="fill-paper/55 font-sans text-[12px]"
+          className="fill-muted font-sans text-[12px]"
         >
           {v.toFixed(0)}
         </text>
       ))}
 
-      <text x={M.left + PW / 2} y={H - 12} textAnchor="middle" className="fill-paper/55 font-sans text-[13px]">
+      <text x={M.left + PW / 2} y={H - 12} textAnchor="middle" className="fill-muted font-sans text-[13px]">
         {xLabel}
       </text>
       <text
@@ -115,7 +115,7 @@ export function Scatter({
         y={16}
         transform="rotate(-90)"
         textAnchor="middle"
-        className="fill-paper/55 font-sans text-[13px]"
+        className="fill-muted font-sans text-[13px]"
       >
         {yLabel}
       </text>
@@ -167,9 +167,9 @@ export function Scatter({
               cx={model.x(p.x)}
               cy={model.y(p.y)}
               r={model.r(p.size)}
-              fill={p.highlight ? 'var(--lamp)' : 'var(--tide)'}
+              fill={p.highlight ? 'var(--primary)' : 'var(--muted)'}
               fillOpacity={isSel ? 0.85 : 0.42}
-              stroke={p.highlight ? 'var(--lamp)' : 'var(--tide)'}
+              stroke={p.highlight ? 'var(--primary)' : 'var(--muted)'}
               strokeWidth={isSel ? 2 : 1}
             />
             {/* 폰에서는 16개 이름표가 전부 겹쳐 읽을 수 없다.
@@ -180,7 +180,7 @@ export function Scatter({
                 y={model.y(p.y) - model.r(p.size) - 7}
                 textAnchor="middle"
                 className="pointer-events-none font-sans text-[12px]"
-                fill={p.highlight ? 'var(--lamp)' : '#ffffff'}
+                fill={p.highlight ? 'var(--primary)' : '#ffffff'}
                 fillOpacity={isSel ? 1 : 0.55}
               >
                 {p.label}
@@ -193,7 +193,7 @@ export function Scatter({
 
       {/* 상관계수 */}
       {model.r2 !== null && (
-        <text x={M.left + PW - 4} y={M.top + 16} textAnchor="end" className="fill-paper/60 font-sans text-[14px]">
+        <text x={M.left + PW - 4} y={M.top + 16} textAnchor="end" className="fill-muted font-sans text-[14px]">
           r = {model.r2.toFixed(2)}
         </text>
       )}

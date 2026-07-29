@@ -32,7 +32,7 @@ function ChapterStage() {
     <AnimatePresence initial={false}>
       <motion.main
         key={chapter.id}
-        className={chapter.tone === 'dark' ? 'deck-panel bg-ink text-paper' : 'deck-panel bg-paper text-ink'}
+        className="deck-panel"
         initial={{ opacity: 0, x: direction * shift, scale: reduced ? 1 : 0.99 }}
         animate={{ opacity: 1, x: 0, scale: 1, transition: { duration: reduced ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] } }}
         exit={{

@@ -23,13 +23,13 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
     className={cn('relative flex w-full touch-none select-none items-center', className)}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1 w-full grow overflow-hidden rounded-full bg-slate/60">
-      <SliderPrimitive.Range className="absolute h-full bg-lamp/70" />
+    <SliderPrimitive.Track className="relative h-1 w-full grow overflow-hidden rounded-full bg-elevated">
+      <SliderPrimitive.Range className="absolute h-full bg-primary/70" />
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb
       aria-label={thumbLabel}
       aria-valuetext={thumbValueText}
-      className="block h-5 w-5 rounded-full border-2 border-lamp bg-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lamp focus-visible:ring-offset-2 focus-visible:ring-offset-ink disabled:pointer-events-none disabled:opacity-50"
+      className="block h-5 w-5 rounded-full border-2 border-primary bg-bg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50"
     />
     </SliderPrimitive.Root>
   )

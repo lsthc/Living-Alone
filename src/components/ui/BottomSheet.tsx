@@ -85,7 +85,7 @@ export function BottomSheet({
             type="button"
             aria-label="닫기"
             onClick={onClose}
-            className="absolute inset-0 h-full w-full cursor-default bg-ink/60 backdrop-blur-[2px]"
+            className="absolute inset-0 h-full w-full cursor-default bg-bg/60 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -95,7 +95,7 @@ export function BottomSheet({
           <motion.div
             className={cn(
               'absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-[20px] border-t shadow-2xl',
-              dark ? 'border-slate/50 bg-ink text-paper' : 'border-ink/10 bg-paper text-ink'
+              dark ? 'border-border bg-surface text-foreground' : 'border-border bg-surface text-foreground'
             )}
             initial={{ y: reduced ? 0 : '100%' }}
             animate={{ y: 0 }}
@@ -116,16 +116,16 @@ export function BottomSheet({
               onPointerDown={(e) => dragControls.start(e)}
             >
               <span
-                className={cn('mx-auto block h-1 w-10 rounded-full', dark ? 'bg-paper/25' : 'bg-ink/20')}
+                className={cn('mx-auto block h-1 w-10 rounded-full', dark ? 'bg-muted/40' : 'bg-muted/40')}
                 aria-hidden
               />
             </div>
 
             <div className="flex shrink-0 items-start justify-between gap-4 px-5 pb-3 pt-2">
               <div className="flex flex-col gap-1">
-                <h2 className={cn('font-serif text-xl leading-snug', dark ? 'text-paper' : 'text-ink')}>{title}</h2>
+                <h2 className={cn('text-xl leading-snug', dark ? 'text-foreground' : 'text-foreground')}>{title}</h2>
                 {subtitle && (
-                  <p className={cn('text-sm leading-relaxed', dark ? 'text-paper/55' : 'text-ink/60')}>{subtitle}</p>
+                  <p className={cn('text-sm leading-relaxed', dark ? 'text-muted' : 'text-muted')}>{subtitle}</p>
                 )}
               </div>
               <button
@@ -134,7 +134,7 @@ export function BottomSheet({
                 aria-label="닫기"
                 className={cn(
                   'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xl transition-colors',
-                  dark ? 'text-paper/50 hover:bg-paper/10' : 'text-ink/45 hover:bg-ink/[0.06]'
+                  dark ? 'text-muted hover:bg-elevated' : 'text-muted hover:bg-elevated'
                 )}
               >
                 ✕
@@ -147,7 +147,7 @@ export function BottomSheet({
               <div
                 className={cn(
                   'shrink-0 border-t px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3',
-                  dark ? 'border-slate/40' : 'border-ink/10'
+                  dark ? 'border-border' : 'border-border'
                 )}
               >
                 {footer}

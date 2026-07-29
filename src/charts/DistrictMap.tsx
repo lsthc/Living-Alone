@@ -13,8 +13,8 @@ import { cn } from '@/lib/utils';
  * 위험을 뜻하는 빨강은 쓰지 않는다.
  */
 
-const LOW = [78, 89, 104]; //  --slate #4e5968
-const HIGH = [49, 130, 246]; // --lamp  #3182f6
+const LOW = [107, 118, 132]; //  --muted #6b7684
+const HIGH = [49, 130, 246]; // --primary  #3182f6
 
 /** 0~1 값을 회청 → 파랑 사이 색으로 바꾼다. */
 export function rampColor(t: number) {
@@ -123,7 +123,7 @@ export function DistrictMap({
                 d={pathFor(f)}
                 // 값이 없는 구는 색을 칠하지 않는다. 0 으로 취급하지 않는다.
                 fill={t === null ? 'transparent' : rampColor(t)}
-                stroke={isSelected ? '#ffffff' : '#191f28'}
+                stroke={isSelected ? '#ffffff' : 'var(--border)'}
                 strokeWidth={isSelected ? 2.5 : 1.2}
                 initial={{ opacity: reduced ? 1 : 0 }}
                 animate={{ opacity: shown ? (dimmed ? 0.18 : 1) : 0 }}
@@ -145,7 +145,7 @@ export function DistrictMap({
               key={`empty-${f.properties.sgg_code}`}
               d={pathFor(f)}
               fill="none"
-              stroke="#4e5968"
+              stroke="var(--muted)"
               strokeWidth={1}
               strokeDasharray="3 3"
             />
@@ -161,7 +161,7 @@ export function MapLegend({ min, max, unit = '%' }: { min: number; max: number; 
   const steps = 12;
   return (
     <div className="flex items-center gap-3">
-      <span className="num text-xs text-paper/55">
+      <span className="num text-xs text-muted">
         {min.toFixed(1)}
         {unit}
       </span>
@@ -174,7 +174,7 @@ export function MapLegend({ min, max, unit = '%' }: { min: number; max: number; 
           />
         ))}
       </div>
-      <span className="num text-xs text-paper/55">
+      <span className="num text-xs text-muted">
         {max.toFixed(1)}
         {unit}
       </span>

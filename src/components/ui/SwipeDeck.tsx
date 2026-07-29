@@ -69,18 +69,18 @@ export function SwipeDeck({
                 'rounded-full border px-3 py-1.5 text-xs transition-colors',
                 i === active
                   ? dark
-                    ? 'border-lamp/60 bg-lamp/15 text-lamp'
-                    : 'border-weakfg/50 bg-weakbg text-weakfg'
+                    ? 'border-primary/60 bg-primary/15 text-primary'
+                    : 'border-weak-fg/50 bg-weak-bg text-weak-fg'
                   : dark
-                    ? 'border-slate/50 text-paper/50'
-                    : 'border-ink/20 text-ink/55'
+                    ? 'border-border text-muted'
+                    : 'border-border text-muted'
               )}
             >
               {l}
             </button>
           ))}
         </div>
-        <span className={cn('num shrink-0 text-xs', dark ? 'text-paper/45' : 'text-ink/45')}>
+        <span className={cn('num shrink-0 text-xs', dark ? 'text-muted' : 'text-muted')}>
           {active + 1} / {slides.length}
         </span>
       </div>
@@ -97,7 +97,7 @@ export function SwipeDeck({
         ))}
       </div>
 
-      <p className={cn('text-center text-xs', dark ? 'text-paper/40' : 'text-ink/45')}>
+      <p className={cn('text-center text-xs', dark ? 'text-muted' : 'text-muted')}>
         옆으로 밀면 다음 표로 넘어갑니다 · 챕터는 아래 화살표로 넘깁니다
       </p>
     </div>

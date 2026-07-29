@@ -159,8 +159,8 @@ export function IndexTrend({
       <motion.g animate={{ opacity: phase >= 2 ? 1 : 0 }} transition={{ duration: 0.6 }}>
         {yTicks.map((v) => (
           <g key={v}>
-            <line x1={M.left} x2={M.left + PW} y1={scale.y(v)} y2={scale.y(v)} stroke="#4e5968" strokeWidth={1} />
-            <text x={M.left - 10} y={scale.y(v) + 4} textAnchor="end" className="fill-paper/55 font-sans text-[13px]">
+            <line x1={M.left} x2={M.left + PW} y1={scale.y(v)} y2={scale.y(v)} stroke="var(--muted)" strokeWidth={1} />
+            <text x={M.left - 10} y={scale.y(v) + 4} textAnchor="end" className="fill-muted font-sans text-[13px]">
               {v}
             </text>
           </g>
@@ -176,7 +176,7 @@ export function IndexTrend({
           strokeWidth={1}
           strokeDasharray="2 4"
         />
-        <text x={M.left - 10} y={scale.y(100) - 8} textAnchor="end" className="fill-paper/55 font-sans text-[12px]">
+        <text x={M.left - 10} y={scale.y(100) - 8} textAnchor="end" className="fill-muted font-sans text-[12px]">
           {yAxisLabel}
         </text>
 
@@ -188,7 +188,7 @@ export function IndexTrend({
               x={scale.x(year)}
               y={M.top + PH + 26}
               textAnchor="middle"
-              className="fill-paper/55 font-sans text-[13px]"
+              className="fill-muted font-sans text-[13px]"
             >
               {year}
             </text>
@@ -281,7 +281,7 @@ export function IndexTrend({
                 key={i}
                 width={gridSize}
                 height={gridSize}
-                fill="var(--lamp)"
+                fill="var(--primary)"
                 // width·height 를 animate 에 넣었으면 initial 에도 반드시 넣어야 한다.
                 // framer-motion 은 SVG 속성(attribute)으로만 준 값을 초기값으로 읽지 못해
                 // width="undefined" 를 써 버린다 (콘솔에 Expected length, "undefined").

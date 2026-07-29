@@ -38,15 +38,15 @@ export function StoryCta({
       type="button"
       onClick={() => goToId(to)}
       className={cn(
-        'flex min-h-[56px] w-full flex-col items-center justify-center rounded-lg px-5 py-3 text-center transition-colors',
+        'flex min-h-[56px] w-full flex-col items-center justify-center rounded-btn-xl px-5 py-3 text-center transition-colors',
         variant === 'fill'
-          ? 'bg-lamp text-paper hover:bg-[#2272eb] active:bg-[#2272eb]'
-          : 'border border-slate/60 bg-ink/40 text-paper/80 hover:bg-ink/70 active:bg-ink/70',
+          ? 'bg-primary text-primary-fg hover:bg-primary-hover active:bg-primary-hover'
+          : 'border border-border bg-surface text-body hover:bg-elevated active:bg-elevated',
         className
       )}
     >
       <span className="text-[17px] font-semibold leading-6">{label}</span>
-      {sub && <span className={cn('mt-0.5 text-sm', variant === 'fill' ? 'text-paper/85' : 'text-paper/55')}>{sub}</span>}
+      {sub && <span className={cn('mt-0.5 text-sm', variant === 'fill' ? 'text-primary-fg/85' : 'text-muted')}>{sub}</span>}
     </button>
   );
 }
@@ -54,6 +54,9 @@ export function StoryCta({
 /**
  * 공유 버튼.
  * 시스템 공유 시트(카카오톡·메시지 등)를 열고, 지원하지 않으면 링크를 복사한다.
+ *
+ * 다크 전용 앱이 되면서 `tone` 은 더 이상 배경을 뒤집지 않는다 — 두 값 모두 같은
+ * 다크 배경용 스타일로 수렴한다. 다른 파일의 호출부를 건드리지 않기 위해 prop 만 남겨 뒀다.
  */
 export function ShareButton({ tone = 'light' }: { tone?: 'dark' | 'light' }) {
   const [copied, setCopied] = useState(false);
@@ -84,10 +87,10 @@ export function ShareButton({ tone = 'light' }: { tone?: 'dark' | 'light' }) {
       type="button"
       onClick={share}
       className={cn(
-        'flex min-h-[56px] w-full max-w-[420px] items-center justify-center gap-2 rounded-lg border text-[16px] font-semibold transition-colors',
+        'flex min-h-[56px] w-full max-w-[420px] items-center justify-center gap-2 rounded-btn-xl border text-[16px] font-semibold transition-colors',
         tone === 'light'
-          ? 'border-ink/20 bg-ink/[0.04] text-ink/80 hover:bg-ink/[0.08] active:bg-ink/[0.08]'
-          : 'border-slate/60 bg-ink/40 text-paper/80 hover:bg-ink/70 active:bg-ink/70'
+          ? 'border-border bg-surface text-body hover:bg-elevated active:bg-elevated'
+          : 'border-border bg-surface text-body hover:bg-elevated active:bg-elevated'
       )}
     >
       {copied ? '링크를 복사했습니다' : '이 연구를 가족에게 공유하기'}

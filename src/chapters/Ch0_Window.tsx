@@ -104,8 +104,8 @@ export function Ch0Window() {
                 className={cn(
                   'num rounded-full border px-3.5 py-1.5 text-xs transition-colors',
                   i === scaleIdx
-                    ? 'border-lamp/60 bg-lamp/15 text-lamp'
-                    : 'border-slate/60 text-paper/55 hover:border-slate hover:text-paper/80'
+                    ? 'border-primary/60 bg-primary/15 text-primary'
+                    : 'border-border text-muted hover:border-muted hover:text-body'
                 )}
               >
                 {s.label}
@@ -114,7 +114,7 @@ export function Ch0Window() {
             <button
               type="button"
               onClick={pickRandom}
-              className="rounded-full border border-slate/60 px-3.5 py-1.5 text-xs text-paper/55 transition-colors hover:border-lamp/60 hover:text-lamp"
+              className="rounded-full border border-border px-3.5 py-1.5 text-xs text-muted transition-colors hover:border-primary/60 hover:text-primary"
             >
               창문 하나 골라 보기
             </button>
@@ -124,7 +124,7 @@ export function Ch0Window() {
                 setPicked(null);
                 setReplay((v) => v + 1);
               }}
-              className="rounded-full border border-slate/60 px-3.5 py-1.5 text-xs text-paper/55 transition-colors hover:border-lamp/60 hover:text-lamp"
+              className="rounded-full border border-border px-3.5 py-1.5 text-xs text-muted transition-colors hover:border-primary/60 hover:text-primary"
             >
               다시 켜기
             </button>
@@ -133,7 +133,7 @@ export function Ch0Window() {
           <AnimatePresence mode="wait">
             <motion.p
               key={picked === null ? 'hint' : `picked-${picked}-${scale.unit}`}
-              className="min-h-[2.5rem] max-w-[52ch] text-center text-sm leading-relaxed text-paper/55"
+              className="min-h-[2.5rem] max-w-[52ch] text-center text-sm leading-relaxed text-muted"
               initial={{ opacity: reduced ? 1 : 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -145,9 +145,9 @@ export function Ch0Window() {
                 <>격자의 사각형을 하나 눌러 보세요. 그 칸 하나에 몇 분이 계신지 나옵니다.</>
               ) : (
                 <>
-                  <span className="num text-lamp">{picked + 1}</span>번째 칸 하나에{' '}
-                  <span className="num text-paper/85">{fmtInt(scale.unit)}가구</span>가 들어 있습니다. 부산 전체에는
-                  이런 칸이 <span className="num text-paper/85">{fmtInt(squares)}개</span> 있습니다.
+                  <span className="num text-primary">{picked + 1}</span>번째 칸 하나에{' '}
+                  <span className="num text-body">{fmtInt(scale.unit)}가구</span>가 들어 있습니다. 부산 전체에는
+                  이런 칸이 <span className="num text-body">{fmtInt(squares)}개</span> 있습니다.
                 </>
               )}
             </motion.p>
@@ -160,9 +160,9 @@ export function Ch0Window() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: gridDuration / 1000, ease: 'easeOut' }}
         >
-          <h1 id="ch0-heading" className="font-serif text-display text-paper">
+          <h1 id="ch0-heading" className="text-display text-foreground">
             부산의 밤에 켜지는 불빛 중{' '}
-            <span className="num whitespace-nowrap text-lamp">
+            <span className="num whitespace-nowrap text-primary">
               <CountUp
                 to={households}
                 delay={gridDuration + 200}
@@ -175,7 +175,7 @@ export function Ch0Window() {
             혼자 켜집니다.
           </h1>
 
-          <p className="num text-sm tracking-wide text-paper/55">
+          <p className="num text-sm tracking-wide text-muted">
             {latest.year} · 부산 · 65세 이상 1인가구 {households.toLocaleString('ko-KR')}
           </p>
         </motion.div>
@@ -197,7 +197,7 @@ export function Ch0Window() {
         </motion.div>
 
         <motion.p
-          className="present-hide text-center text-xs text-paper/40"
+          className="present-hide text-center text-xs text-muted"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: gridDuration / 1000 + 1.2 }}

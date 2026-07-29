@@ -36,8 +36,6 @@ export interface ChapterMeta {
   kicker: string;
   /** 챕터 목록 카드에 쓰는 한 줄 소개 */
   blurb: string;
-  /** dark = 심야 남색 배경(Ch0~3) · light = 종이색 배경(Ch4~) */
-  tone: 'dark' | 'light';
 }
 
 /** 화면에 나오는 순서 그대로. App 의 렌더 순서와 반드시 같아야 한다. */
@@ -49,7 +47,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '창문',
     kicker: '프롤로그',
     blurb: '부산의 밤에 켜지는 불빛 중 몇 개가 혼자 켜지는지부터 셉니다.',
-    tone: 'dark',
   },
   {
     id: 'ch1',
@@ -58,7 +55,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '부산은 정말 더 빠른가',
     kicker: '가설 H1',
     blurb: '첫 연도를 100으로 놓고 부산과 전국의 속도를 겹쳐 봅니다.',
-    tone: 'dark',
   },
   {
     id: 'ch2',
@@ -67,7 +63,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '어디가 가장 외로운가',
     kicker: '가설 H2',
     blurb: '16개 구·군을 하나씩 켜 보고 오래된 동네와의 관계를 확인합니다.',
-    tone: 'dark',
   },
   {
     id: 'ch3',
@@ -76,7 +71,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '누가 혼자 떠나는가',
     kicker: '가설 H3',
     blurb: '혼자 사는 사람과 혼자 떠나는 사람은 같지 않습니다. 없는 데이터도 그대로 보여줍니다.',
-    tone: 'dark',
   },
   {
     id: 'ch4',
@@ -85,7 +79,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '우리 가족의 거리',
     kicker: '2막',
     blurb: '도시 전체의 숫자를 여러분이 아는 한 사람의 자리 위에 다시 놓습니다.',
-    tone: 'light',
   },
   {
     id: 'ch5',
@@ -94,7 +87,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '그래서 지금 무엇을 할 수 있나',
     kicker: '행동',
     blurb: '이미 만들어져 있는 제도와, 지금 바로 걸 수 있는 번호.',
-    tone: 'light',
   },
   {
     id: 'ch6',
@@ -103,7 +95,6 @@ export const CHAPTERS: ChapterMeta[] = [
     title: '연구 노트',
     kicker: '에필로그',
     blurb: '무엇을 어떻게 했고 무엇을 못 했는지 전부 적습니다.',
-    tone: 'light',
   },
 ];
 
@@ -203,14 +194,6 @@ export function DeckProvider({ children }: { children: ReactNode }) {
     document.documentElement.style.setProperty('--font-scale', present ? '1.25' : '1');
     document.body.classList.toggle('present', present);
   }, [present]);
-
-  // 챕터마다 배경이 다르다(남색 ↔ 종이색). 브라우저 크롬 색까지 같이 바꿔 준다.
-  useEffect(() => {
-    const tone = CHAPTERS[index].tone;
-    document.body.dataset.tone = tone;
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', tone === 'dark' ? '#191f28' : '#ffffff');
-  }, [index]);
 
   // 챕터 목록이 열려 있는 동안은 뒤쪽 패널이 스크롤되지 않게 한다.
   // 바텀시트가 쓰는 deck-locked 와 클래스를 나눠 둔다 — 같은 클래스를 쓰면
