@@ -20,6 +20,16 @@ const OUT_H = 900 * SCALE;
 
 const DATA = path.resolve('public/data');
 
+// 배포한 발표 화면 주소와 그 QR.
+// QR 은 build_qr.py 가 주소에서 만들어 public/qr/ 에 둔 SVG 를 그대로 인라인한다.
+// 손으로 그린 그림이 아니라서 연구일지·포스터·발표자료의 QR 이 서로 다른 곳을 가리킬 수 없고,
+// 벡터라 2400×3600 으로 뽑아도 모듈 경계가 흐려지지 않는다.
+const APP_URL = 'https://lsthc.github.io/Living-Alone/';
+const APP_URL_SHORT = 'lsthc.github.io/Living-Alone';
+const QR_PATH = path.resolve('public/qr/dashboard.svg');
+const qrSvg = fs.existsSync(QR_PATH) ? fs.readFileSync(QR_PATH, 'utf8') : null;
+if (!qrSvg) console.warn(`QR 이 없다: ${QR_PATH} — 자리표시로 대신한다 (python build_qr.py 로 만든다)`);
+
 function readCsv(file) {
   const [head, ...lines] = fs.readFileSync(path.join(DATA, file), 'utf8').trim().split('\n');
   const cols = head.split(',');
@@ -209,9 +219,13 @@ const html = `<!doctype html>
            border-top:1px solid rgba(237,232,223,.14); display:flex; gap:12px; align-items:flex-end; }
   .src { flex:1; font-size:7.6px; line-height:1.5; color:rgba(237,232,223,.5); }
   .src b { color:rgba(237,232,223,.72); font-weight:600; }
-  .qr { flex:none; width:58px; height:58px; border:1px dashed rgba(237,232,223,.35);
-        display:flex; align-items:center; justify-content:center; text-align:center;
-        font-size:7px; color:rgba(237,232,223,.45); line-height:1.3; }
+  .qr { flex:none; width:58px; text-align:center; }
+  /* QR 은 흰 바탕이어야 읽힌다. SVG 안에 여백(quiet zone)이 이미 들어 있어 padding 을 주지 않는다. */
+  .qr svg { display:block; width:58px; height:58px; }
+  .qr .cap { margin-top:2px; font-size:6.2px; line-height:1.25; color:rgba(237,232,223,.55); }
+  .qr.empty { height:58px; border:1px dashed rgba(237,232,223,.35);
+              display:flex; align-items:center; justify-content:center;
+              font-size:7px; color:rgba(237,232,223,.45); line-height:1.3; }
 </style>
 </head>
 <body>
@@ -271,9 +285,14 @@ const html = `<!doctype html>
       행정안전부 「주민등록 인구통계」(2024) jumin.mois.go.kr ·
       보건복지부 「고독사 사망자 실태조사」(2024)·「2024년 고독사 발생 현황」(2025) mohw.go.kr ·
       통계청 「센서스용 행정구역경계」(2013)<br/>
-      <b>판정 기준은 분석 전에 등록했다</b> — ${BASE}년부터의 연평균 증가율 격차 1%p. 그래서 H1 은 지지가 아니라 부분 지지다.
+      <b>판정 기준은 분석 전에 등록했다</b> — ${BASE}년부터의 연평균 증가율 격차 1%p. 그래서 H1 은 지지가 아니라 부분 지지다.<br/>
+      <b>발표 화면</b> 데이터·판정·출처를 직접 눌러 볼 수 있는 대시보드 — ${APP_URL_SHORT} (오른쪽 QR)
     </div>
-    <div class="qr">QR<br/>7.28<br/>배포 후</div>
+    ${
+      qrSvg
+        ? `<div class="qr">${qrSvg}<div class="cap">발표 화면</div></div>`
+        : '<div class="qr empty">QR<br/>배포 후</div>'
+    }
   </footer>
 </div>
 </body>
